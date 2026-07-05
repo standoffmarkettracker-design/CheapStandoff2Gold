@@ -1,302 +1,162 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gold Marketplace - Buy & Sell Gold</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-      color: #e0e0e0;
-      min-height: 100vh;
-    }
-    
-    #root {
-      min-height: 100vh;
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-
-    header {
-      background: rgba(0, 0, 0, 0.3);
-      border-bottom: 1px solid rgba(255, 215, 0, 0.2);
-      padding: 20px 0;
-      margin-bottom: 40px;
-    }
-
-    header .container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 20px;
-    }
-
-    h1 {
-      font-size: 28px;
-      color: #ffd700;
-      font-weight: 700;
-      letter-spacing: 1px;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 30px;
-      list-style: none;
-    }
-
-    .nav-links button {
-      background: none;
-      border: none;
-      color: #e0e0e0;
-      cursor: pointer;
-      font-size: 16px;
-      transition: color 0.3s;
-      padding: 8px 12px;
-      border-radius: 4px;
-    }
-
-    .nav-links button:hover {
-      color: #ffd700;
-      background: rgba(255, 215, 0, 0.1);
-    }
-
-    .nav-links button.active {
-      color: #ffd700;
-      border-bottom: 2px solid #ffd700;
-    }
-
-    .auth-section {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-    }
-
-    .btn {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 600;
-      transition: all 0.3s;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #ffd700, #ffed4e);
-      color: #000;
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 16px rgba(255, 215, 0, 0.3);
-    }
-
-    .btn-secondary {
-      background: rgba(255, 215, 0, 0.1);
-      color: #ffd700;
-      border: 1px solid #ffd700;
-    }
-
-    .btn-secondary:hover {
-      background: rgba(255, 215, 0, 0.2);
-    }
-
-    .btn-danger {
-      background: rgba(255, 100, 100, 0.2);
-      color: #ff6464;
-      border: 1px solid #ff6464;
-    }
-
-    .btn-danger:hover {
-      background: rgba(255, 100, 100, 0.3);
-    }
-
-    .page-content {
-      min-height: calc(100vh - 200px);
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 24px;
-      margin-bottom: 40px;
-    }
-
-    .card {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 215, 0, 0.1);
-      border-radius: 12px;
-      padding: 24px;
-      backdrop-filter: blur(10px);
-      transition: all 0.3s;
-    }
-
-    .card:hover {
-      background: rgba(255, 255, 255, 0.08);
-      border-color: rgba(255, 215, 0, 0.3);
-      transform: translateY(-4px);
-    }
-
-    .card h2 {
-      color: #ffd700;
-      margin-bottom: 12px;
-      font-size: 20px;
-    }
-
-    .card p {
-      color: #b0b0b0;
-      margin-bottom: 8px;
-      line-height: 1.6;
-    }
-
-    .price-tag {
-      font-size: 28px;
-      color: #ffd700;
-      font-weight: 700;
-      margin: 16px 0;
-    }
-
-    .stats {
-      display: flex;
-      justify-content: space-between;
-      margin: 16px 0;
-      padding: 12px 0;
-      border-top: 1px solid rgba(255, 215, 0, 0.1);
-      border-bottom: 1px solid rgba(255, 215, 0, 0.1);
-    }
-
-    .stat {
-      text-align: center;
-    }
-
-    .stat-label {
-      font-size: 12px;
-      color: #888;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .stat-value {
-      font-size: 20px;
-      color: #ffd700;
-      font-weight: 700;
-    }
-
-    .input-group {
-      margin-bottom: 16px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 6px;
-      color: #b0b0b0;
-      font-weight: 500;
-      font-size: 13px;
-    }
-
-    input, select {
-      width: 100%;
-      padding: 10px 12px;
-      background: rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(255, 215, 0, 0.1);
-      border-radius: 6px;
-      color: #e0e0e0;
-      font-size: 14px;
-      transition: border-color 0.3s;
-    }
-
-    input:focus, select:focus {
-      outline: none;
-      border-color: #ffd700;
-      box-shadow: 0 0 8px rgba(255, 215, 0, 0.2);
-    }
-
-    .alert {
-      padding: 16px;
-      border-radius: 6px;
-      margin-bottom: 20px;
-      font-size: 14px;
-    }
-
-    .alert-info {
-      background: rgba(52, 152, 219, 0.1);
-      border: 1px solid rgba(52, 152, 219, 0.3);
-      color: #3498db;
-    }
-
-    .alert-success {
-      background: rgba(46, 204, 113, 0.1);
-      border: 1px solid rgba(46, 204, 113, 0.3);
-      color: #2ecc71;
-    }
-
-    .alert-error {
-      background: rgba(231, 76, 60, 0.1);
-      border: 1px solid rgba(231, 76, 60, 0.3);
-      color: #e74c3c;
-    }
-
-    .loading {
-      text-align: center;
-      padding: 40px;
-      color: #ffd700;
-    }
-
-    .spinner {
-      display: inline-block;
-      width: 40px;
-      height: 40px;
-      border: 4px solid rgba(255, 215, 0, 0.2);
-      border-top-color: #ffd700;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    footer {
-      background: rgba(0, 0, 0, 0.3);
-      border-top: 1px solid rgba(255, 215, 0, 0.2);
-      padding: 20px;
-      text-align: center;
-      color: #888;
-      margin-top: 60px;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cheap Standoff 2 Gold — Daily Gold Subscriptions & Instant Packs</title>
+<meta name="description" content="Get Standoff 2 gold for a fraction of in-app prices. Daily gold subscriptions from $2.99/mo and instant gold packs, delivered to your account by the standoff2markettracker.com team.">
+<meta property="og:title" content="Cheap Standoff 2 Gold — Subscriptions & Instant Packs">
+<meta property="og:description" content="Up to 30,000 gold per month from $19.99. Instant packs delivered within 24 hours.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0B0E1A; --bg2:#121629; --bg3:#1A1F38;
+  --gold:#FFC93C; --gold-hot:#FFB020; --gold-dim:rgba(255,201,60,.14);
+  --ink:#E8EAF2; --muted:#8B90A5; --green:#3DD68C; --danger:#FF5C5C;
+  --line:rgba(255,201,60,.16);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.num{font-family:'Rajdhani',sans-serif;letter-spacing:.02em;line-height:1.1}
+img{max-width:100%}
+a{color:var(--gold);text-decoration:none}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.eyebrow{font-family:'Rajdhani';font-weight:700;font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
+.goldtext{background:linear-gradient(100deg,#FFE28A 0%,var(--gold) 45%,#C98F12 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:'Rajdhani';font-weight:700;font-size:16px;letter-spacing:.06em;text-transform:uppercase;padding:14px 26px;border:none;cursor:pointer;transition:transform .15s,box-shadow .15s,background .15s;clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px)}
+.btn:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.btn-gold{background:linear-gradient(120deg,#FFE28A,var(--gold) 55%,var(--gold-hot));color:#141000}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(255,201,60,.35)}
+.btn-ghost{background:transparent;color:var(--gold);box-shadow:inset 0 0 0 1.5px var(--gold)}
+.btn-ghost:hover{background:var(--gold-dim)}
+.btn-sm{padding:10px 18px;font-size:14px}
+.btn[disabled]{opacity:.5;cursor:not-allowed;transform:none}
+/* announcement */
+.annc{background:linear-gradient(90deg,var(--gold-dim),transparent 60%);border-bottom:1px solid var(--line);font-size:13px;padding:8px 0;text-align:center;color:var(--muted)}
+.annc b{color:var(--gold)}
+/* header */
+header{position:sticky;top:0;z-index:50;background:rgba(11,14,26,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:64px;gap:16px}
+.logo{font-family:'Rajdhani';font-weight:700;font-size:22px;color:var(--ink);display:flex;align-items:center;gap:8px;white-space:nowrap}
+.logo span{color:var(--gold)}
+.navlinks{display:flex;gap:4px;list-style:none}
+.navlinks button{background:none;border:none;color:var(--muted);font:inherit;font-size:14px;font-weight:500;padding:8px 12px;cursor:pointer;border-radius:6px}
+.navlinks button:hover,.navlinks button.active{color:var(--gold);background:var(--gold-dim)}
+.authbox{display:flex;align-items:center;gap:10px}
+.uname{color:var(--gold);font-weight:600;font-size:14px;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* hero */
+.hero{padding:72px 0 56px;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background:radial-gradient(700px 380px at 78% 8%,rgba(255,201,60,.10),transparent 65%);pointer-events:none}
+.herogrid{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center}
+.hero h1{font-size:clamp(38px,5.4vw,60px);font-weight:700;margin:14px 0 18px}
+.hero p.lead{color:var(--muted);font-size:18px;max-width:520px;margin-bottom:28px}
+.heroctas{display:flex;gap:14px;flex-wrap:wrap}
+.trustline{margin-top:26px;font-size:13px;color:var(--muted);display:flex;gap:18px;flex-wrap:wrap}
+.trustline b{color:var(--ink)}
+/* hero deal card */
+.dealcard{background:linear-gradient(160deg,var(--bg3),var(--bg2));border:1px solid var(--line);padding:28px;position:relative;clip-path:polygon(16px 0,100% 0,100% calc(100% - 16px),calc(100% - 16px) 100%,0 100%,0 16px)}
+.dealcard .tag{position:absolute;top:0;right:0;background:var(--gold);color:#141000;font-family:'Rajdhani';font-weight:700;font-size:12px;letter-spacing:.14em;padding:5px 14px}
+.dealnum{font-size:56px;font-weight:700}
+.dealsub{color:var(--muted);font-size:14px;margin:2px 0 18px}
+.dealrow{display:flex;justify-content:space-between;padding:10px 0;border-top:1px dashed var(--line);font-size:14px}
+.dealrow b{font-family:'Rajdhani';font-size:16px;color:var(--gold)}
+/* sections */
+section{padding:72px 0}
+.sect-head{text-align:center;max-width:640px;margin:0 auto 44px}
+.sect-head h2{font-size:clamp(28px,4vw,40px);margin:10px 0 12px}
+.sect-head p{color:var(--muted)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+/* cards */
+.card{background:var(--bg2);border:1px solid var(--line);padding:26px;position:relative;display:flex;flex-direction:column;transition:transform .18s,border-color .18s}
+.card:hover{transform:translateY(-5px);border-color:rgba(255,201,60,.45)}
+.card h3{font-size:22px;margin-bottom:4px}
+.card .sub{color:var(--muted);font-size:13px;margin-bottom:14px}
+.price{font-family:'Rajdhani';font-weight:700;font-size:40px;color:var(--gold)}
+.price small{font-size:15px;color:var(--muted);font-weight:600}
+.was{color:var(--muted);text-decoration:line-through;font-size:14px;margin-left:8px}
+.goldamt{font-family:'Rajdhani';font-weight:700;font-size:26px;margin:10px 0 2px}
+.feat{list-style:none;margin:14px 0 20px;flex:1}
+.feat li{font-size:14px;color:var(--muted);padding:6px 0 6px 24px;position:relative}
+.feat li::before{content:"◆";position:absolute;left:2px;color:var(--gold);font-size:10px;top:9px}
+.badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--gold);color:#141000;font-family:'Rajdhani';font-weight:700;font-size:12px;letter-spacing:.12em;padding:4px 16px;white-space:nowrap}
+.card.best{border-color:var(--gold)}
+.card.best::before{content:"";position:absolute;top:0;left:0;right:0;height:8px;background:repeating-linear-gradient(45deg,var(--gold) 0 12px,#141000 12px 24px)}
+.permo{font-size:12px;color:var(--green);font-weight:600;margin-top:6px}
+/* toggle */
+.toggle{display:flex;justify-content:center;gap:0;margin-bottom:36px}
+.toggle button{font-family:'Rajdhani';font-weight:700;font-size:15px;letter-spacing:.06em;text-transform:uppercase;padding:11px 26px;background:var(--bg2);color:var(--muted);border:1px solid var(--line);cursor:pointer}
+.toggle button.on{background:var(--gold);color:#141000;border-color:var(--gold)}
+.toggle .save{font-size:11px;display:block;letter-spacing:.04em}
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;counter-reset:step}
+.step{background:var(--bg2);border:1px solid var(--line);padding:26px}
+.step::before{counter-increment:step;content:"0" counter(step);font-family:'Rajdhani';font-weight:700;font-size:40px;color:var(--gold-dim);-webkit-text-stroke:1px var(--gold);display:block;margin-bottom:8px}
+.step h3{font-size:19px;margin-bottom:8px}
+.step p{color:var(--muted);font-size:14px}
+/* sell */
+.sellgrid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:13px;color:var(--muted);font-weight:600;margin-bottom:6px}
+input,select,textarea{width:100%;padding:12px 14px;background:rgba(0,0,0,.35);border:1px solid var(--line);color:var(--ink);font:inherit;font-size:15px;border-radius:4px}
+input:focus,select:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(255,201,60,.15)}
+.quote{background:var(--gold-dim);border:1px solid var(--line);padding:16px;font-size:15px;margin-top:6px}
+.quote b{color:var(--green);font-family:'Rajdhani';font-size:22px}
+/* faq */
+details{background:var(--bg2);border:1px solid var(--line);margin-bottom:10px}
+summary{cursor:pointer;padding:18px 20px;font-weight:600;font-size:15px;list-style:none;display:flex;justify-content:space-between;align-items:center}
+summary::after{content:"+";font-family:'Rajdhani';font-size:22px;color:var(--gold)}
+details[open] summary::after{content:"–"}
+details p{padding:0 20px 18px;color:var(--muted);font-size:14px}
+/* modal */
+.overlay{position:fixed;inset:0;background:rgba(5,7,15,.8);backdrop-filter:blur(6px);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal{background:var(--bg2);border:1px solid var(--gold);max-width:460px;width:100%;padding:30px;position:relative;clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px);max-height:90vh;overflow-y:auto}
+.modal h3{font-size:24px;margin-bottom:4px}
+.modal .msub{color:var(--muted);font-size:13px;margin-bottom:18px}
+.xbtn{position:absolute;top:12px;right:14px;background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer}
+.ordersum{background:var(--gold-dim);border:1px dashed var(--line);padding:12px 14px;font-size:14px;margin-bottom:18px;display:flex;justify-content:space-between}
+.ordersum b{color:var(--gold);font-family:'Rajdhani';font-size:17px}
+.oksplash{text-align:center;padding:14px 0}
+.oksplash .big{font-size:52px}
+.alert{padding:12px 14px;font-size:13px;margin-top:12px;border:1px solid}
+.alert.err{border-color:var(--danger);color:var(--danger);background:rgba(255,92,92,.08)}
+/* dashboard */
+.dash{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.statnum{font-family:'Rajdhani';font-weight:700;font-size:44px;color:var(--gold)}
+/* footer */
+footer{border-top:1px solid var(--line);padding:36px 0;color:var(--muted);font-size:13px}
+.fgrid{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}
+/* sticky mobile cta */
+.mcta{display:none;position:fixed;bottom:0;left:0;right:0;z-index:60;padding:10px 14px;background:rgba(11,14,26,.92);backdrop-filter:blur(10px);border-top:1px solid var(--line)}
+.mcta .btn{width:100%}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}html{scroll-behavior:auto}}
+@media(max-width:900px){
+  .herogrid{grid-template-columns:1fr}
+  .grid3,.steps,.dash{grid-template-columns:1fr}
+  .sellgrid{grid-template-columns:1fr}
+  .navlinks{display:none}
+  .mcta{display:block}
+  body{padding-bottom:64px}
+  section{padding:52px 0}
+}
+</style>
 </head>
 <body>
-  <div id="root"></div>
-  
-  <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-database-compat.js"></script>
-  <script src="https://js.stripe.com/v3/"></script>
+<div id="root"></div>
+<script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-database-compat.js"></script>
+<script type="text/babel">
+const { useState, useEffect } = React;
 
-  <script type="text/babel">
-    const { useState, useEffect, useRef } = React;
-
-    // Firebase config - replace with your credentials
-    const firebaseConfig = {
+// Firebase config (replaced at deploy with live project config)
+const firebaseConfig = {
       apiKey: "AIzaSyDX-FZZVvr2XguDvHZUonJokgTAs9O19CY",
       authDomain: "standoff-2-tracker.firebaseapp.com",
       projectId: "standoff-2-tracker",
@@ -306,469 +166,352 @@
       appId: "1:576315107843:web:452af4251cfc60fd2b3c36"
     };
 
-    // Initialize Firebase (safe: app still renders if config is missing)
-    let auth, db;
-    try {
-      if (!window.firebase?.apps?.length) {
-        window.firebase.initializeApp(firebaseConfig);
-      }
-      auth = window.firebase.auth();
-      db = window.firebase.database();
-    } catch (e) {
-      console.warn('Firebase not configured yet:', e);
-      auth = { onAuthStateChanged: (cb) => { cb(null); return () => {}; }, signOut: () => {}, signInWithPopup: () => alert('Login coming soon - Firebase not configured yet') };
-      const fakeRef = { on: () => {}, once: () => Promise.resolve({ val: () => null }), orderByChild() { return this; }, equalTo() { return this; }, limitToLast() { return this; } };
-      db = { ref: () => fakeRef };
-    }
+// Initialize Firebase (safe: app still renders if config is missing)
+let auth, db;
+try {
+  if (!window.firebase?.apps?.length) {
+    window.firebase.initializeApp(firebaseConfig);
+  }
+  auth = window.firebase.auth();
+  db = window.firebase.database();
+} catch (e) {
+  console.warn('Firebase not configured yet:', e);
+  auth = { onAuthStateChanged: (cb) => { cb(null); return () => {}; }, signOut: () => {} };
+  const fakeRef = { on: () => {}, off: () => {}, once: () => Promise.resolve({ val: () => null }), push: () => Promise.resolve() };
+  db = { ref: () => fakeRef };
+}
 
-    // ============ PAGES ============
+const WEBHOOK = "https://discord.com/api/webhooks/1521212880614330488/whaIWiT5y7FbVYQ93k0TwHtbPljg5CxdG8vwr8J9s6vbWTturZluUyKhHTNKcL0Ytzj5";
 
-    function HomePage() {
-      return (
-        <div className="container page-content">
-          <h2 style={{ fontSize: '32px', marginBottom: '30px', color: '#ffd700' }}>
-            Welcome to Gold Marketplace
-          </h2>
-          
-          <div className="grid">
-            <div className="card">
-              <h3 style={{ color: '#ffd700', fontSize: '24px', marginBottom: '12px' }}>💰 Buy Gold</h3>
-              <p>Subscribe to a tier and claim daily gold allowances. The more you subscribe, the more gold you earn every day.</p>
-              <button className="btn btn-primary" style={{ marginTop: '16px', width: '100%' }}>
-                View Subscriptions
-              </button>
+const PACKS = [
+  { id:'scout',  name:'Scout Pack',  gold:1000,  bonus:0,    price:4.99,  tag:null,          blurb:'Quick top-up for your next skin.' },
+  { id:'raider', name:'Raider Pack', gold:5000,  bonus:0,    price:19.99, tag:'MOST POPULAR', blurb:'The sweet spot for serious loadouts.' },
+  { id:'vault',  name:'Vault Pack',  gold:10000, bonus:2000, price:39.99, tag:'+2,000 BONUS', blurb:'Maximum gold, maximum bonus.' },
+];
+
+const TIERS = [
+  { id:'bronze', name:'Bronze', daily:100,  mo:2.99,  yr:29.99,  tag:null },
+  { id:'silver', name:'Silver', daily:300,  mo:9.99,  yr:99.99,  tag:'MOST POPULAR' },
+  { id:'gold',   name:'Gold',   daily:1000, mo:19.99, yr:199.99, tag:'BEST VALUE', best:true },
+];
+
+const fmt = n => n.toLocaleString('en-US');
+
+async function submitOrder(order) {
+  const lines = Object.entries(order).map(([k,v]) => `**${k}:** ${v}`).join('\n');
+  let webhookOk = false;
+  try {
+    const res = await fetch(WEBHOOK, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ embeds:[{ title:`🛒 New ${order.Type} — CheapStandoff2Gold`, description: lines, color: 16763964, timestamp: new Date().toISOString() }] })
+    });
+    webhookOk = res.ok;
+  } catch(e) { console.warn('webhook failed', e); }
+  try { await db.ref('goldOrders').push({ ...order, createdAt: Date.now(), status:'pending' }); } catch(e) { console.warn('db write skipped', e); }
+  return webhookOk;
+}
+
+function Checkout({ item, user, onClose }) {
+  const [sid, setSid] = useState('');
+  const [disc, setDisc] = useState('');
+  const [state, setState] = useState('form'); // form | sending | done | error
+  const submit = async () => {
+    if (!sid.trim() || !disc.trim()) return;
+    setState('sending');
+    const ok = await submitOrder({
+      Type: item.type, Item: item.label, Price: '$' + item.price.toFixed(2),
+      'Standoff 2 ID': sid.trim(), 'Discord': disc.trim(),
+      'Account': user ? (user.email || user.uid) : 'guest'
+    });
+    setState(ok ? 'done' : 'error');
+  };
+  return (
+    <div className="overlay" onClick={e => e.target === e.currentTarget && onClose()}>
+      <div className="modal">
+        <button className="xbtn" onClick={onClose} aria-label="Close">×</button>
+        {state !== 'done' ? (
+          <div>
+            <h3>Complete your order</h3>
+            <p className="msub">We take payment over Discord DM, then deliver straight to your account. You are not charged on this page.</p>
+            <div className="ordersum"><span>{item.label}</span><b>${item.price.toFixed(2)}</b></div>
+            <div className="field">
+              <label>Your Standoff 2 player ID</label>
+              <input value={sid} onChange={e=>setSid(e.target.value)} placeholder="e.g. 12345678" />
             </div>
-
-            <div className="card">
-              <h3 style={{ color: '#ffd700', fontSize: '24px', marginBottom: '12px' }}>💸 Sell Gold</h3>
-              <p>Have extra gold? Sell it back to the site at competitive rates. We buy at tiered prices based on quantity.</p>
-              <button className="btn btn-primary" style={{ marginTop: '16px', width: '100%' }}>
-                Sell Gold
-              </button>
+            <div className="field">
+              <label>Your Discord username</label>
+              <input value={disc} onChange={e=>setDisc(e.target.value)} placeholder="e.g. player#0001 or @player" />
             </div>
-
-            <div className="card">
-              <h3 style={{ color: '#ffd700', fontSize: '24px', marginBottom: '12px' }}>📊 Dashboard</h3>
-              <p>Track your balance, subscriptions, and transaction history all in one place.</p>
-              <button className="btn btn-primary" style={{ marginTop: '16px', width: '100%' }}>
-                View Dashboard
-              </button>
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    function SubscriptionsPage() {
-      const [tiers, setTiers] = useState([
-        {
-          id: 'bronze',
-          name: 'Bronze',
-          monthlyPrice: 2.99,
-          yearlyPrice: 29.99,
-          dailyAllowance: 100,
-          description: 'Great for casual players'
-        },
-        {
-          id: 'silver',
-          name: 'Silver',
-          monthlyPrice: 9.99,
-          yearlyPrice: 99.99,
-          dailyAllowance: 300,
-          description: 'Perfect for regular players'
-        },
-        {
-          id: 'gold',
-          name: 'Gold',
-          monthlyPrice: 19.99,
-          yearlyPrice: 199.99,
-          dailyAllowance: 1000,
-          description: 'For serious collectors'
-        }
-      ]);
-
-      const [billingCycle, setBillingCycle] = useState('monthly');
-
-      return (
-        <div className="container page-content">
-          <h2 style={{ fontSize: '32px', marginBottom: '30px', color: '#ffd700' }}>
-            Subscription Tiers
-          </h2>
-
-          <div style={{ marginBottom: '30px', textAlign: 'center' }}>
-            <button 
-              className={`btn ${billingCycle === 'monthly' ? 'btn-primary' : 'btn-secondary'}`}
-              onClick={() => setBillingCycle('monthly')}
-              style={{ marginRight: '12px' }}
-            >
-              Monthly
+            <button className="btn btn-gold" style={{width:'100%'}} disabled={state==='sending' || !sid.trim() || !disc.trim()} onClick={submit}>
+              {state==='sending' ? 'Sending…' : 'Place order'}
             </button>
-            <button 
-              className={`btn ${billingCycle === 'yearly' ? 'btn-primary' : 'btn-secondary'}`}
-              onClick={() => setBillingCycle('yearly')}
-            >
-              Yearly (Save 17%)
-            </button>
+            {state==='error' && <div className="alert err">Order could not be sent. DM <b>camel5961</b> on Discord and we will sort you out directly.</div>}
+            <p className="msub" style={{marginTop:14, marginBottom:0}}>Placing an order pings our team instantly. We DM you within hours to take payment and deliver.</p>
           </div>
-
-          <div className="grid">
-            {tiers.map(tier => (
-              <div key={tier.id} className="card">
-                <h2>{tier.name}</h2>
-                <p>{tier.description}</p>
-                
-                <div className="price-tag">
-                  ${billingCycle === 'monthly' ? tier.monthlyPrice : tier.yearlyPrice}
-                  <span style={{ fontSize: '14px', color: '#b0b0b0', marginLeft: '8px' }}>
-                    / {billingCycle === 'monthly' ? 'month' : 'year'}
-                  </span>
-                </div>
-
-                <div className="stats">
-                  <div className="stat">
-                    <div className="stat-label">Daily</div>
-                    <div className="stat-value">{tier.dailyAllowance}</div>
-                  </div>
-                  <div className="stat">
-                    <div className="stat-label">Monthly</div>
-                    <div className="stat-value">{(tier.dailyAllowance * 30).toLocaleString()}</div>
-                  </div>
-                </div>
-
-                <button className="btn btn-primary" style={{ width: '100%' }}>
-                  Subscribe Now
-                </button>
-              </div>
-            ))}
+        ) : (
+          <div className="oksplash">
+            <div className="big">🥇</div>
+            <h3>Order received</h3>
+            <p className="msub" style={{marginTop:8}}>Our team just got pinged. Watch for a Discord DM from <b style={{color:'var(--gold)'}}>camel5961</b> to complete payment — your gold ships right after.</p>
+            <button className="btn btn-ghost btn-sm" onClick={onClose} style={{marginTop:10}}>Done</button>
           </div>
+        )}
+      </div>
+    </div>
+  );
+}
+function Packs({ buy }) {
+  return (
+    <section id="packs">
+      <div className="wrap">
+        <div className="sect-head">
+          <div className="eyebrow">Instant Gold Packs</div>
+          <h2>Need gold <span className="goldtext">right now?</span></h2>
+          <p>One-time packs, delivered to your account within 24 hours of payment. No subscription needed.</p>
         </div>
-      );
-    }
-
-    function SellGoldPage() {
-      const [amount, setAmount] = useState('');
-      const [selectedTier, setSelectedTier] = useState('standard');
-      const [quote, setQuote] = useState(null);
-
-      const tiers = [
-        { id: 'standard', name: 'Standard (0-10k)', pricePerGold: 0.03 },
-        { id: 'bulk', name: 'Bulk (10k+)', pricePerGold: 0.05 }
-      ];
-
-      const handleGetQuote = () => {
-        const tier = tiers.find(t => t.id === selectedTier);
-        const numAmount = parseFloat(amount);
-        if (numAmount && tier) {
-          setQuote({
-            gold: numAmount,
-            pricePerGold: tier.pricePerGold,
-            total: (numAmount * tier.pricePerGold).toFixed(2)
-          });
-        }
-      };
-
-      return (
-        <div className="container page-content">
-          <h2 style={{ fontSize: '32px', marginBottom: '30px', color: '#ffd700' }}>
-            Sell Gold
-          </h2>
-
-          <div className="grid">
-            <div className="card" style={{ gridColumn: '1 / -1' }}>
-              <h2>Sell Your Gold</h2>
-              
-              <div className="input-group">
-                <label>Your Current Balance</label>
-                <div style={{ 
-                  background: 'rgba(0, 0, 0, 0.3)', 
-                  padding: '16px', 
-                  borderRadius: '6px',
-                  color: '#ffd700',
-                  fontSize: '20px',
-                  fontWeight: 'bold'
-                }}>
-                  5,000 Gold
-                </div>
-              </div>
-
-              <div className="input-group">
-                <label>Price Tier</label>
-                <select value={selectedTier} onChange={(e) => setSelectedTier(e.target.value)}>
-                  {tiers.map(t => (
-                    <option key={t.id} value={t.id}>
-                      {t.name} - ${t.pricePerGold}/gold
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="input-group">
-                <label>Amount to Sell</label>
-                <input 
-                  type="number" 
-                  placeholder="Enter amount"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                />
-              </div>
-
-              <button className="btn btn-primary" onClick={handleGetQuote} style={{ marginRight: '12px' }}>
-                Get Quote
-              </button>
-
-              {quote && (
-                <div className="alert alert-info" style={{ marginTop: '20px' }}>
-                  <strong>Quote:</strong> {quote.gold} gold × ${quote.pricePerGold} = <strong style={{ color: '#2ecc71' }}>${quote.total}</strong>
-                </div>
-              )}
-
-              {quote && (
-                <button className="btn btn-primary" style={{ width: '100%', marginTop: '12px' }}>
-                  Confirm Sale
-                </button>
-              )}
+        <div className="grid3">
+          {PACKS.map(p => (
+            <div key={p.id} className="card">
+              {p.tag && <div className="badge">{p.tag}</div>}
+              <h3>{p.name}</h3>
+              <div className="sub">{p.blurb}</div>
+              <div className="goldamt goldtext">🥇 {fmt(p.gold + p.bonus)} gold</div>
+              {p.bonus > 0 && <div className="permo">{fmt(p.gold)} + {fmt(p.bonus)} bonus included</div>}
+              <div className="price" style={{marginTop:10}}>${p.price}</div>
+              <ul className="feat">
+                <li>Delivered within 24 hours</li>
+                <li>Hand-delivered by our team</li>
+                <li>{Math.round((p.gold+p.bonus)/p.price)} gold per dollar</li>
+              </ul>
+              <button className="btn btn-gold" onClick={() => buy({ type:'Gold Pack', label:`${p.name} — ${fmt(p.gold+p.bonus)} gold`, price:p.price })}>Buy {p.name}</button>
             </div>
-          </div>
+          ))}
         </div>
-      );
-    }
+        <p style={{textAlign:'center',color:'var(--muted)',fontSize:14,marginTop:28}}>
+          Want way more gold per dollar? <a href="#subs">Subscriptions pay out up to 5× more →</a>
+        </p>
+      </div>
+    </section>
+  );
+}
 
-    function DashboardPage() {
-      const [user, setUser] = useState(null);
-      const [userData, setUserData] = useState(null);
-      const [transactions, setTransactions] = useState([]);
-
-      useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged(user => {
-          setUser(user);
-          if (user) {
-            // Load user data from Firebase
-            db.ref(`users/${user.uid}`).on('value', snapshot => {
-              setUserData(snapshot.val());
-            });
-            // Load transactions
-            db.ref(`transactions`).orderByChild('uid').equalTo(user.uid).limitToLast(10).on('value', snapshot => {
-              const txns = [];
-              snapshot.forEach(child => {
-                txns.unshift(child.val());
-              });
-              setTransactions(txns);
-            });
-          }
-        });
-        return () => unsubscribe();
-      }, []);
-
-      if (!user) {
-        return (
-          <div className="container page-content">
-            <div className="alert alert-info">
-              Please log in to view your dashboard.
-            </div>
-          </div>
-        );
-      }
-
-      return (
-        <div className="container page-content">
-          <h2 style={{ fontSize: '32px', marginBottom: '30px', color: '#ffd700' }}>
-            My Dashboard
-          </h2>
-
-          <div className="grid">
-            <div className="card">
-              <h2>Gold Balance</h2>
-              <div className="price-tag" style={{ margin: '20px 0' }}>
-                {userData?.goldBalance || 0}
-              </div>
-              <button className="btn btn-primary" style={{ width: '100%' }}>
-                Claim Daily Gold
-              </button>
-            </div>
-
-            <div className="card">
-              <h2>Subscription</h2>
-              <p style={{ fontSize: '18px', color: '#ffd700', marginBottom: '12px' }}>
-                {userData?.subscriptionTier || 'None'}
-              </p>
-              <p style={{ color: '#888', fontSize: '12px', marginBottom: '16px' }}>
-                {userData?.subscriptionExpiry ? `Expires: ${new Date(userData.subscriptionExpiry).toLocaleDateString()}` : 'Not subscribed'}
-              </p>
-              <button className="btn btn-primary" style={{ width: '100%' }}>
-                Manage Subscription
-              </button>
-            </div>
-
-            <div className="card">
-              <h2>Transactions</h2>
-              <p style={{ color: '#888', fontSize: '12px' }}>
-                {transactions.length} recent transactions
-              </p>
-              <button className="btn btn-secondary" style={{ width: '100%', marginTop: '16px' }}>
-                View All
-              </button>
-            </div>
-          </div>
-
-          <div style={{ marginTop: '40px' }}>
-            <h3 style={{ color: '#ffd700', marginBottom: '16px' }}>Recent Transactions</h3>
-            <div className="card">
-              {transactions.length === 0 ? (
-                <p style={{ color: '#888' }}>No transactions yet.</p>
-              ) : (
-                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                  <thead>
-                    <tr style={{ borderBottom: '1px solid rgba(255, 215, 0, 0.1)' }}>
-                      <th style={{ textAlign: 'left', padding: '12px 0', color: '#ffd700' }}>Type</th>
-                      <th style={{ textAlign: 'left', padding: '12px 0', color: '#ffd700' }}>Amount</th>
-                      <th style={{ textAlign: 'left', padding: '12px 0', color: '#ffd700' }}>Date</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {transactions.map((tx, i) => (
-                      <tr key={i} style={{ borderBottom: '1px solid rgba(255, 215, 0, 0.05)' }}>
-                        <td style={{ padding: '12px 0', color: '#b0b0b0' }}>{tx.type}</td>
-                        <td style={{ padding: '12px 0', color: '#ffd700', fontWeight: 'bold' }}>
-                          {tx.type === 'sell' ? '-' : '+'}{tx.amount}
-                        </td>
-                        <td style={{ padding: '12px 0', color: '#888' }}>
-                          {new Date(tx.timestamp).toLocaleDateString()}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
-            </div>
-          </div>
+function Subs({ buy }) {
+  const [yearly, setYearly] = useState(false);
+  return (
+    <section id="subs" style={{background:'var(--bg2)'}}>
+      <div className="wrap">
+        <div className="sect-head">
+          <div className="eyebrow">Gold Subscriptions</div>
+          <h2>Claim gold <span className="goldtext">every single day</span></h2>
+          <p>Log in, hit claim, stack gold. Subscribers get up to 5× more gold per dollar than one-time packs.</p>
         </div>
-      );
-    }
-
-    function AdminPanel() {
-      const [user, setUser] = useState(null);
-      const [isAdmin, setIsAdmin] = useState(false);
-
-      useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged(user => {
-          setUser(user);
-          if (user) {
-            // Check if user is admin
-            db.ref(`admins/${user.uid}`).once('value', snapshot => {
-              setIsAdmin(!!snapshot.val());
-            });
-          }
-        });
-        return () => unsubscribe();
-      }, []);
-
-      if (!isAdmin) {
-        return (
-          <div className="container page-content">
-            <div className="alert alert-error">
-              You don't have permission to access the admin panel.
-            </div>
-          </div>
-        );
-      }
-
-      return (
-        <div className="container page-content">
-          <h2 style={{ fontSize: '32px', marginBottom: '30px', color: '#ffd700' }}>
-            Admin Panel
-          </h2>
-
-          <div className="grid">
-            <div className="card" style={{ gridColumn: '1 / -1' }}>
-              <h2>Manage Subscription Tiers</h2>
-              <p style={{ marginBottom: '20px', color: '#888' }}>Coming soon - Configure subscription tiers, prices, and daily allowances.</p>
-            </div>
-
-            <div className="card" style={{ gridColumn: '1 / -1' }}>
-              <h2>Manage Sell Prices</h2>
-              <p style={{ marginBottom: '20px', color: '#888' }}>Coming soon - Set buy-back prices for different gold tiers.</p>
-            </div>
-
-            <div className="card" style={{ gridColumn: '1 / -1' }}>
-              <h2>User Management</h2>
-              <p style={{ marginBottom: '20px', color: '#888' }}>Coming soon - View and manage user balances, gift gold, etc.</p>
-            </div>
-          </div>
+        <div className="toggle" role="tablist">
+          <button className={!yearly ? 'on' : ''} onClick={()=>setYearly(false)}>Monthly</button>
+          <button className={yearly ? 'on' : ''} onClick={()=>setYearly(true)}>Yearly <span className="save">save 17%</span></button>
         </div>
-      );
-    }
-
-    // ============ MAIN APP ============
-
-    function App() {
-      const [currentPage, setCurrentPage] = useState('home');
-      const [user, setUser] = useState(null);
-
-      useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged(setUser);
-        return () => unsubscribe();
-      }, []);
-
-      const handleLogin = () => {
-        const provider = new window.firebase.auth.GoogleAuthProvider();
-        auth.signInWithPopup(provider);
-      };
-
-      const handleLogout = () => {
-        auth.signOut();
-      };
-
-      const renderPage = () => {
-        switch (currentPage) {
-          case 'home': return <HomePage />;
-          case 'subscriptions': return <SubscriptionsPage />;
-          case 'sell': return <SellGoldPage />;
-          case 'dashboard': return <DashboardPage />;
-          case 'admin': return <AdminPanel />;
-          default: return <HomePage />;
-        }
-      };
-
-      return (
-        <>
-          <header>
-            <div className="container">
-              <h1 onClick={() => setCurrentPage('home')} style={{ cursor: 'pointer' }}>
-                🏆 Gold Marketplace
-              </h1>
-              <div style={{ display: 'flex', gap: '30px', alignItems: 'center' }}>
-                <ul className="nav-links">
-                  <li><button className={currentPage === 'home' ? 'active' : ''} onClick={() => setCurrentPage('home')}>Home</button></li>
-                  <li><button className={currentPage === 'subscriptions' ? 'active' : ''} onClick={() => setCurrentPage('subscriptions')}>Subscriptions</button></li>
-                  <li><button className={currentPage === 'sell' ? 'active' : ''} onClick={() => setCurrentPage('sell')}>Sell Gold</button></li>
-                  {user && <li><button className={currentPage === 'dashboard' ? 'active' : ''} onClick={() => setCurrentPage('dashboard')}>Dashboard</button></li>}
+        <div className="grid3">
+          {TIERS.map(t => {
+            const price = yearly ? t.yr : t.mo;
+            const perMo = yearly ? t.yr/12 : t.mo;
+            const moGold = t.daily * 30;
+            return (
+              <div key={t.id} className={'card' + (t.best ? ' best' : '')} style={t.best ? {paddingTop:34} : null}>
+                {t.tag && <div className="badge">{t.tag}</div>}
+                <h3>{t.name}</h3>
+                <div className="sub">{fmt(t.daily)} gold claimable daily</div>
+                <div className="price">${price}<small>/{yearly?'yr':'mo'}</small>{yearly && <span className="was">${(t.mo*12).toFixed(2)}</span>}</div>
+                {yearly && <div className="permo">≈ ${perMo.toFixed(2)}/mo — rate locked for a year</div>}
+                <div className="goldamt goldtext">🥇 {fmt(moGold)} gold / month</div>
+                <ul className="feat">
+                  <li>{fmt(t.daily)} gold daily claim</li>
+                  <li>{fmt(Math.round(moGold/perMo))} gold per dollar</li>
+                  <li>Cancel anytime — keep claimed gold</li>
+                  {t.best && <li>Highest payout rate we offer</li>}
                 </ul>
-                <div className="auth-section">
-                  {user ? (
-                    <>
-                      <span style={{ color: '#ffd700', fontWeight: '500' }}>{user.displayName || 'User'}</span>
-                      <button className="btn btn-danger" onClick={handleLogout}>Logout</button>
-                    </>
-                  ) : (
-                    <button className="btn btn-primary" onClick={handleLogin}>Login with Discord</button>
-                  )}
-                </div>
+                <button className={'btn ' + (t.best ? 'btn-gold' : 'btn-ghost')} onClick={() => buy({ type:'Subscription', label:`${t.name} ${yearly?'Yearly':'Monthly'} — ${fmt(t.daily)} gold/day`, price })}>
+                  Get {t.name}
+                </button>
               </div>
+            );
+          })}
+        </div>
+        <p style={{textAlign:'center',color:'var(--muted)',fontSize:13,marginTop:26}}>Launch pricing — lock your rate in before it goes up.</p>
+      </div>
+    </section>
+  );
+}
+
+function HowItWorks() {
+  return (
+    <section id="how">
+      <div className="wrap">
+        <div className="sect-head">
+          <div className="eyebrow">How it works</div>
+          <h2>From checkout to gold in <span className="goldtext">3 steps</span></h2>
+        </div>
+        <div className="steps">
+          <div className="step"><h3>Pick your gold</h3><p>Choose an instant pack or a daily subscription and drop your Standoff 2 ID at checkout.</p></div>
+          <div className="step"><h3>Pay over Discord</h3><p>Our team DMs you to take payment securely — the same crew that runs standoff2markettracker.com.</p></div>
+          <div className="step"><h3>Gold hits your account</h3><p>Packs land within 24 hours. Subscribers claim their gold from the dashboard every day.</p></div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Sell({ sell }) {
+  const [amt, setAmt] = useState(10000);
+  const rate = amt >= 10000 ? 0.05 : 0.03;
+  const payout = (amt * rate).toFixed(2);
+  return (
+    <section id="sell" style={{background:'var(--bg2)'}}>
+      <div className="wrap sellgrid">
+        <div>
+          <div className="eyebrow">Sell your gold</div>
+          <h2 style={{fontSize:'clamp(26px,3.6vw,36px)',margin:'10px 0 14px'}}>Sitting on spare gold? <span className="goldtext">Cash it out.</span></h2>
+          <p style={{color:'var(--muted)',marginBottom:16}}>We buy back gold at tiered rates — the more you sell, the better your rate.</p>
+          <ul className="feat">
+            <li>Standard rate: $0.03 per gold (under 10,000)</li>
+            <li>Bulk rate: $0.05 per gold (10,000+)</li>
+            <li>Paid out after in-game transfer confirms</li>
+          </ul>
+        </div>
+        <div className="card" style={{transform:'none'}}>
+          <div className="field">
+            <label>How much gold are you selling?</label>
+            <input type="number" min="100" step="100" value={amt} onChange={e=>setAmt(Math.max(0, parseInt(e.target.value)||0))} />
+          </div>
+          <div className="quote">Your payout: <b>${payout}</b> <span style={{color:'var(--muted)'}}>at ${rate.toFixed(2)}/gold ({amt>=10000?'bulk':'standard'} rate)</span></div>
+          <button className="btn btn-gold" style={{width:'100%',marginTop:16}} disabled={amt<100} onClick={() => sell({ type:'Sell Gold Request', label:`Selling ${fmt(amt)} gold @ $${rate.toFixed(2)}`, price: parseFloat(payout) })}>Request payout</button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FAQ() {
+  const QA = [
+    ['How fast do I get my gold?', 'Instant packs are delivered within 24 hours of payment, usually much faster. Subscription gold is claimable from your dashboard every day.'],
+    ['How is the gold delivered?', 'Our team delivers it directly to your Standoff 2 account — the same manual, human-verified process we use on standoff2markettracker.com.'],
+    ['How do I pay?', 'After you place an order, we DM you on Discord (camel5961) to arrange payment. You are never charged on this website.'],
+    ['Can I cancel my subscription?', 'Anytime. You keep every bit of gold you already claimed, no questions asked.'],
+    ['Is this legit?', 'We are the team behind standoff2markettracker.com — the Standoff 2 price tracker with live skin prices, giveaways, and an active Discord community. Come say hi before you spend a cent.'],
+  ];
+  return (
+    <section id="faq">
+      <div className="wrap" style={{maxWidth:760}}>
+        <div className="sect-head"><div className="eyebrow">FAQ</div><h2>Questions, answered</h2></div>
+        {QA.map(([q,a],i) => <details key={i}><summary>{q}</summary><p>{a}</p></details>)}
+      </div>
+    </section>
+  );
+}
+
+function Dashboard({ user, signIn }) {
+  const [data, setData] = useState(null);
+  useEffect(() => {
+    if (!user) return;
+    const ref = db.ref('users/' + user.uid);
+    const cb = ref.on ? ref.on('value', s => setData(s.val())) : null;
+    return () => { try { ref.off('value'); } catch(e){} };
+  }, [user]);
+  if (!user) return (
+    <section><div className="wrap" style={{textAlign:'center',maxWidth:520}}>
+      <div className="eyebrow">Dashboard</div>
+      <h2 style={{margin:'10px 0 14px'}}>Sign in to claim your daily gold</h2>
+      <p style={{color:'var(--muted)',marginBottom:22}}>Track your balance, orders and daily claims in one place.</p>
+      <button className="btn btn-gold" onClick={signIn}>Sign in with Google</button>
+    </div></section>
+  );
+  const claim = async () => {
+    await submitOrder({ Type:'Daily Claim', Item:'Subscription daily gold claim', Price:'$0.00', 'Standoff 2 ID': data?.standoffId || 'on file', Discord: data?.discord || 'on file', Account: user.email || user.uid });
+    alert('Claim sent! Our team will credit your gold shortly.');
+  };
+  return (
+    <section><div className="wrap">
+      <div className="sect-head"><div className="eyebrow">Dashboard</div><h2>Welcome back, <span className="goldtext">{(user.displayName||'player').split(' ')[0]}</span></h2></div>
+      <div className="dash">
+        <div className="card"><div className="sub">Gold balance</div><div className="statnum">🥇 {fmt(data?.goldBalance || 0)}</div></div>
+        <div className="card"><div className="sub">Subscription</div><div className="statnum" style={{fontSize:30}}>{data?.subscriptionTier ? data.subscriptionTier.toUpperCase() : 'None yet'}</div>{!data?.subscriptionTier && <a href="#subs" style={{fontSize:13}}>Pick a tier →</a>}</div>
+        <div className="card"><div className="sub">Daily claim</div>{data?.subscriptionTier ? <button className="btn btn-gold btn-sm" onClick={claim} style={{marginTop:8}}>Claim today's gold</button> : <p style={{color:'var(--muted)',fontSize:13,marginTop:8}}>Subscribe to unlock daily claims.</p>}</div>
+      </div>
+    </div></section>
+  );
+}
+
+function App() {
+  const [user, setUser] = useState(null);
+  const [page, setPage] = useState('home');
+  const [checkout, setCheckout] = useState(null);
+  useEffect(() => auth.onAuthStateChanged(u => setUser(u)), []);
+  const signIn = async () => {
+    try { await auth.signInWithPopup(new window.firebase.auth.GoogleAuthProvider()); }
+    catch(e) { alert('Sign-in is almost ready — DM camel5961 on Discord in the meantime and we will set you up manually.'); }
+  };
+  const buy = item => setCheckout(item);
+  const go = (id) => { setPage('home'); setTimeout(() => document.getElementById(id)?.scrollIntoView({behavior:'smooth'}), 30); };
+  return (
+    <div>
+      <div className="annc">🎁 Weekly skin giveaways on our main site — <a href="https://standoff2markettracker.com" target="_blank" rel="noopener"><b>standoff2markettracker.com</b></a></div>
+      <header><div className="wrap nav">
+        <div className="logo">🥇 Cheap<span>Standoff2</span>Gold</div>
+        <ul className="navlinks">
+          <li><button onClick={()=>go('packs')}>Gold Packs</button></li>
+          <li><button onClick={()=>go('subs')}>Subscriptions</button></li>
+          <li><button onClick={()=>go('sell')}>Sell Gold</button></li>
+          <li><button className={page==='dash'?'active':''} onClick={()=>setPage('dash')}>Dashboard</button></li>
+        </ul>
+        <div className="authbox">
+          {user ? (<React.Fragment><span className="uname">{user.displayName||user.email}</span><button className="btn btn-ghost btn-sm" onClick={()=>auth.signOut()}>Sign out</button></React.Fragment>)
+                : (<button className="btn btn-ghost btn-sm" onClick={signIn}>Sign in</button>)}
+        </div>
+      </div></header>
+
+      {page === 'home' ? (
+        <main>
+          <div className="hero"><div className="wrap herogrid">
+            <div>
+              <div className="eyebrow">Standoff 2 Gold Shop</div>
+              <h1>Stack gold for a <span className="goldtext">fraction</span> of in-app prices.</h1>
+              <p className="lead">Daily gold subscriptions from $2.99/mo and instant packs delivered in under 24 hours — run by the team behind standoff2markettracker.com.</p>
+              <div className="heroctas">
+                <button className="btn btn-gold" onClick={()=>go('subs')}>See subscriptions</button>
+                <button className="btn btn-ghost" onClick={()=>go('packs')}>Buy a gold pack</button>
+              </div>
+              <div className="trustline"><span>◆ <b>Human delivery</b>, no bots</span><span>◆ <b>Cancel anytime</b></span><span>◆ <b>Discord support</b>: camel5961</span></div>
             </div>
-          </header>
+            <div className="dealcard">
+              <div className="tag">TOP DEAL</div>
+              <div className="eyebrow" style={{marginBottom:6}}>Gold Tier</div>
+              <div className="dealnum goldtext num">30,000</div>
+              <div className="dealsub">gold every month for $19.99</div>
+              <div className="dealrow"><span>Daily claim</span><b>1,000 gold</b></div>
+              <div className="dealrow"><span>Gold per dollar</span><b>1,501</b></div>
+              <div className="dealrow"><span>vs. one-time packs</span><b>5× more gold</b></div>
+              <button className="btn btn-gold" style={{width:'100%',marginTop:18}} onClick={()=>buy({type:'Subscription',label:'Gold Monthly — 1,000 gold/day',price:19.99})}>Claim this deal</button>
+            </div>
+          </div></div>
+          <Packs buy={buy} />
+          <Subs buy={buy} />
+          <HowItWorks />
+          <Sell sell={buy} />
+          <FAQ />
+        </main>
+      ) : (
+        <Dashboard user={user} signIn={signIn} />
+      )}
 
-          <main className="page-content">
-            {renderPage()}
-          </main>
+      <footer><div className="wrap fgrid">
+        <div>© {new Date().getFullYear()} CheapStandoff2Gold — by the <a href="https://standoff2markettracker.com" target="_blank" rel="noopener">standoff2markettracker.com</a> team</div>
+        <div>Support: <b style={{color:'var(--gold)'}}>camel5961</b> on Discord</div>
+      </div></footer>
 
-          <footer>
-            <p>&copy; 2024 Gold Marketplace. All rights reserved.</p>
-          </footer>
-        </>
-      );
-    }
-
-    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
-  </script>
+      <div className="mcta"><button className="btn btn-gold" onClick={()=>{page!=='home'&&setPage('home');go('subs')}}>🥇 Get cheap gold</button></div>
+      {checkout && <Checkout item={checkout} user={user} onClose={()=>setCheckout(null)} />}
+    </div>
+  );
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
 </body>
 </html>
