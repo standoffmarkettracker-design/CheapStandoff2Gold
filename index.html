@@ -287,9 +287,9 @@
   <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-database-compat.js"></script>
   <script src="https://js.stripe.com/v3/"></script>
 
   <script type="text/babel">
@@ -306,13 +306,20 @@
       appId: "YOUR_APP_ID"
     };
 
-    // Initialize Firebase
-    if (!window.firebase?.apps?.length) {
-      window.firebase.initializeApp(firebaseConfig);
+    // Initialize Firebase (safe: app still renders if config is missing)
+    let auth, db;
+    try {
+      if (!window.firebase?.apps?.length) {
+        window.firebase.initializeApp(firebaseConfig);
+      }
+      auth = window.firebase.auth();
+      db = window.firebase.database();
+    } catch (e) {
+      console.warn('Firebase not configured yet:', e);
+      auth = { onAuthStateChanged: (cb) => { cb(null); return () => {}; }, signOut: () => {}, signInWithPopup: () => alert('Login coming soon - Firebase not configured yet') };
+      const fakeRef = { on: () => {}, once: () => Promise.resolve({ val: () => null }), orderByChild() { return this; }, equalTo() { return this; }, limitToLast() { return this; } };
+      db = { ref: () => fakeRef };
     }
-
-    const auth = window.firebase.auth();
-    const db = window.firebase.database();
 
     // ============ PAGES ============
 
