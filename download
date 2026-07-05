@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.parcel-cache/
+.env
+.env.local
+*.DS_Store
+.vscode/
+.idea/
+*.log
