@@ -422,7 +422,7 @@ function Dashboard({ user, signIn }) {
       <div className="eyebrow">Dashboard</div>
       <h2 style={{margin:'10px 0 14px'}}>Sign in to claim your daily gold</h2>
       <p style={{color:'var(--muted)',marginBottom:22}}>Track your balance, orders and daily claims in one place.</p>
-      <button className="btn btn-gold" onClick={signIn}>Sign in with Google</button>
+      <button className="btn btn-gold" onClick={signIn}>Sign in or create account</button>
     </div></section>
   );
   const claim = async () => {
@@ -441,15 +441,95 @@ function Dashboard({ user, signIn }) {
   );
 }
 
+function AuthPanel({ onClose }) {
+  const [mode, setMode] = useState('login'); // login | signup
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [displayName, setDisplayName] = useState('');
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+  const [busy, setBusy] = useState(false);
+
+  const handleSignUp = () => {
+    setError(null);
+    if (!email || !password || !displayName) { setError('Please fill in all fields'); return; }
+    if (password.length < 6) { setError('Password must be at least 6 characters'); return; }
+    setBusy(true);
+    window.firebase.auth().createUserWithEmailAndPassword(email, password)
+      .then(cred => cred.user.updateProfile({ displayName })
+        .then(() => cred.user.sendEmailVerification())
+        .then(() => {
+          const uid = cred.user.uid;
+          return Promise.all([
+            db.ref('users/' + uid + '/name').set(displayName),
+            db.ref('users/' + uid + '/email').set(email),
+            db.ref('users/' + uid + '/joined').set(Date.now())
+          ]).catch(() => {});
+        }))
+      .then(() => { window.firebase.auth().signOut(); setBusy(false); setSuccess('Account created! Check your email (and spam folder) to verify, then sign in.'); })
+      .catch(e => { setBusy(false); setError(e.message); });
+  };
+
+  const handleLogin = () => {
+    setError(null);
+    if (!email || !password) { setError('Please fill in all fields'); return; }
+    setBusy(true);
+    window.firebase.auth().signInWithEmailAndPassword(email, password)
+      .then(cred => {
+        if (!cred.user.emailVerified) {
+          cred.user.sendEmailVerification().catch(() => {});
+          window.firebase.auth().signOut();
+          setBusy(false);
+          setError('Email not verified yet. We sent a new verification link \u2014 check your inbox and spam folder.');
+          return;
+        }
+        setBusy(false); setSuccess('Signed in!'); setTimeout(onClose, 700);
+      })
+      .catch(e => { setBusy(false); setError(e.message); });
+  };
+
+  return (
+    <div className="overlay" onClick={e => e.target === e.currentTarget && onClose()}>
+      <div className="modal">
+        <button className="xbtn" onClick={onClose} aria-label="Close">\u00d7</button>
+        <h3>{mode === 'signup' ? 'Create your account' : 'Sign in'}</h3>
+        <p className="msub">{mode === 'signup' ? 'One free account works across both our sites.' : 'Welcome back \u2014 sign in to claim and track your gold.'}</p>
+        <div className="toggle" style={{marginBottom:18}}>
+          <button className={mode==='login'?'on':''} onClick={()=>{setMode('login');setError(null);setSuccess(null);}}>Sign in</button>
+          <button className={mode==='signup'?'on':''} onClick={()=>{setMode('signup');setError(null);setSuccess(null);}}>Sign up</button>
+        </div>
+        {mode === 'signup' && (
+          <div className="field">
+            <label>Display name</label>
+            <input value={displayName} onChange={e=>setDisplayName(e.target.value)} placeholder="Your name" />
+          </div>
+        )}
+        <div className="field">
+          <label>Email</label>
+          <input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="you@example.com" />
+        </div>
+        <div className="field">
+          <label>Password</label>
+          <input type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022" />
+        </div>
+        {error && <div className="alert err">{error}</div>}
+        {success && <div className="alert" style={{borderColor:'var(--green)',color:'var(--green)',background:'rgba(61,214,140,.08)'}}>{success}</div>}
+        <button className="btn btn-gold" style={{width:'100%',marginTop:8}} disabled={busy} onClick={mode==='signup'?handleSignUp:handleLogin}>
+          {busy ? 'Working\u2026' : (mode === 'signup' ? 'Create account' : 'Sign in')}
+        </button>
+        <p className="msub" style={{marginTop:14,marginBottom:0}}>Trouble signing in? DM <b style={{color:'var(--gold)'}}>camel5961</b> on Discord.</p>
+      </div>
+    </div>
+  );
+}
+
 function App() {
   const [user, setUser] = useState(null);
   const [page, setPage] = useState('home');
   const [checkout, setCheckout] = useState(null);
-  useEffect(() => auth.onAuthStateChanged(u => setUser(u)), []);
-  const signIn = async () => {
-    try { await auth.signInWithPopup(new window.firebase.auth.GoogleAuthProvider()); }
-    catch(e) { alert('Sign-in is almost ready — DM camel5961 on Discord in the meantime and we will set you up manually.'); }
-  };
+  const [authOpen, setAuthOpen] = useState(false);
+  useEffect(() => auth.onAuthStateChanged(u => { const vu = u && u.emailVerified ? u : null; setUser(vu); if (vu) setAuthOpen(false); }), []);
+  const signIn = () => setAuthOpen(true);
   const buy = item => setCheckout(item);
   const go = (id) => { setPage('home'); setTimeout(() => document.getElementById(id)?.scrollIntoView({behavior:'smooth'}), 30); };
   return (
@@ -510,6 +590,7 @@ function App() {
 
       <div className="mcta"><button className="btn btn-gold" onClick={()=>{page!=='home'&&setPage('home');go('subs')}}>🥇 Get cheap gold</button></div>
       {checkout && <Checkout item={checkout} user={user} onClose={()=>setCheckout(null)} />}
+      {authOpen && <AuthPanel onClose={()=>setAuthOpen(false)} />}
     </div>
   );
 }
