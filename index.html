@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cheap Standoff 2 Gold — Daily Gold Subscriptions & Instant Packs</title>
-<meta name="description" content="Get Standoff 2 gold for a fraction of in-app prices. Daily gold subscriptions from $2.99/mo and instant gold packs, delivered to your account by the standoff2markettracker.com team.">
+<meta name="description" content="Get Standoff 2 gold for a fraction of in-app prices. Daily gold subscriptions from $1/mo and instant gold packs, delivered to your account by the standoff2markettracker.com team.">
 <meta property="og:title" content="Cheap Standoff 2 Gold — Subscriptions & Instant Packs">
-<meta property="og:description" content="Up to 30,000 gold per month from $19.99. Instant packs delivered within 24 hours.">
+<meta property="og:description" content="Up to 6,000 gold per month from $25. Instant packs delivered within 24 hours.">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -184,15 +184,15 @@ try {
 const WEBHOOK = "https://discord.com/api/webhooks/1521212880614330488/whaIWiT5y7FbVYQ93k0TwHtbPljg5CxdG8vwr8J9s6vbWTturZluUyKhHTNKcL0Ytzj5";
 
 const PACKS = [
-  { id:'scout',  name:'Scout Pack',  gold:1000,  bonus:0,    price:4.99,  tag:null,          blurb:'Quick top-up for your next skin.' },
-  { id:'raider', name:'Raider Pack', gold:5000,  bonus:0,    price:19.99, tag:'MOST POPULAR', blurb:'The sweet spot for serious loadouts.' },
-  { id:'vault',  name:'Vault Pack',  gold:10000, bonus:2000, price:39.99, tag:'+2,000 BONUS', blurb:'Maximum gold, maximum bonus.' },
+  { id:'scout',  name:'Scout Pack',  gold:1000,  bonus:0,    price:7.99,  tag:null,          blurb:'Quick top-up for your next skin.' },
+  { id:'raider', name:'Raider Pack', gold:5000,  bonus:0,    price:34.99, tag:'MOST POPULAR', blurb:'The sweet spot for serious loadouts.' },
+  { id:'vault',  name:'Vault Pack',  gold:10000, bonus:2000, price:69.99, tag:'+2,000 BONUS', blurb:'Maximum gold, maximum bonus.' },
 ];
 
 const TIERS = [
-  { id:'bronze', name:'Bronze', daily:100,  mo:2.99,  yr:29.99,  tag:null },
-  { id:'silver', name:'Silver', daily:300,  mo:9.99,  yr:99.99,  tag:'MOST POPULAR' },
-  { id:'gold',   name:'Gold',   daily:1000, mo:19.99, yr:199.99, tag:'BEST VALUE', best:true },
+  { id:'bronze', name:'Bronze', monthly:150,  mo:1,  yr:10,  tag:null },
+  { id:'silver', name:'Silver', monthly:2000, mo:10, yr:100, tag:'MOST POPULAR' },
+  { id:'gold',   name:'Gold',   monthly:6000, mo:25, yr:250, tag:'BEST VALUE', best:true },
 ];
 
 const fmt = n => n.toLocaleString('en-US');
@@ -288,7 +288,7 @@ function Packs({ buy }) {
           ))}
         </div>
         <p style={{textAlign:'center',color:'var(--muted)',fontSize:14,marginTop:28}}>
-          Want way more gold per dollar? <a href="#subs">Subscriptions pay out up to 5× more →</a>
+          Want the best gold-per-dollar rate? <a href="#subs">Check out daily subscriptions →</a>
         </p>
       </div>
     </section>
@@ -303,7 +303,7 @@ function Subs({ buy }) {
         <div className="sect-head">
           <div className="eyebrow">Gold Subscriptions</div>
           <h2>Claim gold <span className="goldtext">every single day</span></h2>
-          <p>Log in, hit claim, stack gold. Subscribers get up to 5× more gold per dollar than one-time packs.</p>
+          <p>Log in, hit claim, stack gold. Subscriptions deliver the best gold-per-dollar rate we offer.</p>
         </div>
         <div className="toggle" role="tablist">
           <button className={!yearly ? 'on' : ''} onClick={()=>setYearly(false)}>Monthly</button>
@@ -313,22 +313,24 @@ function Subs({ buy }) {
           {TIERS.map(t => {
             const price = yearly ? t.yr : t.mo;
             const perMo = yearly ? t.yr/12 : t.mo;
-            const moGold = t.daily * 30;
+            const moGold = t.monthly;
+            const daily = Math.round(moGold / 30);
             return (
               <div key={t.id} className={'card' + (t.best ? ' best' : '')} style={t.best ? {paddingTop:34} : null}>
                 {t.tag && <div className="badge">{t.tag}</div>}
                 <h3>{t.name}</h3>
-                <div className="sub">{fmt(t.daily)} gold claimable daily</div>
+                <div className="sub">≈ {fmt(daily)} gold claimable daily</div>
                 <div className="price">${price}<small>/{yearly?'yr':'mo'}</small>{yearly && <span className="was">${(t.mo*12).toFixed(2)}</span>}</div>
                 {yearly && <div className="permo">≈ ${perMo.toFixed(2)}/mo — rate locked for a year</div>}
                 <div className="goldamt goldtext">🥇 {fmt(moGold)} gold / month</div>
                 <ul className="feat">
-                  <li>{fmt(t.daily)} gold daily claim</li>
+                  <li>{fmt(moGold)} gold per month total</li>
+                  <li>≈ {fmt(daily)} gold to claim each day</li>
                   <li>{fmt(Math.round(moGold/perMo))} gold per dollar</li>
                   <li>Cancel anytime — keep claimed gold</li>
-                  {t.best && <li>Highest payout rate we offer</li>}
+                  {t.best && <li>Best gold-per-dollar rate we offer</li>}
                 </ul>
-                <button className={'btn ' + (t.best ? 'btn-gold' : 'btn-ghost')} onClick={() => buy({ type:'Subscription', label:`${t.name} ${yearly?'Yearly':'Monthly'} — ${fmt(t.daily)} gold/day`, price })}>
+                <button className={'btn ' + (t.best ? 'btn-gold' : 'btn-ghost')} onClick={() => buy({ type:'Subscription', label:`${t.name} ${yearly?'Yearly':'Monthly'} — ${fmt(moGold)} gold/month`, price })}>
                   Get {t.name}
                 </button>
               </div>
@@ -361,7 +363,7 @@ function HowItWorks() {
 
 function Sell({ sell }) {
   const [amt, setAmt] = useState(10000);
-  const rate = amt >= 10000 ? 0.05 : 0.03;
+  const rate = 0.0025;
   const payout = (amt * rate).toFixed(2);
   return (
     <section id="sell" style={{background:'var(--bg2)'}}>
@@ -369,10 +371,10 @@ function Sell({ sell }) {
         <div>
           <div className="eyebrow">Sell your gold</div>
           <h2 style={{fontSize:'clamp(26px,3.6vw,36px)',margin:'10px 0 14px'}}>Sitting on spare gold? <span className="goldtext">Cash it out.</span></h2>
-          <p style={{color:'var(--muted)',marginBottom:16}}>We buy back gold at tiered rates — the more you sell, the better your rate.</p>
+          <p style={{color:'var(--muted)',marginBottom:16}}>We buy back gold at a flat rate — no minimums, no tiers, no surprises.</p>
           <ul className="feat">
-            <li>Standard rate: $0.03 per gold (under 10,000)</li>
-            <li>Bulk rate: $0.05 per gold (10,000+)</li>
+            <li>Flat rate: $0.0025 per gold</li>
+            <li>Any amount, same rate every time</li>
             <li>Paid out after in-game transfer confirms</li>
           </ul>
         </div>
@@ -381,8 +383,8 @@ function Sell({ sell }) {
             <label>How much gold are you selling?</label>
             <input type="number" min="100" step="100" value={amt} onChange={e=>setAmt(Math.max(0, parseInt(e.target.value)||0))} />
           </div>
-          <div className="quote">Your payout: <b>${payout}</b> <span style={{color:'var(--muted)'}}>at ${rate.toFixed(2)}/gold ({amt>=10000?'bulk':'standard'} rate)</span></div>
-          <button className="btn btn-gold" style={{width:'100%',marginTop:16}} disabled={amt<100} onClick={() => sell({ type:'Sell Gold Request', label:`Selling ${fmt(amt)} gold @ $${rate.toFixed(2)}`, price: parseFloat(payout) })}>Request payout</button>
+          <div className="quote">Your payout: <b>${payout}</b> <span style={{color:'var(--muted)'}}>at ${rate.toFixed(4)}/gold flat rate</span></div>
+          <button className="btn btn-gold" style={{width:'100%',marginTop:16}} disabled={amt<100} onClick={() => sell({ type:'Sell Gold Request', label:`Selling ${fmt(amt)} gold @ $${rate.toFixed(4)}`, price: parseFloat(payout) })}>Request payout</button>
         </div>
       </div>
     </section>
@@ -473,7 +475,7 @@ function App() {
             <div>
               <div className="eyebrow">Standoff 2 Gold Shop</div>
               <h1>Stack gold for a <span className="goldtext">fraction</span> of in-app prices.</h1>
-              <p className="lead">Daily gold subscriptions from $2.99/mo and instant packs delivered in under 24 hours — run by the team behind standoff2markettracker.com.</p>
+              <p className="lead">Daily gold subscriptions from $1/mo and instant packs delivered in under 24 hours — run by the team behind standoff2markettracker.com.</p>
               <div className="heroctas">
                 <button className="btn btn-gold" onClick={()=>go('subs')}>See subscriptions</button>
                 <button className="btn btn-ghost" onClick={()=>go('packs')}>Buy a gold pack</button>
@@ -483,12 +485,12 @@ function App() {
             <div className="dealcard">
               <div className="tag">TOP DEAL</div>
               <div className="eyebrow" style={{marginBottom:6}}>Gold Tier</div>
-              <div className="dealnum goldtext num">30,000</div>
-              <div className="dealsub">gold every month for $19.99</div>
-              <div className="dealrow"><span>Daily claim</span><b>1,000 gold</b></div>
-              <div className="dealrow"><span>Gold per dollar</span><b>1,501</b></div>
-              <div className="dealrow"><span>vs. one-time packs</span><b>5× more gold</b></div>
-              <button className="btn btn-gold" style={{width:'100%',marginTop:18}} onClick={()=>buy({type:'Subscription',label:'Gold Monthly — 1,000 gold/day',price:19.99})}>Claim this deal</button>
+              <div className="dealnum goldtext num">6,000</div>
+              <div className="dealsub">gold every month for $25</div>
+              <div className="dealrow"><span>Daily claim</span><b>≈ 200 gold</b></div>
+              <div className="dealrow"><span>Gold per dollar</span><b>240</b></div>
+              <div className="dealrow"><span>vs. one-time packs</span><b>40% more gold</b></div>
+              <button className="btn btn-gold" style={{width:'100%',marginTop:18}} onClick={()=>buy({type:'Subscription',label:'Gold Monthly — 6,000 gold/month',price:25})}>Claim this deal</button>
             </div>
           </div></div>
           <Packs buy={buy} />
