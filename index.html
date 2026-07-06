@@ -523,12 +523,305 @@ function AuthPanel({ onClose }) {
   );
 }
 
+function BuyGoldPanel({ user, tier, signIn }) {
+  const RATES = { none:0.0075, bronze:0.0075, silver:0.005, gold:0.0035 };
+  const tierKey = (tier || 'none').toLowerCase();
+  const rate = RATES[tierKey] !== undefined ? RATES[tierKey] : 0.0075;
+  const HANDLES = { cashapp:'$jamesmoney192', venmo:'@Standoff2Tracker' };
+  const APPLE_DENOMS = [5,10,15,25,50,100];
+  const GOOGLE_DENOMS = [10,15,25,50,100];
+  const CRYPTO = [
+    { name:'Bitcoin',  symbol:'BTC',  color:'#f7931a', addr:'bc1pgsmcq0036tdc8zfn8kfj0ngnkxyragj77vydmkmc8vu88xndyk4scx7kux' },
+    { name:'Ethereum', symbol:'ETH',  color:'#627eea', addr:'0x61bffb5ff4c4f9f730224cf2c7c0648877e8e1af' },
+    { name:'Solana',   symbol:'SOL',  color:'#9945ff', addr:'FoTPGikDL52vJTpxLUiW7DBpt94QZc1mDK1KwT3Hk7wy' },
+    { name:'USDT',     symbol:'USDT', color:'#26a17b', addr:'0x61bffb5ff4c4f9f730224cf2c7c0648877e8e1af', note:'ERC-20' },
+    { name:'USDC',     symbol:'USDC', color:'#2775ca', addr:'0x61bffb5ff4c4f9f730224cf2c7c0648877e8e1af', note:'ERC-20' },
+  ];
+  const METHODS = [
+    { id:'cashapp', label:'Cash App',  icon:'💸' },
+    { id:'venmo',   label:'Venmo',     icon:'🔵' },
+    { id:'kofi',    label:'Ko-fi/PayPal', icon:'☕' },
+    { id:'crypto',  label:'Crypto',    icon:'🪙' },
+    { id:'apple',   label:'Apple Card', icon:'🍎' },
+    { id:'google',  label:'Google Play', icon:'▶️' },
+  ];
+
+  const [method, setMethod] = useState('cashapp');
+  const [amt, setAmt] = useState(2000);
+  const [gcDenom, setGcDenom] = useState(10);
+  const [gcCode, setGcCode] = useState('');
+  const [username, setUsername] = useState(user ? (user.displayName || '') : '');
+  const [copied, setCopied] = useState('');
+  const [step, setStep] = useState('form');
+
+  const isCard = method === 'apple' || method === 'google';
+  const isDirect = method === 'cashapp' || method === 'venmo';
+  const isKofi = method === 'kofi';
+  const isCrypto = method === 'crypto';
+  const cost = (amt * rate).toFixed(2);
+  const gcGold = Math.round(gcDenom / rate);
+
+  const copyText = (t, key) => { navigator.clipboard.writeText(t).catch(()=>{}); setCopied(key); setTimeout(()=>setCopied(''), 1500); };
+  const canSubmit = () => username.trim() && (isCard ? gcCode.trim().length >= 8 : amt >= 100);
+
+  const submit = async () => {
+    if (!canSubmit()) return;
+    setStep('submitting');
+    const methodLabel = { cashapp:'Cash App ($jamesmoney192)', venmo:'Venmo (@Standoff2Tracker)', kofi:'Ko-fi / PayPal', crypto:'Cryptocurrency', apple:'Apple Gift Card', google:'Google Play Gift Card' }[method];
+    const amountStr = isCard ? (`$${gcDenom} gift card → ${fmt(gcGold)} G`) : (`${fmt(amt)} G ($${cost})`);
+    const order = {
+      Type: 'Custom Gold', Username: username.trim(), Tier: tier || 'None',
+      Method: methodLabel, Amount: amountStr,
+      Account: user ? (user.email || user.uid) : 'guest'
+    };
+    if (isCard) order['Gift Card Code'] = '||' + gcCode.trim() + '||';
+    const ok = await submitOrder(order);
+    try {
+      if (user) db.ref('goldPurchases/' + user.uid + '/' + Date.now()).set({
+        uid: user.uid, username: username.trim(), tier: tier || 'None', method,
+        status: 'pending', amount: isCard ? gcGold : amt, gcCode: isCard ? gcCode.trim() : null,
+        createdAt: new Date().toISOString()
+      });
+    } catch(e) {}
+    setStep(ok ? 'done' : 'error');
+  };
+
+  if (step === 'done') return (
+    <div className="card" style={{maxWidth:520,margin:'0 auto',textAlign:'center',transform:'none'}}>
+      <div style={{fontSize:48}}>🥇</div>
+      <h3 style={{marginTop:8}}>Order submitted!</h3>
+      <p className="msub" style={{marginTop:8}}>We got your order. Watch for a Discord DM from <b style={{color:'var(--gold)'}}>camel5961</b> with delivery instructions — usually within a few hours.</p>
+      <button className="btn btn-ghost btn-sm" style={{marginTop:12}} onClick={()=>{setStep('form');setGcCode('');}}>Place another order</button>
+    </div>
+  );
+
+  return (
+    <div style={{maxWidth:560,margin:'0 auto',position:'relative'}}>
+      {!user && (
+        <div style={{position:'absolute',inset:0,zIndex:10,borderRadius:12,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',background:'rgba(11,14,26,.82)',backdropFilter:'blur(4px)'}}>
+          <div style={{fontSize:30,marginBottom:8}}>🔒</div>
+          <div style={{fontSize:17,fontWeight:700,marginBottom:6}}>Sign in to buy gold</div>
+          <div className="msub" style={{textAlign:'center',padding:'0 32px',marginBottom:16}}>Create a free account to get started.</div>
+          <button className="btn btn-gold" onClick={signIn}>Sign in / Create account</button>
+        </div>
+      )}
+      <div className="card" style={{transform:'none'}}>
+        <div className="sub" style={{marginBottom:12}}>Your rate: <b style={{color:'var(--gold)'}}>${rate}/gold</b> {tierKey!=='none' && tierKey!=='bronze' ? `(${tier} discount applied)` : '— subscribe for a better rate'}</div>
+
+        <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>Payment method</label>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:6,marginBottom:16}}>
+          {METHODS.map(m => (
+            <div key={m.id} onClick={()=>setMethod(m.id)} style={{padding:'10px 4px',border:'1px solid '+(method===m.id?'var(--gold)':'var(--line)'),borderRadius:8,background:method===m.id?'var(--gold-dim)':'transparent',color:method===m.id?'var(--ink)':'var(--muted)',fontSize:11,fontWeight:600,cursor:'pointer',textAlign:'center',display:'flex',flexDirection:'column',alignItems:'center',gap:4}}>
+              <span style={{fontSize:18}}>{m.icon}</span><span>{m.label}</span>
+            </div>
+          ))}
+        </div>
+
+        {isDirect && (
+          <div>
+            <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>Send payment to</label>
+            <div onClick={()=>copyText(HANDLES[method],'handle')} style={{background:'rgba(0,0,0,.3)',border:'1px solid var(--line)',borderRadius:8,padding:'12px 14px',display:'flex',justifyContent:'space-between',alignItems:'center',cursor:'pointer',marginBottom:14}}>
+              <span style={{fontFamily:'monospace',fontSize:16,fontWeight:600}}>{HANDLES[method]}</span>
+              <span style={{fontSize:11,color:copied==='handle'?'var(--green)':'var(--muted)'}}>{copied==='handle'?'Copied!':'tap to copy'}</span>
+            </div>
+          </div>
+        )}
+
+        {isKofi && (
+          <div className="quote" style={{marginBottom:14}}>Pay via Ko-fi — accepts PayPal, credit card, and Apple Pay. Include your username in the Ko-fi message.<br/><a href="https://ko-fi.com/standoff263277" target="_blank" rel="noopener">Open Ko-fi page →</a></div>
+        )}
+
+        {isCrypto && (
+          <div style={{marginBottom:14}}>
+            <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>Send the equivalent of <b style={{color:'var(--gold)'}}>${cost}</b> to any wallet (tap to copy)</label>
+            <div style={{display:'flex',flexDirection:'column',gap:8}}>
+              {CRYPTO.map(w => (
+                <div key={w.name} onClick={()=>copyText(w.addr,w.symbol)} style={{display:'flex',alignItems:'center',gap:10,padding:'10px 12px',background:'rgba(255,255,255,.03)',border:'1px solid var(--line)',borderRadius:8,cursor:'pointer'}}>
+                  <div style={{width:32,height:32,borderRadius:'50%',background:w.color+'22',display:'flex',alignItems:'center',justifyContent:'center',fontSize:10,fontWeight:700,color:w.color,flexShrink:0}}>{w.symbol}</div>
+                  <div style={{flex:1,minWidth:0}}>
+                    <div style={{fontSize:13,fontWeight:600}}>{w.name} {w.note && <span style={{fontSize:10,color:'var(--muted)'}}>({w.note})</span>}</div>
+                    <div style={{fontSize:10,color:'var(--muted)',fontFamily:'monospace',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{w.addr}</div>
+                  </div>
+                  <span style={{fontSize:11,color:copied===w.symbol?'var(--green)':'var(--muted)',flexShrink:0}}>{copied===w.symbol?'Copied!':'copy'}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {isCard ? (
+          <div>
+            <div className="quote" style={{marginBottom:12}}>{method==='apple'?'Buy an Apple Gift Card from the App Store or any retailer.':'Buy a Google Play Gift Card from any retailer.'} Reveal the code, then enter it below. <b>Do not redeem it yourself.</b></div>
+            <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>Card value</label>
+            <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:6,marginBottom:12}}>
+              {(method==='apple'?APPLE_DENOMS:GOOGLE_DENOMS).map(d => {
+                const g = Math.round(d/rate);
+                return (
+                  <div key={d} onClick={()=>setGcDenom(d)} style={{padding:'8px 4px',border:'1px solid '+(gcDenom===d?'var(--gold)':'var(--line)'),borderRadius:8,background:gcDenom===d?'var(--gold-dim)':'transparent',cursor:'pointer',textAlign:'center'}}>
+                    <div style={{fontSize:13,fontWeight:600,color:gcDenom===d?'var(--ink)':'var(--muted)'}}>${d}</div>
+                    <div style={{fontSize:10,fontFamily:'monospace',color:gcDenom===d?'var(--gold)':'var(--muted)',marginTop:2}}>{fmt(g)} G</div>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="quote" style={{display:'flex',justifyContent:'space-between',marginBottom:10}}><span>Gold you receive</span><b>{fmt(gcGold)} G</b></div>
+            <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>{method==='apple'?'Apple':'Google Play'} gift card code</label>
+            <input type="text" value={gcCode} onChange={e=>setGcCode(e.target.value.toUpperCase())} placeholder="XXXX-XXXX-XXXX" style={{fontFamily:'monospace',letterSpacing:'0.05em',marginBottom:12}} />
+          </div>
+        ) : (
+          <div>
+            <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>Amount of gold</label>
+            <input type="number" value={amt} min={100} step={100} onChange={e=>setAmt(Math.max(0,parseInt(e.target.value)||0))} style={{fontFamily:'monospace',marginBottom:10}} />
+            <div className="quote" style={{display:'flex',justifyContent:'space-between',marginBottom:12}}><span>You pay{isKofi?' on Ko-fi':isCrypto?' in crypto':''}</span><b style={{color:'var(--gold)',fontSize:22}}>${cost}</b></div>
+          </div>
+        )}
+
+        <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>Your in-game username</label>
+        <input type="text" value={username} onChange={e=>setUsername(e.target.value)} placeholder="e.g. CamelS2" style={{marginBottom:8}} />
+        <div className="quote" style={{fontSize:12,marginBottom:14}}>{isCrypto?'Copy your username, send the crypto, then submit — include your username so we can match the payment.':'Include your username in the payment note, then submit below.'}</div>
+
+        <button className="btn btn-gold" style={{width:'100%'}} disabled={!canSubmit()||step==='submitting'} onClick={submit}>{step==='submitting'?'Submitting…':'Submit purchase'}</button>
+        {step==='error' && <div className="alert err">Something went wrong. DM camel5961 on Discord and we'll sort it out.</div>}
+        <p className="msub" style={{marginTop:12,marginBottom:0,textAlign:'center'}}>Need help? Discord: <b style={{color:'var(--gold)'}}>camel5961</b></p>
+      </div>
+    </div>
+  );
+}
+function AdminPanel({ user, signIn }) {
+  const [authed, setAuthed] = useState(false);
+  const [checking, setChecking] = useState(true);
+  const [tab, setTab] = useState('orders');
+  const [users, setUsers] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [search, setSearch] = useState('');
+  const [msg, setMsg] = useState(null);
+
+  useEffect(() => {
+    if (!user) { setChecking(false); return; }
+    let done = false;
+    const to = setTimeout(() => { if (!done) { done = true; setChecking(false); } }, 5000);
+    db.ref('admins/' + user.uid).once('value', snap => {
+      if (done) return; done = true; clearTimeout(to);
+      const ok = snap.val() === true;
+      setAuthed(ok); setChecking(false);
+      if (ok) { loadUsers(); loadOrders(); }
+    }, () => { if (done) return; done = true; clearTimeout(to); setAuthed(false); setChecking(false); });
+  }, [user]);
+
+  const loadUsers = () => db.ref('users').once('value', snap => {
+    const d = snap.val() || {};
+    setUsers(Object.keys(d).map(uid => Object.assign({ uid }, d[uid])));
+  });
+  const loadOrders = () => db.ref('goldPurchases').once('value', snap => {
+    const d = snap.val() || {};
+    const list = [];
+    Object.keys(d).forEach(uid => Object.keys(d[uid] || {}).forEach(ts => list.push(Object.assign({ uid, ts }, d[uid][ts]))));
+    list.sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||''));
+    setOrders(list);
+  });
+
+  const flash = (type, text) => { setMsg({ type, text }); setTimeout(()=>setMsg(null), 2500); };
+  const markComplete = (o) => { db.ref('goldPurchases/' + o.uid + '/' + o.ts + '/status').set('complete'); flash('ok','Order marked complete'); setTimeout(loadOrders, 300); };
+  const setTier = (uid, t) => { db.ref('users/' + uid + '/subscriptionTier').set(t); flash('ok','Tier → ' + t); setTimeout(loadUsers, 300); };
+  const adjustBalance = (uid, cur) => {
+    const v = prompt('Set gold balance for this user:', cur || 0);
+    if (v === null) return;
+    const n = parseInt(v); if (isNaN(n)) return flash('err','Invalid number');
+    db.ref('users/' + uid + '/goldBalance').set(n); flash('ok','Balance → ' + fmt(n)); setTimeout(loadUsers, 300);
+  };
+
+  if (checking) return <section><div className="wrap" style={{textAlign:'center',color:'var(--muted)'}}>Checking admin access…</div></section>;
+  if (!user) return (
+    <section><div className="wrap" style={{textAlign:'center',maxWidth:460}}>
+      <div style={{fontSize:40,marginBottom:12}}>🔒</div>
+      <h2 style={{marginBottom:12}}>Admin</h2>
+      <p className="msub" style={{marginBottom:18}}>Sign in to access the admin panel.</p>
+      <button className="btn btn-gold" onClick={signIn}>Sign in</button>
+    </div></section>
+  );
+  if (!authed) return (
+    <section><div className="wrap" style={{textAlign:'center'}}>
+      <div style={{fontSize:40,marginBottom:12}}>⛔</div>
+      <h2>Access denied</h2>
+      <p className="msub" style={{marginTop:8}}>This account is not an admin.</p>
+    </div></section>
+  );
+
+  const q = search.trim().toLowerCase();
+  const fUsers = q ? users.filter(u => (u.name||'').toLowerCase().includes(q) || (u.email||'').toLowerCase().includes(q) || u.uid.includes(q)) : users;
+  const fOrders = q ? orders.filter(o => (o.username||'').toLowerCase().includes(q) || (o.method||'').toLowerCase().includes(q)) : orders;
+  const pending = orders.filter(o => o.status === 'pending').length;
+
+  return (
+    <section><div className="wrap">
+      <div className="sect-head" style={{marginBottom:24}}><div className="eyebrow">Admin</div><h2>Control panel</h2></div>
+      {msg && <div className="alert" style={{maxWidth:560,margin:'0 auto 16px',borderColor:msg.type==='ok'?'var(--green)':'var(--danger)',color:msg.type==='ok'?'var(--green)':'var(--danger)',background:msg.type==='ok'?'rgba(61,214,140,.08)':'rgba(255,92,92,.08)'}}>{msg.text}</div>}
+      <div className="toggle" style={{marginBottom:18}}>
+        <button className={tab==='orders'?'on':''} onClick={()=>setTab('orders')}>Orders {pending>0?`(${pending})`:''}</button>
+        <button className={tab==='users'?'on':''} onClick={()=>setTab('users')}>Users ({users.length})</button>
+      </div>
+      <div className="field" style={{maxWidth:400,margin:'0 auto 20px'}}>
+        <input value={search} onChange={e=>setSearch(e.target.value)} placeholder={tab==='orders'?'Search orders by username/method…':'Search users by name/email/UID…'} />
+      </div>
+
+      {tab === 'orders' && (
+        <div style={{display:'flex',flexDirection:'column',gap:10}}>
+          {fOrders.length === 0 && <p className="msub" style={{textAlign:'center'}}>No orders yet.</p>}
+          {fOrders.map(o => (
+            <div key={o.uid+o.ts} className="card" style={{transform:'none',flexDirection:'row',alignItems:'center',justifyContent:'space-between',gap:12,flexWrap:'wrap'}}>
+              <div style={{flex:1,minWidth:200}}>
+                <div style={{fontWeight:600}}>{o.username || '(no name)'} <span style={{fontSize:12,color:o.status==='complete'?'var(--green)':'var(--gold)',marginLeft:8}}>● {o.status}</span></div>
+                <div className="sub" style={{marginBottom:0}}>{fmt(o.amount||0)} G · {o.method}{o.tier?' · '+o.tier:''} · {o.createdAt ? new Date(o.createdAt).toLocaleString() : ''}</div>
+                {o.gcCode && <div style={{fontSize:12,fontFamily:'monospace',color:'var(--gold)',marginTop:4}}>Gift code: {o.gcCode}</div>}
+              </div>
+              {o.status !== 'complete' && <button className="btn btn-gold btn-sm" onClick={()=>markComplete(o)}>Mark complete</button>}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {tab === 'users' && (
+        <div style={{display:'flex',flexDirection:'column',gap:10}}>
+          {fUsers.length === 0 && <p className="msub" style={{textAlign:'center'}}>No users found.</p>}
+          {fUsers.map(u => (
+            <div key={u.uid} className="card" style={{transform:'none',flexDirection:'row',alignItems:'center',justifyContent:'space-between',gap:12,flexWrap:'wrap'}}>
+              <div style={{flex:1,minWidth:200}}>
+                <div style={{fontWeight:600}}>{u.name || '(no name)'} <span style={{fontSize:12,color:'var(--muted)'}}>{u.email||''}</span></div>
+                <div className="sub" style={{marginBottom:0}}>🥇 {fmt(u.goldBalance||0)} · Tier: {u.subscriptionTier || 'none'} · {u.uid.slice(0,10)}…</div>
+              </div>
+              <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
+                <button className="btn btn-ghost btn-sm" onClick={()=>adjustBalance(u.uid, u.goldBalance)}>Set gold</button>
+                <select value={u.subscriptionTier||''} onChange={e=>setTier(u.uid, e.target.value)} style={{width:'auto',padding:'6px 10px',fontSize:13}}>
+                  <option value="">no tier</option>
+                  <option value="bronze">bronze</option>
+                  <option value="silver">silver</option>
+                  <option value="gold">gold</option>
+                </select>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div></section>
+  );
+}
+
 function App() {
   const [user, setUser] = useState(null);
   const [page, setPage] = useState('home');
   const [checkout, setCheckout] = useState(null);
   const [authOpen, setAuthOpen] = useState(false);
-  useEffect(() => auth.onAuthStateChanged(u => { const vu = u && u.emailVerified ? u : null; setUser(vu); if (vu) setAuthOpen(false); }), []);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [userTier, setUserTier] = useState(null);
+  useEffect(() => auth.onAuthStateChanged(u => {
+    const vu = u && u.emailVerified ? u : null;
+    setUser(vu);
+    if (vu) {
+      setAuthOpen(false);
+      db.ref('admins/' + vu.uid).once('value', s => setIsAdmin(s.val() === true)).catch(()=>setIsAdmin(false));
+      db.ref('users/' + vu.uid + '/subscriptionTier').on('value', s => setUserTier(s.val() || null));
+    } else { setIsAdmin(false); setUserTier(null); }
+  }), []);
   const signIn = () => setAuthOpen(true);
   const buy = item => setCheckout(item);
   const go = (id) => { setPage('home'); setTimeout(() => document.getElementById(id)?.scrollIntoView({behavior:'smooth'}), 30); };
@@ -538,10 +831,12 @@ function App() {
       <header><div className="wrap nav">
         <div className="logo">🥇 Cheap<span>Standoff2</span>Gold</div>
         <ul className="navlinks">
-          <li><button onClick={()=>go('packs')}>Gold Packs</button></li>
+          <li><button className={page==='buy'?'active':''} onClick={()=>setPage('buy')}>Buy Gold</button></li>
+          <li><button onClick={()=>go('packs')}>Packs</button></li>
           <li><button onClick={()=>go('subs')}>Subscriptions</button></li>
           <li><button onClick={()=>go('sell')}>Sell Gold</button></li>
           <li><button className={page==='dash'?'active':''} onClick={()=>setPage('dash')}>Dashboard</button></li>
+          {isAdmin && <li><button className={page==='admin'?'active':''} onClick={()=>setPage('admin')}>Admin</button></li>}
         </ul>
         <div className="authbox">
           {user ? (<React.Fragment><span className="uname">{user.displayName||user.email}</span><button className="btn btn-ghost btn-sm" onClick={()=>auth.signOut()}>Sign out</button></React.Fragment>)
@@ -557,8 +852,8 @@ function App() {
               <h1>Stack gold for a <span className="goldtext">fraction</span> of in-app prices.</h1>
               <p className="lead">Daily gold subscriptions from $1/mo and instant packs delivered in under 24 hours — run by the team behind standoff2markettracker.com.</p>
               <div className="heroctas">
-                <button className="btn btn-gold" onClick={()=>go('subs')}>See subscriptions</button>
-                <button className="btn btn-ghost" onClick={()=>go('packs')}>Buy a gold pack</button>
+                <button className="btn btn-gold" onClick={()=>setPage('buy')}>Buy gold now</button>
+                <button className="btn btn-ghost" onClick={()=>go('subs')}>See subscriptions</button>
               </div>
               <div className="trustline"><span>◆ <b>Human delivery</b>, no bots</span><span>◆ <b>Cancel anytime</b></span><span>◆ <b>Discord support</b>: camel5961</span></div>
             </div>
@@ -573,12 +868,25 @@ function App() {
               <button className="btn btn-gold" style={{width:'100%',marginTop:18}} onClick={()=>buy({type:'Subscription',label:'Gold Monthly — 6,000 gold/month',price:25})}>Claim this deal</button>
             </div>
           </div></div>
+          <section id="buy-custom" style={{paddingTop:0}}>
+            <div className="wrap">
+              <div className="sect-head"><div className="eyebrow">Buy Any Amount</div><h2>Need a <span className="goldtext">specific amount?</span></h2><p>Type the exact gold you want and pay your way — cards, PayPal, crypto, or gift cards.</p></div>
+              <BuyGoldPanel user={user} tier={userTier} signIn={signIn} />
+            </div>
+          </section>
           <Packs buy={buy} />
           <Subs buy={buy} />
           <HowItWorks />
           <Sell sell={buy} />
           <FAQ />
         </main>
+      ) : page === 'buy' ? (
+        <section><div className="wrap">
+          <div className="sect-head"><div className="eyebrow">Buy Gold</div><h2>Buy <span className="goldtext">any amount</span> of gold</h2><p>Type the exact amount you want and choose how to pay.</p></div>
+          <BuyGoldPanel user={user} tier={userTier} signIn={signIn} />
+        </div></section>
+      ) : page === 'admin' ? (
+        <AdminPanel user={user} signIn={signIn} />
       ) : (
         <Dashboard user={user} signIn={signIn} />
       )}
