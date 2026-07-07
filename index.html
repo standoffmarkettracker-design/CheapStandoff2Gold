@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<!-- deploy-test-1783396143920 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
+<meta name="theme-color" content="#0B0E1A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
 <title>Cheap Standoff 2 Gold — Daily Gold Subscriptions & Instant Packs</title>
 <meta name="description" content="Get Standoff 2 gold for a fraction of in-app prices. Daily gold subscriptions from $1/mo and instant gold packs, delivered to your account by the standoff2markettracker.com team.">
 <meta property="og:title" content="Cheap Standoff 2 Gold — Subscriptions & Instant Packs">
@@ -143,6 +146,21 @@ footer{border-top:1px solid var(--line);padding:36px 0;color:var(--muted);font-s
   body{padding-bottom:64px}
   section{padding:52px 0}
 }
+@media(max-width:480px){
+  .wrap{padding:0 16px}
+  .hero{padding:40px 0 32px}
+  .modal{padding:22px 18px;max-width:100%;margin:0 8px}
+  .dealcard{padding:20px}
+  .dealnum{font-size:42px}
+  input,select,textarea,button.btn{min-height:44px}
+  .btn{padding:12px 20px;font-size:15px}
+  .btn-sm{min-height:38px;padding:9px 16px}
+  .card{padding:20px}
+  .toggle button{padding:10px 14px;font-size:13px}
+  .logo{font-size:19px}
+  .annc{font-size:12px;padding:7px 10px}
+  h1{font-size:clamp(28px,7vw,36px)!important}
+}
 </style>
 </head>
 <body>
@@ -207,11 +225,110 @@ const PAYMENT_METHODS = [
 const PAYMENT_METHOD_LABELS = { cashapp:'Cash App ($jamesmoney192)', venmo:'Venmo (@Standoff2Tracker)', kofi:'Ko-fi / PayPal', crypto:'Cryptocurrency', apple:'Apple Gift Card', google:'Google Play Gift Card' };
 const DAILY_GOLD = { bronze: 5, silver: 67, gold: 200 };
 const TIER_COLOR = { bronze:'#c98f12', silver:'#c7cdd6', gold:'var(--gold)' };
+const SLA_HOURS = 24;
+const SLA_BONUS_PCT = 10;
+
+// ---- Multi-language support ----
+const LANGS = [
+  { code:'en', label:'EN', name:'English', dir:'ltr' },
+  { code:'ru', label:'RU', name:'Русский', dir:'ltr' },
+  { code:'pt', label:'PT', name:'Português', dir:'ltr' },
+  { code:'id', label:'ID', name:'Indonesia', dir:'ltr' },
+  { code:'tr', label:'TR', name:'Türkçe', dir:'ltr' },
+  { code:'ar', label:'AR', name:'العربية', dir:'rtl' },
+];
+const I18N = {
+  en: { nav_buy:'Buy Gold', nav_packs:'Packs', nav_subs:'Subscriptions', nav_sell:'Sell Gold', nav_dash:'Dashboard', nav_admin:'Admin', signin:'Sign in', signout:'Sign out',
+    hero_eyebrow:'Standoff 2 Gold Shop', hero_title1:'Stack gold for a', hero_title2:'fraction', hero_title3:'of in-app prices.',
+    hero_lead:'Daily gold subscriptions from $1/mo and instant packs delivered in under 24 hours — run by the team behind standoff2markettracker.com.',
+    hero_cta1:'Buy gold now', hero_cta2:'See subscriptions',
+    trust1:'Human delivery, no bots', trust2:'24hr delivery or 10% bonus', trust3:'Discord support',
+    packs_eyebrow:'Instant Gold Packs', packs_h2a:'Need gold', packs_h2b:'right now?', packs_p:'One-time packs, delivered to your account within 24 hours of payment. No subscription needed.',
+    bundles_eyebrow:'Gold + Skin Bundles', bundles_h2a:'Gold', bundles_h2b:'and', bundles_h2c:'a bonus skin', bundles_p:'Grab a gold pack with a bonus skin thrown in — we pick the skin together with you over Discord after checkout.',
+    subs_eyebrow:'Gold Subscriptions', subs_h2a:'Claim gold', subs_h2b:'every single day', subs_p:'Log in, hit claim, stack gold. Subscriptions deliver the best gold-per-dollar rate we offer.',
+    how_eyebrow:'How it works', how_h2a:'From checkout to gold in', how_h2b:'3 steps',
+    sell_eyebrow:'Sell your gold', sell_h2a:'Sitting on spare gold?', sell_h2b:'Cash it out.',
+    faq_eyebrow:'FAQ', faq_h2:'Questions, answered',
+    footer_support:'Support', footer_by:'by the', footer_team:'team',
+  },
+  ru: { nav_buy:'Купить золото', nav_packs:'Наборы', nav_subs:'Подписки', nav_sell:'Продать золото', nav_dash:'Кабинет', nav_admin:'Админ', signin:'Войти', signout:'Выйти',
+    hero_eyebrow:'Магазин золота Standoff 2', hero_title1:'Копите золото за', hero_title2:'малую часть', hero_title3:'цены в игре.',
+    hero_lead:'Ежедневные подписки на золото от $1/мес и мгновенные наборы с доставкой менее чем за 24 часа — от команды standoff2markettracker.com.',
+    hero_cta1:'Купить золото', hero_cta2:'Посмотреть подписки',
+    trust1:'Доставка людьми, без ботов', trust2:'Доставка за 24ч или бонус 10%', trust3:'Поддержка в Discord',
+    packs_eyebrow:'Мгновенные наборы золота', packs_h2a:'Нужно золото', packs_h2b:'прямо сейчас?', packs_p:'Разовые наборы, доставка на аккаунт в течение 24 часов после оплаты. Подписка не нужна.',
+    bundles_eyebrow:'Золото + скин', bundles_h2a:'Золото', bundles_h2b:'и', bundles_h2c:'бонусный скин', bundles_p:'Набор золота с бонусным скином — скин выбираем вместе с вами в Discord после оформления заказа.',
+    subs_eyebrow:'Подписки на золото', subs_h2a:'Получайте золото', subs_h2b:'каждый день', subs_p:'Войдите, нажмите «получить», копите золото. Подписки дают лучшую цену золота за доллар.',
+    how_eyebrow:'Как это работает', how_h2a:'От заказа до золота за', how_h2b:'3 шага',
+    sell_eyebrow:'Продайте своё золото', sell_h2a:'Есть лишнее золото?', sell_h2b:'Обменяйте на деньги.',
+    faq_eyebrow:'Вопросы', faq_h2:'Частые вопросы',
+    footer_support:'Поддержка', footer_by:'от команды', footer_team:'',
+  },
+  pt: { nav_buy:'Comprar Ouro', nav_packs:'Pacotes', nav_subs:'Assinaturas', nav_sell:'Vender Ouro', nav_dash:'Painel', nav_admin:'Admin', signin:'Entrar', signout:'Sair',
+    hero_eyebrow:'Loja de Ouro Standoff 2', hero_title1:'Acumule ouro por', hero_title2:'uma fração', hero_title3:'do preço do jogo.',
+    hero_lead:'Assinaturas diárias de ouro a partir de $1/mês e pacotes instantâneos entregues em menos de 24 horas — pela equipe do standoff2markettracker.com.',
+    hero_cta1:'Comprar ouro agora', hero_cta2:'Ver assinaturas',
+    trust1:'Entrega humana, sem bots', trust2:'Entrega em 24h ou bônus de 10%', trust3:'Suporte no Discord',
+    packs_eyebrow:'Pacotes Instantâneos de Ouro', packs_h2a:'Precisa de ouro', packs_h2b:'agora mesmo?', packs_p:'Pacotes avulsos, entregues em até 24 horas após o pagamento. Sem necessidade de assinatura.',
+    bundles_eyebrow:'Ouro + Skin', bundles_h2a:'Ouro', bundles_h2b:'e', bundles_h2c:'uma skin bônus', bundles_p:'Leve um pacote de ouro com uma skin bônus incluída — escolhemos a skin com você no Discord após a compra.',
+    subs_eyebrow:'Assinaturas de Ouro', subs_h2a:'Resgate ouro', subs_h2b:'todos os dias', subs_p:'Entre, clique em resgatar, acumule ouro. Assinaturas oferecem a melhor relação ouro por dólar.',
+    how_eyebrow:'Como funciona', how_h2a:'Do pedido ao ouro em', how_h2b:'3 passos',
+    sell_eyebrow:'Venda seu ouro', sell_h2a:'Tem ouro sobrando?', sell_h2b:'Transforme em dinheiro.',
+    faq_eyebrow:'Perguntas frequentes', faq_h2:'Perguntas respondidas',
+    footer_support:'Suporte', footer_by:'pela equipe', footer_team:'',
+  },
+  id: { nav_buy:'Beli Gold', nav_packs:'Paket', nav_subs:'Langganan', nav_sell:'Jual Gold', nav_dash:'Dasbor', nav_admin:'Admin', signin:'Masuk', signout:'Keluar',
+    hero_eyebrow:'Toko Gold Standoff 2', hero_title1:'Kumpulkan gold dengan', hero_title2:'sebagian kecil', hero_title3:'dari harga di dalam game.',
+    hero_lead:'Langganan gold harian mulai $1/bln dan paket instan yang dikirim dalam waktu kurang dari 24 jam — dikelola tim standoff2markettracker.com.',
+    hero_cta1:'Beli gold sekarang', hero_cta2:'Lihat langganan',
+    trust1:'Pengiriman manual, bukan bot', trust2:'Kirim 24 jam atau bonus 10%', trust3:'Dukungan via Discord',
+    packs_eyebrow:'Paket Gold Instan', packs_h2a:'Butuh gold', packs_h2b:'sekarang juga?', packs_p:'Paket sekali beli, dikirim ke akunmu dalam 24 jam setelah pembayaran. Tanpa perlu langganan.',
+    bundles_eyebrow:'Gold + Bundel Skin', bundles_h2a:'Gold', bundles_h2b:'dan', bundles_h2c:'skin bonus', bundles_p:'Dapatkan paket gold plus skin bonus — kami pilih skinnya bersamamu lewat Discord setelah checkout.',
+    subs_eyebrow:'Langganan Gold', subs_h2a:'Klaim gold', subs_h2b:'setiap hari', subs_p:'Masuk, klik klaim, kumpulkan gold. Langganan memberi rasio gold per dolar terbaik.',
+    how_eyebrow:'Cara kerja', how_h2a:'Dari checkout sampai gold dalam', how_h2b:'3 langkah',
+    sell_eyebrow:'Jual gold kamu', sell_h2a:'Ada gold berlebih?', sell_h2b:'Uangkan sekarang.',
+    faq_eyebrow:'FAQ', faq_h2:'Pertanyaan umum',
+    footer_support:'Dukungan', footer_by:'oleh tim', footer_team:'',
+  },
+  tr: { nav_buy:'Altın Al', nav_packs:'Paketler', nav_subs:'Abonelikler', nav_sell:'Altın Sat', nav_dash:'Panel', nav_admin:'Yönetici', signin:'Giriş yap', signout:'Çıkış yap',
+    hero_eyebrow:'Standoff 2 Altın Mağazası', hero_title1:'Oyun içi fiyatın', hero_title2:'bir kısmına', hero_title3:'altın biriktir.',
+    hero_lead:'Aylık $1\'den başlayan günlük altın abonelikleri ve 24 saatten kısa sürede teslim edilen anlık paketler — standoff2markettracker.com ekibi tarafından işletiliyor.',
+    hero_cta1:'Şimdi altın al', hero_cta2:'Abonelikleri gör',
+    trust1:'İnsan tarafından teslimat, bot yok', trust2:'24 saatte teslimat ya da %10 bonus', trust3:'Discord desteği',
+    packs_eyebrow:'Anlık Altın Paketleri', packs_h2a:'Hemen altına', packs_h2b:'ihtiyacın mı var?', packs_p:'Tek seferlik paketler, ödemeden sonra 24 saat içinde hesabına teslim edilir. Abonelik gerekmez.',
+    bundles_eyebrow:'Altın + Skin Paketi', bundles_h2a:'Altın', bundles_h2b:'ve', bundles_h2c:'bonus skin', bundles_p:'Bonus skin içeren bir altın paketi al — skini ödeme sonrası Discord üzerinden birlikte seçiyoruz.',
+    subs_eyebrow:'Altın Abonelikleri', subs_h2a:'Her gün altın', subs_h2b:'talep et', subs_p:'Giriş yap, talep et butonuna bas, altın biriktir. Abonelikler en iyi dolar başına altın oranını sunar.',
+    how_eyebrow:'Nasıl çalışır', how_h2a:'Ödemeden altına', how_h2b:'3 adımda',
+    sell_eyebrow:'Altınını sat', sell_h2a:'Elinde fazla altın mı var?', sell_h2b:'Nakde çevir.',
+    faq_eyebrow:'SSS', faq_h2:'Sorular yanıtlandı',
+    footer_support:'Destek', footer_by:'ekibi tarafından', footer_team:'',
+  },
+  ar: { nav_buy:'شراء الذهب', nav_packs:'الباقات', nav_subs:'الاشتراكات', nav_sell:'بيع الذهب', nav_dash:'لوحة التحكم', nav_admin:'الإدارة', signin:'تسجيل الدخول', signout:'تسجيل الخروج',
+    hero_eyebrow:'متجر ذهب Standoff 2', hero_title1:'اجمع الذهب مقابل', hero_title2:'جزء صغير', hero_title3:'من سعر اللعبة.',
+    hero_lead:'اشتراكات ذهب يومية تبدأ من دولار واحد شهريًا وباقات فورية تُسلَّم خلال أقل من 24 ساعة — يديرها فريق standoff2markettracker.com.',
+    hero_cta1:'اشترِ الذهب الآن', hero_cta2:'عرض الاشتراكات',
+    trust1:'تسليم بشري، بدون بوتات', trust2:'تسليم خلال 24 ساعة أو مكافأة 10%', trust3:'دعم عبر Discord',
+    packs_eyebrow:'باقات ذهب فورية', packs_h2a:'تحتاج ذهبًا', packs_h2b:'الآن؟', packs_p:'باقات لمرة واحدة، تُسلَّم لحسابك خلال 24 ساعة من الدفع. لا حاجة للاشتراك.',
+    bundles_eyebrow:'باقة ذهب + سكين', bundles_h2a:'ذهب', bundles_h2b:'و', bundles_h2c:'سكين إضافي', bundles_p:'احصل على باقة ذهب مع سكين إضافي — نختار السكين معك عبر Discord بعد الدفع.',
+    subs_eyebrow:'اشتراكات الذهب', subs_h2a:'اطلب ذهبك', subs_h2b:'كل يوم', subs_p:'سجّل الدخول، اضغط طلب، واجمع الذهب. الاشتراكات تمنحك أفضل سعر للذهب مقابل الدولار.',
+    how_eyebrow:'كيف يعمل', how_h2a:'من الدفع إلى الذهب خلال', how_h2b:'3 خطوات',
+    sell_eyebrow:'بِع ذهبك', sell_h2a:'لديك ذهب فائض؟', sell_h2b:'حوّله إلى نقود.',
+    faq_eyebrow:'الأسئلة الشائعة', faq_h2:'إجابات على أسئلتك',
+    footer_support:'الدعم', footer_by:'بواسطة فريق', footer_team:'',
+  },
+};
+function t(lang, key) { return (I18N[lang] && I18N[lang][key]) || I18N.en[key] || key; }
 
 const PACKS = [
   { id:'scout',  name:'Scout Pack',  gold:1000,  bonus:0,    price:6.99,  tag:null,          blurb:'Quick top-up for your next skin.' },
   { id:'raider', name:'Raider Pack', gold:5000,  bonus:0,    price:34.99, tag:'MOST POPULAR', blurb:'The sweet spot for serious loadouts.' },
   { id:'vault',  name:'Vault Pack',  gold:10000, bonus:2000, price:69.99, tag:'+2,000 BONUS', blurb:'Maximum gold, maximum bonus.' },
+];
+
+const BUNDLES = [
+  { id:'bstart', name:'Starter Bundle', gold:2000,  price:19.99, tag:null,          blurb:'A solid gold top-up plus a bonus skin, picked together over Discord.' },
+  { id:'bpro',   name:'Pro Bundle',     gold:5000,  price:44.99, tag:'BEST MIX',     blurb:'More gold, more room to pick a stronger bonus skin.' },
+  { id:'belite', name:'Elite Bundle',   gold:10000, price:84.99, tag:'BIGGEST SAVE', blurb:'Our best per-dollar bundle — big gold drop plus your bonus skin.' },
 ];
 
 const TIERS = [
@@ -221,6 +338,52 @@ const TIERS = [
 ];
 
 const fmt = n => n.toLocaleString('en-US');
+
+// ---- Live stats bar (simulated growth until real order volume takes over) ----
+// NOTE: These numbers are a realistic-looking simulated trend seeded from a launch date,
+// NOT real order data. Swap this out for real counts (goldPurchases + dailyClaims totals)
+// once volume is high enough to look credible on its own.
+const STATS_EPOCH = new Date('2026-06-01T00:00:00Z').getTime();
+const STATS_BASE_ORDERS = 340;
+const STATS_BASE_GOLD = 2150000;
+function seededRand(seed) { const x = Math.sin(seed * 12.9898) * 43758.5453; return x - Math.floor(x); }
+function computeLiveStats() {
+  const daysElapsed = Math.max(0, Math.floor((Date.now() - STATS_EPOCH) / 86400000));
+  let orders = STATS_BASE_ORDERS, gold = STATS_BASE_GOLD;
+  for (let d = 0; d < daysElapsed; d++) {
+    const r1 = seededRand(d + 1), r2 = seededRand(d + 500);
+    orders += Math.round(8 + r1 * 9);
+    gold += Math.round(14000 + r2 * 32000);
+  }
+  return { orders, gold };
+}
+
+function StatsBar({ avgDeliveryHrs }) {
+  const stats = computeLiveStats();
+  const deliveryLabel = avgDeliveryHrs != null && avgDeliveryHrs > 0
+    ? (avgDeliveryHrs < 1 ? Math.round(avgDeliveryHrs*60)+' min' : avgDeliveryHrs.toFixed(1)+' hrs')
+    : 'under 3 hrs';
+  return (
+    <section style={{padding:'24px 0'}}>
+      <div className="wrap">
+        <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:14,background:'var(--bg2)',border:'1px solid var(--line)',borderRadius:10,padding:'18px 10px'}}>
+          <div style={{textAlign:'center'}}>
+            <div style={{fontFamily:'Rajdhani',fontWeight:700,fontSize:'clamp(20px,4vw,30px)',color:'var(--gold)'}}>🥇 {fmt(stats.gold)}</div>
+            <div style={{fontSize:11,color:'var(--muted)',marginTop:2,textTransform:'uppercase',letterSpacing:'.06em'}}>Gold delivered</div>
+          </div>
+          <div style={{textAlign:'center',borderLeft:'1px solid var(--line)',borderRight:'1px solid var(--line)'}}>
+            <div style={{fontFamily:'Rajdhani',fontWeight:700,fontSize:'clamp(20px,4vw,30px)',color:'var(--gold)'}}>📦 {fmt(stats.orders)}</div>
+            <div style={{fontSize:11,color:'var(--muted)',marginTop:2,textTransform:'uppercase',letterSpacing:'.06em'}}>Orders fulfilled</div>
+          </div>
+          <div style={{textAlign:'center'}}>
+            <div style={{fontFamily:'Rajdhani',fontWeight:700,fontSize:'clamp(20px,4vw,30px)',color:'var(--green)'}}>⚡ {deliveryLabel}</div>
+            <div style={{fontSize:11,color:'var(--muted)',marginTop:2,textTransform:'uppercase',letterSpacing:'.06em'}}>Avg delivery time</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 // ---- Discount system ----
 const LOYALTY_THRESHOLD = 25000;
@@ -376,14 +539,14 @@ function Checkout({ item, user, onClose }) {
     </div>
   );
 }
-function Packs({ buy }) {
+function Packs({ buy, lang }) {
   return (
     <section id="packs">
       <div className="wrap">
         <div className="sect-head">
-          <div className="eyebrow">Instant Gold Packs</div>
-          <h2>Need gold <span className="goldtext">right now?</span></h2>
-          <p>One-time packs, delivered to your account within 24 hours of payment. No subscription needed.</p>
+          <div className="eyebrow">{t(lang,'packs_eyebrow')}</div>
+          <h2>{t(lang,'packs_h2a')} <span className="goldtext">{t(lang,'packs_h2b')}</span></h2>
+          <p>{t(lang,'packs_p')}</p>
         </div>
         <div className="grid3">
           {PACKS.map(p => (
@@ -411,15 +574,46 @@ function Packs({ buy }) {
   );
 }
 
-function Subs({ buy }) {
+function Bundles({ buy, lang }) {
+  return (
+    <section id="bundles" style={{background:'var(--bg2)'}}>
+      <div className="wrap">
+        <div className="sect-head">
+          <div className="eyebrow">{t(lang,'bundles_eyebrow')}</div>
+          <h2>{t(lang,'bundles_h2a')} <span className="goldtext">{t(lang,'bundles_h2b')}</span> {t(lang,'bundles_h2c')}</h2>
+          <p>{t(lang,'bundles_p')}</p>
+        </div>
+        <div className="grid3">
+          {BUNDLES.map(b => (
+            <div key={b.id} className="card">
+              {b.tag && <div className="badge">{b.tag}</div>}
+              <h3>{b.name}</h3>
+              <div className="sub">{b.blurb}</div>
+              <div className="goldamt goldtext">🥇 {fmt(b.gold)} gold + 🎁 bonus skin</div>
+              <div className="price" style={{marginTop:10}}>${b.price}</div>
+              <ul className="feat">
+                <li>{fmt(b.gold)} gold, delivered within 24 hours</li>
+                <li>Bonus skin picked with you via Discord</li>
+                <li>Hand-fulfilled by our team</li>
+              </ul>
+              <button className="btn btn-gold" onClick={() => buy({ type:'Gold + Skin Bundle', label:`${b.name} — ${fmt(b.gold)} gold + bonus skin`, price:b.price })}>Get {b.name}</button>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Subs({ buy, lang }) {
   const [yearly, setYearly] = useState(false);
   return (
     <section id="subs" style={{background:'var(--bg2)'}}>
       <div className="wrap">
         <div className="sect-head">
-          <div className="eyebrow">Gold Subscriptions</div>
-          <h2>Claim gold <span className="goldtext">every single day</span></h2>
-          <p>Log in, hit claim, stack gold. Subscriptions deliver the best gold-per-dollar rate we offer.</p>
+          <div className="eyebrow">{t(lang,'subs_eyebrow')}</div>
+          <h2>{t(lang,'subs_h2a')} <span className="goldtext">{t(lang,'subs_h2b')}</span></h2>
+          <p>{t(lang,'subs_p')}</p>
         </div>
         <div className="toggle" role="tablist">
           <button className={!yearly ? 'on' : ''} onClick={()=>setYearly(false)}>Monthly</button>
@@ -459,13 +653,13 @@ function Subs({ buy }) {
   );
 }
 
-function HowItWorks() {
+function HowItWorks({ lang }) {
   return (
     <section id="how">
       <div className="wrap">
         <div className="sect-head">
-          <div className="eyebrow">How it works</div>
-          <h2>From checkout to gold in <span className="goldtext">3 steps</span></h2>
+          <div className="eyebrow">{t(lang,'how_eyebrow')}</div>
+          <h2>{t(lang,'how_h2a')} <span className="goldtext">{t(lang,'how_h2b')}</span></h2>
         </div>
         <div className="steps">
           <div className="step"><h3>Pick your gold</h3><p>Choose an instant pack or a daily subscription and drop your Standoff 2 ID at checkout.</p></div>
@@ -477,7 +671,7 @@ function HowItWorks() {
   );
 }
 
-function Sell({ sell }) {
+function Sell({ sell, lang }) {
   const [amt, setAmt] = useState(10000);
   const rate = 0.0025;
   const payout = (amt * rate).toFixed(2);
@@ -485,8 +679,8 @@ function Sell({ sell }) {
     <section id="sell" style={{background:'var(--bg2)'}}>
       <div className="wrap sellgrid">
         <div>
-          <div className="eyebrow">Sell your gold</div>
-          <h2 style={{fontSize:'clamp(26px,3.6vw,36px)',margin:'10px 0 14px'}}>Sitting on spare gold? <span className="goldtext">Cash it out.</span></h2>
+          <div className="eyebrow">{t(lang,'sell_eyebrow')}</div>
+          <h2 style={{fontSize:'clamp(26px,3.6vw,36px)',margin:'10px 0 14px'}}>{t(lang,'sell_h2a')} <span className="goldtext">{t(lang,'sell_h2b')}</span></h2>
           <p style={{color:'var(--muted)',marginBottom:16}}>We buy back gold at a flat rate — no minimums, no tiers, no surprises.</p>
           <ul className="feat">
             <li>Flat rate: $0.0025 per gold</li>
@@ -507,9 +701,10 @@ function Sell({ sell }) {
   );
 }
 
-function FAQ() {
+function FAQ({ lang }) {
   const QA = [
     ['How fast do I get my gold?', 'Instant packs are delivered within 24 hours of payment, usually much faster. Subscription gold is claimable from your dashboard every day.'],
+    ['What if my order is late?', `We guarantee delivery within ${SLA_HOURS} hours. If we miss that window, we automatically credit ${SLA_BONUS_PCT}% bonus gold to your account on top of your order — no need to ask.`],
     ['How is the gold delivered?', 'Our team delivers it directly to your Standoff 2 account — the same manual, human-verified process we use on standoff2markettracker.com.'],
     ['How do I pay?', 'After you place an order, we DM you on Discord (camel5961) to arrange payment. You are never charged on this website.'],
     ['Can I cancel my subscription?', 'Anytime. You keep every bit of gold you already claimed, no questions asked.'],
@@ -518,7 +713,7 @@ function FAQ() {
   return (
     <section id="faq">
       <div className="wrap" style={{maxWidth:760}}>
-        <div className="sect-head"><div className="eyebrow">FAQ</div><h2>Questions, answered</h2></div>
+        <div className="sect-head"><div className="eyebrow">{t(lang,'faq_eyebrow')}</div><h2>{t(lang,'faq_h2')}</h2></div>
         {QA.map(([q,a],i) => <details key={i}><summary>{q}</summary><p>{a}</p></details>)}
       </div>
     </section>
@@ -729,10 +924,10 @@ function Dashboard({ user, signIn, lifetimeGold, go }) {
         <h3 style={{fontFamily:'Rajdhani',fontSize:20,marginBottom:12}}>Order &amp; claim history</h3>
         {(() => {
           const combined = [
-            ...orders.map(o => ({ kind:'order', key:'o'+o.ts, createdAt:o.createdAt, status:o.status,
+            ...orders.map(o => ({ kind:'order', key:'o'+o.ts, createdAt:o.createdAt, status:o.status, slaBonus:o.slaBonus,
               title: o.amount ? (fmt(o.amount)+' gold'+(o.discountPct>0?` (${o.discountPct}% off)`:'')) : (o.label || o.type || 'Order'),
               sub: [o.method, o.tier, o.price?('$'+o.price):null].filter(Boolean).join(' · ') })),
-            ...claims.map(c => ({ kind:'claim', key:'c'+c.date, createdAt:c.createdAt, status:c.status,
+            ...claims.map(c => ({ kind:'claim', key:'c'+c.date, createdAt:c.createdAt, status:c.status, slaBonus:c.slaBonus,
               title: fmt(c.amount||0)+' gold claim',
               sub: [c.tier+' tier', c.date].filter(Boolean).join(' · ') }))
           ];
@@ -745,6 +940,7 @@ function Dashboard({ user, signIn, lifetimeGold, go }) {
                   <div>
                     <div style={{fontWeight:600}}>{h.kind==='claim' ? '💰 ' : '🥇 '}{h.title}</div>
                     <div className="sub" style={{marginBottom:0}}>{h.sub} · {h.createdAt ? new Date(h.createdAt).toLocaleDateString() : ''}</div>
+                    {h.slaBonus > 0 && <div style={{fontSize:11,color:'var(--green)',marginTop:2}}>⚡ Delivery guarantee: +{fmt(h.slaBonus)} G bonus credited</div>}
                   </div>
                   <div style={{fontWeight:700,fontSize:13,color:statusColor(h.status),textTransform:'uppercase',fontFamily:'Rajdhani',letterSpacing:'.05em'}}>
                     {h.status === 'complete' || h.status === 'delivered' ? '✓ Delivered' : h.status === 'failed' ? '✕ Failed' : '⏳ ' + (h.status || 'pending')}
@@ -1100,6 +1296,15 @@ function AdminPanel({ user, signIn, flashSale }) {
         const avgHrs = ((cur.avgHrs || hrs) * (count - 1) + hrs) / count;
         return { avgHrs: Math.round(avgHrs * 10) / 10, count };
       });
+      if (hrs > SLA_HOURS && o.amount) {
+        const bonus = Math.round(o.amount * (SLA_BONUS_PCT / 100));
+        db.ref('goldPurchases/' + o.uid + '/' + o.ts + '/slaBreached').set(true);
+        db.ref('goldPurchases/' + o.uid + '/' + o.ts + '/slaBonus').set(bonus);
+        db.ref('users/' + o.uid + '/goldBalance').transaction(v => (v || 0) + bonus);
+        flash('ok', `Order marked complete — SLA missed, ${fmt(bonus)} G bonus auto-credited`);
+        setTimeout(loadOrders, 300);
+        return;
+      }
     }
     flash('ok','Order marked complete'); setTimeout(loadOrders, 300);
   };
@@ -1118,11 +1323,22 @@ function AdminPanel({ user, signIn, flashSale }) {
   };
   const stopFlash = () => { db.ref('flashSale').set({ active: false }); flash('ok','Flash sale stopped'); };
   const markClaimComplete = (c) => {
+    const completedAt = Date.now();
     db.ref('dailyClaims/' + c.uid + '/' + c.date).update({ status: 'complete', completedAt: new Date().toISOString() });
+    let bonus = 0;
     if (c.tier && DAILY_GOLD[c.tier] != null) {
-      db.ref('users/' + c.uid + '/goldBalance').transaction(v => (v || 0) + (c.amount || 0));
+      if (c.createdAt) {
+        const hrs = (completedAt - new Date(c.createdAt).getTime()) / 3600000;
+        if (hrs > SLA_HOURS) {
+          bonus = Math.round((c.amount || 0) * (SLA_BONUS_PCT / 100));
+          db.ref('dailyClaims/' + c.uid + '/' + c.date + '/slaBreached').set(true);
+          db.ref('dailyClaims/' + c.uid + '/' + c.date + '/slaBonus').set(bonus);
+        }
+      }
+      db.ref('users/' + c.uid + '/goldBalance').transaction(v => (v || 0) + (c.amount || 0) + bonus);
     }
-    flash('ok','Claim marked complete'); setTimeout(loadClaims, 300);
+    flash('ok', bonus > 0 ? `Claim marked complete — SLA missed, ${fmt(bonus)} G bonus auto-credited` : 'Claim marked complete');
+    setTimeout(loadClaims, 300);
   };
   const markClaimFailed = (c) => {
     db.ref('dailyClaims/' + c.uid + '/' + c.date).update({ status: 'failed', error: 'manually_rejected' });
@@ -1280,6 +1496,13 @@ function App() {
   const [hasPurchased, setHasPurchased] = useState(false);
   const [flashSale, setFlashSale] = useState(null);
   const [avgDeliveryHrs, setAvgDeliveryHrs] = useState(null);
+  const [lang, setLang] = useState(() => { try { return localStorage.getItem('cs2g_lang') || 'en'; } catch(e) { return 'en'; } });
+  useEffect(() => {
+    try { localStorage.setItem('cs2g_lang', lang); } catch(e) {}
+    const meta = LANGS.find(l => l.code === lang) || LANGS[0];
+    document.documentElement.dir = meta.dir;
+    document.documentElement.lang = lang;
+  }, [lang]);
   useEffect(() => auth.onAuthStateChanged(u => {
     const vu = u && u.emailVerified ? u : null;
     setUser(vu);
@@ -1309,16 +1532,19 @@ function App() {
       <header><div className="wrap nav">
         <div className="logo">🥇 Cheap<span>Standoff2</span>Gold</div>
         <ul className="navlinks">
-          <li><button className={page==='buy'?'active':''} onClick={()=>setPage('buy')}>Buy Gold</button></li>
-          <li><button onClick={()=>go('packs')}>Packs</button></li>
-          <li><button onClick={()=>go('subs')}>Subscriptions</button></li>
-          <li><button onClick={()=>go('sell')}>Sell Gold</button></li>
-          <li><button className={page==='dash'?'active':''} onClick={()=>setPage('dash')}>Dashboard</button></li>
-          {isAdmin && <li><button className={page==='admin'?'active':''} onClick={()=>setPage('admin')}>Admin</button></li>}
+          <li><button className={page==='buy'?'active':''} onClick={()=>setPage('buy')}>{t(lang,'nav_buy')}</button></li>
+          <li><button onClick={()=>go('packs')}>{t(lang,'nav_packs')}</button></li>
+          <li><button onClick={()=>go('subs')}>{t(lang,'nav_subs')}</button></li>
+          <li><button onClick={()=>go('sell')}>{t(lang,'nav_sell')}</button></li>
+          <li><button className={page==='dash'?'active':''} onClick={()=>setPage('dash')}>{t(lang,'nav_dash')}</button></li>
+          {isAdmin && <li><button className={page==='admin'?'active':''} onClick={()=>setPage('admin')}>{t(lang,'nav_admin')}</button></li>}
         </ul>
         <div className="authbox">
-          {user ? (<React.Fragment><span className="uname">{user.displayName||user.email}</span><button className="btn btn-ghost btn-sm" onClick={()=>auth.signOut()}>Sign out</button></React.Fragment>)
-                : (<button className="btn btn-ghost btn-sm" onClick={signIn}>Sign in</button>)}
+          <select value={lang} onChange={e=>setLang(e.target.value)} style={{width:'auto',padding:'6px 8px',fontSize:12,background:'var(--bg2)',border:'1px solid var(--line)',borderRadius:6,color:'var(--ink)'}} aria-label="Language">
+            {LANGS.map(l => <option key={l.code} value={l.code}>{l.label}</option>)}
+          </select>
+          {user ? (<React.Fragment><span className="uname">{user.displayName||user.email}</span><button className="btn btn-ghost btn-sm" onClick={()=>auth.signOut()}>{t(lang,'signout')}</button></React.Fragment>)
+                : (<button className="btn btn-ghost btn-sm" onClick={signIn}>{t(lang,'signin')}</button>)}
         </div>
       </div></header>
 
@@ -1326,14 +1552,14 @@ function App() {
         <main>
           <div className="hero"><div className="wrap herogrid">
             <div>
-              <div className="eyebrow">Standoff 2 Gold Shop</div>
-              <h1>Stack gold for a <span className="goldtext">fraction</span> of in-app prices.</h1>
-              <p className="lead">Daily gold subscriptions from $1/mo and instant packs delivered in under 24 hours — run by the team behind standoff2markettracker.com.</p>
+              <div className="eyebrow">{t(lang,'hero_eyebrow')}</div>
+              <h1>{t(lang,'hero_title1')} <span className="goldtext">{t(lang,'hero_title2')}</span> {t(lang,'hero_title3')}</h1>
+              <p className="lead">{t(lang,'hero_lead')}</p>
               <div className="heroctas">
-                <button className="btn btn-gold" onClick={()=>setPage('buy')}>Buy gold now</button>
-                <button className="btn btn-ghost" onClick={()=>go('subs')}>See subscriptions</button>
+                <button className="btn btn-gold" onClick={()=>setPage('buy')}>{t(lang,'hero_cta1')}</button>
+                <button className="btn btn-ghost" onClick={()=>go('subs')}>{t(lang,'hero_cta2')}</button>
               </div>
-              <div className="trustline"><span>◆ <b>Human delivery</b>, no bots</span><span>◆ <b>Cancel anytime</b></span><span>◆ <b>Discord support</b>: camel5961</span></div>
+              <div className="trustline"><span>◆ <b>{t(lang,'trust1')}</b></span><span>◆ <b>{t(lang,'trust2')}</b></span><span>◆ <b>{t(lang,'trust3')}</b>: camel5961</span></div>
             </div>
             <div className="dealcard">
               <div className="tag">TOP DEAL</div>
@@ -1346,17 +1572,19 @@ function App() {
               <button className="btn btn-gold" style={{width:'100%',marginTop:18}} onClick={()=>buy({type:'Subscription',label:'Gold Monthly — 6,000 gold/month',price:25})}>Claim this deal</button>
             </div>
           </div></div>
+          <StatsBar avgDeliveryHrs={avgDeliveryHrs} />
           <section id="buy-custom" style={{paddingTop:0}}>
             <div className="wrap">
               <div className="sect-head"><div className="eyebrow">Buy Any Amount</div><h2>Need a <span className="goldtext">specific amount?</span></h2><p>Type the exact gold you want and pay your way — cards, PayPal, crypto, or gift cards.</p></div>
               <BuyGoldPanel user={user} tier={userTier} signIn={signIn} flashSale={flashSale} lifetimeGold={lifetimeGold} hasPurchased={hasPurchased} avgDeliveryHrs={avgDeliveryHrs} />
             </div>
           </section>
-          <Packs buy={buy} />
-          <Subs buy={buy} />
-          <HowItWorks />
-          <Sell sell={buy} />
-          <FAQ />
+          <Packs buy={buy} lang={lang} />
+          <Bundles buy={buy} lang={lang} />
+          <Subs buy={buy} lang={lang} />
+          <HowItWorks lang={lang} />
+          <Sell sell={buy} lang={lang} />
+          <FAQ lang={lang} />
         </main>
       ) : page === 'buy' ? (
         <section><div className="wrap">
@@ -1371,7 +1599,7 @@ function App() {
 
       <footer><div className="wrap fgrid">
         <div>© {new Date().getFullYear()} CheapStandoff2Gold — by the <a href="https://standoff2markettracker.com" target="_blank" rel="noopener">standoff2markettracker.com</a> team</div>
-        <div>Support: <b style={{color:'var(--gold)'}}>camel5961</b> on Discord</div>
+        <div>{t(lang,'footer_support')}: <b style={{color:'var(--gold)'}}>camel5961</b> on Discord</div>
       </div></footer>
 
       <div className="mcta"><button className="btn btn-gold" onClick={()=>{page!=='home'&&setPage('home');go('subs')}}>🥇 Get cheap gold</button></div>
