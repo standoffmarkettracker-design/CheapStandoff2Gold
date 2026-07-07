@@ -183,6 +183,27 @@ try {
 
 const WEBHOOK = "https://discord.com/api/webhooks/1521212880614330488/whaIWiT5y7FbVYQ93k0TwHtbPljg5CxdG8vwr8J9s6vbWTturZluUyKhHTNKcL0Ytzj5";
 
+// ---- Shared payment info (used by Checkout + BuyGoldPanel) ----
+const PAYMENT_HANDLES = { cashapp:'$jamesmoney192', venmo:'@Standoff2Tracker' };
+const CRYPTO_WALLETS = [
+  { name:'Bitcoin',  symbol:'BTC',  color:'#f7931a', addr:'bc1pgsmcq0036tdc8zfn8kfj0ngnkxyragj77vydmkmc8vu88xndyk4scx7kux' },
+  { name:'Ethereum', symbol:'ETH',  color:'#627eea', addr:'0x61bffb5ff4c4f9f730224cf2c7c0648877e8e1af' },
+  { name:'Solana',   symbol:'SOL',  color:'#9945ff', addr:'FoTPGikDL52vJTpxLUiW7DBpt94QZc1mDK1KwT3Hk7wy' },
+  { name:'USDT',     symbol:'USDT', color:'#26a17b', addr:'0x61bffb5ff4c4f9f730224cf2c7c0648877e8e1af', note:'ERC-20' },
+  { name:'USDC',     symbol:'USDC', color:'#2775ca', addr:'0x61bffb5ff4c4f9f730224cf2c7c0648877e8e1af', note:'ERC-20' },
+];
+const PAYMENT_METHODS = [
+  { id:'cashapp', label:'Cash App',  icon:'💸' },
+  { id:'venmo',   label:'Venmo',     icon:'🔵' },
+  { id:'kofi',    label:'Ko-fi/PayPal', icon:'☕' },
+  { id:'crypto',  label:'Crypto',    icon:'🪙' },
+  { id:'apple',   label:'Apple Card', icon:'🍎' },
+  { id:'google',  label:'Google Play', icon:'▶️' },
+];
+const PAYMENT_METHOD_LABELS = { cashapp:'Cash App ($jamesmoney192)', venmo:'Venmo (@Standoff2Tracker)', kofi:'Ko-fi / PayPal', crypto:'Cryptocurrency', apple:'Apple Gift Card', google:'Google Play Gift Card' };
+const DAILY_GOLD = { bronze: 5, silver: 67, gold: 200 };
+const TIER_COLOR = { bronze:'#c98f12', silver:'#c7cdd6', gold:'var(--gold)' };
+
 const PACKS = [
   { id:'scout',  name:'Scout Pack',  gold:1000,  bonus:0,    price:7.99,  tag:null,          blurb:'Quick top-up for your next skin.' },
   { id:'raider', name:'Raider Pack', gold:5000,  bonus:0,    price:34.99, tag:'MOST POPULAR', blurb:'The sweet spot for serious loadouts.' },
@@ -231,48 +252,116 @@ async function submitOrder(order) {
 }
 
 function Checkout({ item, user, onClose }) {
-  const [sid, setSid] = useState('');
-  const [disc, setDisc] = useState('');
-  const [state, setState] = useState('form'); // form | sending | done | error
+  const [method, setMethod] = useState('cashapp');
+  const [username, setUsername] = useState(user ? (user.displayName || '') : '');
+  const [gcCode, setGcCode] = useState('');
+  const [copied, setCopied] = useState('');
+  const [state, setState] = useState('form');
+
+  const isCard = method === 'apple' || method === 'google';
+  const isKofi = method === 'kofi';
+  const isCrypto = method === 'crypto';
+  const isDirect = method === 'cashapp' || method === 'venmo';
+
+  const copyText = (t, key) => { navigator.clipboard.writeText(t).catch(()=>{}); setCopied(key); setTimeout(()=>setCopied(''), 1500); };
+  const canSubmit = () => username.trim() && (isCard ? gcCode.trim().length >= 8 : true);
+
   const submit = async () => {
-    if (!sid.trim() || !disc.trim()) return;
+    if (!canSubmit()) return;
     setState('sending');
-    const ok = await submitOrder({
-      Type: item.type, Item: item.label, Price: '$' + item.price.toFixed(2),
-      'Standoff 2 ID': sid.trim(), 'Discord': disc.trim(),
-      'Account': user ? (user.email || user.uid) : 'guest'
-    });
+    const methodLabel = PAYMENT_METHOD_LABELS[method];
+    const order = {
+      Type: item.type, Item: item.label, Price: '$' + item.price.toFixed(2), Method: methodLabel,
+      Username: username.trim(), Account: user ? (user.email || user.uid) : 'guest'
+    };
+    if (isCard) order['Gift Card Code'] = '||' + gcCode.trim() + '||';
+    const ok = await submitOrder(order);
+    try {
+      if (user) {
+        db.ref('goldPurchases/' + user.uid + '/' + Date.now()).set({
+          uid: user.uid, username: username.trim(), method, type: item.type,
+          status: 'pending', amount: null, label: item.label, price: item.price,
+          gcCode: isCard ? gcCode.trim() : null, createdAt: new Date().toISOString()
+        });
+      }
+    } catch(e) {}
     setState(ok ? 'done' : 'error');
   };
+
   return (
     <div className="overlay" onClick={e => e.target === e.currentTarget && onClose()}>
       <div className="modal">
         <button className="xbtn" onClick={onClose} aria-label="Close">×</button>
-        {state !== 'done' ? (
-          <div>
-            <h3>Complete your order</h3>
-            <p className="msub">We take payment over Discord DM, then deliver straight to your account. You are not charged on this page.</p>
-            <div className="ordersum"><span>{item.label}</span><b>${item.price.toFixed(2)}</b></div>
-            <div className="field">
-              <label>Your Standoff 2 player ID</label>
-              <input value={sid} onChange={e=>setSid(e.target.value)} placeholder="e.g. 12345678" />
-            </div>
-            <div className="field">
-              <label>Your Discord username</label>
-              <input value={disc} onChange={e=>setDisc(e.target.value)} placeholder="e.g. player#0001 or @player" />
-            </div>
-            <button className="btn btn-gold" style={{width:'100%'}} disabled={state==='sending' || !sid.trim() || !disc.trim()} onClick={submit}>
-              {state==='sending' ? 'Sending…' : 'Place order'}
-            </button>
-            {state==='error' && <div className="alert err">Order could not be sent. DM <b>camel5961</b> on Discord and we will sort you out directly.</div>}
-            <p className="msub" style={{marginTop:14, marginBottom:0}}>Placing an order pings our team instantly. We DM you within hours to take payment and deliver.</p>
-          </div>
-        ) : (
+        {state === 'done' ? (
           <div className="oksplash">
             <div className="big">🥇</div>
             <h3>Order received</h3>
-            <p className="msub" style={{marginTop:8}}>Our team just got pinged. Watch for a Discord DM from <b style={{color:'var(--gold)'}}>camel5961</b> to complete payment — your gold ships right after.</p>
+            <p className="msub" style={{marginTop:8}}>Our team just got pinged. Watch for a Discord DM from <b style={{color:'var(--gold)'}}>camel5961</b> to confirm — your gold ships right after.</p>
             <button className="btn btn-ghost btn-sm" onClick={onClose} style={{marginTop:10}}>Done</button>
+          </div>
+        ) : (
+          <div>
+            <h3>Complete your order</h3>
+            <p className="msub">Pick how you'd like to pay. You are not charged on this page.</p>
+            <div className="ordersum"><span>{item.label}</span><b>${item.price.toFixed(2)}</b></div>
+
+            <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>Payment method</label>
+            <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:6,marginBottom:16}}>
+              {PAYMENT_METHODS.map(m => (
+                <div key={m.id} onClick={()=>setMethod(m.id)} style={{padding:'10px 4px',border:'1px solid '+(method===m.id?'var(--gold)':'var(--line)'),borderRadius:8,background:method===m.id?'var(--gold-dim)':'transparent',color:method===m.id?'var(--ink)':'var(--muted)',fontSize:11,fontWeight:600,cursor:'pointer',textAlign:'center',display:'flex',flexDirection:'column',alignItems:'center',gap:4}}>
+                  <span style={{fontSize:18}}>{m.icon}</span><span>{m.label}</span>
+                </div>
+              ))}
+            </div>
+
+            {isDirect && (
+              <div>
+                <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>Send ${item.price.toFixed(2)} to</label>
+                <div onClick={()=>copyText(PAYMENT_HANDLES[method],'handle')} style={{background:'rgba(0,0,0,.3)',border:'1px solid var(--line)',borderRadius:8,padding:'12px 14px',display:'flex',justifyContent:'space-between',alignItems:'center',cursor:'pointer',marginBottom:14}}>
+                  <span style={{fontFamily:'monospace',fontSize:16,fontWeight:600}}>{PAYMENT_HANDLES[method]}</span>
+                  <span style={{fontSize:11,color:copied==='handle'?'var(--green)':'var(--muted)'}}>{copied==='handle'?'Copied!':'tap to copy'}</span>
+                </div>
+              </div>
+            )}
+
+            {isKofi && (
+              <div className="quote" style={{marginBottom:14}}>Pay ${item.price.toFixed(2)} via Ko-fi — accepts PayPal, credit card, and Apple Pay. Include your username in the Ko-fi message.<br/><a href="https://ko-fi.com/standoff263277" target="_blank" rel="noopener">Open Ko-fi page →</a></div>
+            )}
+
+            {isCrypto && (
+              <div style={{marginBottom:14}}>
+                <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>Send the equivalent of <b style={{color:'var(--gold)'}}>${item.price.toFixed(2)}</b> to any wallet (tap to copy)</label>
+                <div style={{display:'flex',flexDirection:'column',gap:8}}>
+                  {CRYPTO_WALLETS.map(w => (
+                    <div key={w.name} onClick={()=>copyText(w.addr,w.symbol)} style={{display:'flex',alignItems:'center',gap:10,padding:'10px 12px',background:'rgba(255,255,255,.03)',border:'1px solid var(--line)',borderRadius:8,cursor:'pointer'}}>
+                      <div style={{width:32,height:32,borderRadius:'50%',background:w.color+'22',display:'flex',alignItems:'center',justifyContent:'center',fontSize:10,fontWeight:700,color:w.color,flexShrink:0}}>{w.symbol}</div>
+                      <div style={{flex:1,minWidth:0}}>
+                        <div style={{fontSize:13,fontWeight:600}}>{w.name} {w.note && <span style={{fontSize:10,color:'var(--muted)'}}>({w.note})</span>}</div>
+                        <div style={{fontSize:10,color:'var(--muted)',fontFamily:'monospace',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{w.addr}</div>
+                      </div>
+                      <span style={{fontSize:11,color:copied===w.symbol?'var(--green)':'var(--muted)',flexShrink:0}}>{copied===w.symbol?'Copied!':'copy'}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {isCard && (
+              <div>
+                <div className="quote" style={{marginBottom:12}}>{method==='apple'?'Buy an Apple Gift Card from the App Store or any retailer.':'Buy a Google Play Gift Card from any retailer.'} Use a card worth at least <b>${item.price.toFixed(2)}</b>, reveal the code, then enter it below. <b>Do not redeem it yourself.</b></div>
+                <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>{method==='apple'?'Apple':'Google Play'} gift card code</label>
+                <input type="text" value={gcCode} onChange={e=>setGcCode(e.target.value.toUpperCase())} placeholder="XXXX-XXXX-XXXX" style={{fontFamily:'monospace',letterSpacing:'0.05em',marginBottom:12}} />
+              </div>
+            )}
+
+            <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>Your in-game username</label>
+            <input value={username} onChange={e=>setUsername(e.target.value)} placeholder="e.g. CamelS2" style={{marginBottom:14}} />
+
+            <button className="btn btn-gold" style={{width:'100%'}} disabled={state==='sending' || !canSubmit()} onClick={submit}>
+              {state==='sending' ? 'Sending…' : 'Place order'}
+            </button>
+            {state==='error' && <div className="alert err">Order could not be sent. DM <b>camel5961</b> on Discord and we will sort you out directly.</div>}
+            <p className="msub" style={{marginTop:14, marginBottom:0}}>Placing an order pings our team instantly. We confirm your payment and deliver shortly after.</p>
           </div>
         )}
       </div>
@@ -428,9 +517,48 @@ function FAQ() {
   );
 }
 
-function Dashboard({ user, signIn, lifetimeGold }) {
+function ClaimModal({ user, tier, amount, username: initialUsername, onClose, onClaimed }) {
+  const [username, setUsername] = useState(initialUsername || '');
+  const [state, setState] = useState('form');
+  const color = TIER_COLOR[tier] || 'var(--gold)';
+  const submit = async () => {
+    if (!username.trim()) return;
+    setState('sending');
+    const order = { Type:'Daily Claim', Item: fmt(amount) + ' G daily allowance (' + tier + ' tier)', Price:'$0.00', Username: username.trim(), Account: user.email || user.uid };
+    const ok = await submitOrder(order);
+    if (ok) {
+      try {
+        await db.ref('goldPurchases/' + user.uid + '/' + Date.now()).set({
+          uid: user.uid, username: username.trim(), method: 'Daily Claim', type: 'Daily Claim',
+          status: 'pending', amount, tier, createdAt: new Date().toISOString()
+        });
+      } catch(e) {}
+      onClaimed();
+    } else {
+      setState('error');
+    }
+  };
+  return (
+    <div className="overlay" onClick={e => e.target === e.currentTarget && onClose()}>
+      <div className="modal">
+        <button className="xbtn" onClick={onClose} aria-label="Close">×</button>
+        <h3>Claim today's gold</h3>
+        <p className="msub">Confirm your username and we'll queue up your <b style={{color}}>{fmt(amount)} G</b> ({tier} tier) — usually credited within a few hours.</p>
+        <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>Your in-game username</label>
+        <input value={username} onChange={e=>setUsername(e.target.value)} placeholder="e.g. CamelS2" style={{marginBottom:14}} />
+        <button className="btn btn-gold" style={{width:'100%'}} disabled={state==='sending' || !username.trim()} onClick={submit}>
+          {state==='sending' ? 'Submitting…' : `Claim ${fmt(amount)} G`}
+        </button>
+        {state==='error' && <div className="alert err">Claim could not be sent. DM <b>camel5961</b> on Discord and we'll sort it out.</div>}
+      </div>
+    </div>
+  );
+}
+
+function Dashboard({ user, signIn, lifetimeGold, go }) {
   const [data, setData] = useState(null);
   const [orders, setOrders] = useState([]);
+  const [claimOpen, setClaimOpen] = useState(false);
   useEffect(() => {
     if (!user) return;
     const ref = db.ref('users/' + user.uid);
@@ -452,10 +580,12 @@ function Dashboard({ user, signIn, lifetimeGold }) {
       <button className="btn btn-gold" onClick={signIn}>Sign in or create account</button>
     </div></section>
   );
-  const claim = async () => {
-    await submitOrder({ Type:'Daily Claim', Item:'Subscription daily gold claim', Price:'$0.00', 'Standoff 2 ID': data?.standoffId || 'on file', Discord: data?.discord || 'on file', Account: user.email || user.uid });
-    alert('Claim sent! Our team will credit your gold shortly.');
-  };
+  const tierKey = data?.subscriptionTier ? data.subscriptionTier.toLowerCase() : null;
+  const dailyAmount = tierKey ? (DAILY_GOLD[tierKey] || 0) : 0;
+  const today = new Date().toISOString().slice(0,10);
+  const todaysClaim = orders.find(o => o.method === 'Daily Claim' && o.createdAt && o.createdAt.slice(0,10) === today);
+  const alreadyClaimed = todaysClaim && todaysClaim.status === 'complete';
+  const isPending = todaysClaim && todaysClaim.status !== 'complete';
   const lg = lifetimeGold || 0;
   const loyaltyUnlocked = lg >= LOYALTY_THRESHOLD;
   const loyaltyPct = Math.min(100, Math.round(lg / LOYALTY_THRESHOLD * 100));
@@ -465,8 +595,19 @@ function Dashboard({ user, signIn, lifetimeGold }) {
       <div className="sect-head"><div className="eyebrow">Dashboard</div><h2>Welcome back, <span className="goldtext">{(user.displayName||'player').split(' ')[0]}</span></h2></div>
       <div className="dash">
         <div className="card"><div className="sub">Gold balance</div><div className="statnum">🥇 {fmt(data?.goldBalance || 0)}</div></div>
-        <div className="card"><div className="sub">Subscription</div><div className="statnum" style={{fontSize:30}}>{data?.subscriptionTier ? data.subscriptionTier.toUpperCase() : 'None yet'}</div>{!data?.subscriptionTier && <a href="#subs" style={{fontSize:13}}>Pick a tier →</a>}</div>
-        <div className="card"><div className="sub">Daily claim</div>{data?.subscriptionTier ? <button className="btn btn-gold btn-sm" onClick={claim} style={{marginTop:8}}>Claim today's gold</button> : <p style={{color:'var(--muted)',fontSize:13,marginTop:8}}>Subscribe to unlock daily claims.</p>}</div>
+        <div className="card"><div className="sub">Subscription</div><div className="statnum" style={{fontSize:30}}>{tierKey ? tierKey.toUpperCase() : 'None yet'}</div>{!tierKey && <button onClick={()=>go('subs')} style={{fontSize:13,background:'none',border:'none',color:'var(--gold)',cursor:'pointer',padding:0,textDecoration:'underline'}}>Pick a tier →</button>}</div>
+        <div className="card">
+          <div className="sub">Daily claim</div>
+          {!tierKey ? (
+            <p style={{color:'var(--muted)',fontSize:13,marginTop:8}}>Subscribe to unlock daily claims.</p>
+          ) : alreadyClaimed ? (
+            <p style={{color:'var(--green)',fontSize:13,marginTop:8}}>✓ Claimed today — resets at 00:00 UTC.</p>
+          ) : isPending ? (
+            <p style={{color:'var(--gold)',fontSize:13,marginTop:8}}>⏳ Pending — we're on it!</p>
+          ) : (
+            <button className="btn btn-gold btn-sm" onClick={()=>setClaimOpen(true)} style={{marginTop:8}}>Claim {fmt(dailyAmount)} G</button>
+          )}
+        </div>
       </div>
 
       <div className="card" style={{transform:'none',marginTop:22}}>
@@ -489,8 +630,8 @@ function Dashboard({ user, signIn, lifetimeGold }) {
             {orders.map(o => (
               <div key={o.ts} className="card" style={{transform:'none',flexDirection:'row',alignItems:'center',justifyContent:'space-between',gap:12,flexWrap:'wrap',padding:'14px 18px'}}>
                 <div>
-                  <div style={{fontWeight:600}}>🥇 {fmt(o.amount||0)} gold {o.discountPct>0 && <span style={{fontSize:12,color:'var(--green)'}}>({o.discountPct}% off)</span>}</div>
-                  <div className="sub" style={{marginBottom:0}}>{o.method} · {o.createdAt ? new Date(o.createdAt).toLocaleDateString() : ''}{o.price?` · $${o.price}`:''}</div>
+                  <div style={{fontWeight:600}}>{o.amount ? <React.Fragment>🥇 {fmt(o.amount)} gold {o.discountPct>0 && <span style={{fontSize:12,color:'var(--green)'}}>({o.discountPct}% off)</span>}</React.Fragment> : (o.label || o.type || 'Order')}</div>
+                  <div className="sub" style={{marginBottom:0}}>{o.method}{o.tier?' · '+o.tier:''} · {o.createdAt ? new Date(o.createdAt).toLocaleDateString() : ''}{o.price?` · $${o.price}`:''}</div>
                 </div>
                 <div style={{fontWeight:700,fontSize:13,color:statusColor(o.status),textTransform:'uppercase',fontFamily:'Rajdhani',letterSpacing:'.05em'}}>
                   {o.status === 'complete' || o.status === 'delivered' ? '✓ Delivered' : '⏳ ' + (o.status || 'pending')}
@@ -500,6 +641,7 @@ function Dashboard({ user, signIn, lifetimeGold }) {
           </div>
         )}
       </div>
+      {claimOpen && <ClaimModal user={user} tier={tierKey} amount={dailyAmount} username={data?.standoffUsername || user.displayName} onClose={()=>setClaimOpen(false)} onClaimed={()=>setClaimOpen(false)} />}
     </div></section>
   );
 }
@@ -609,24 +751,11 @@ function BuyGoldPanel({ user, tier, signIn, flashSale, lifetimeGold, hasPurchase
   const RATES = { none:0.0075, bronze:0.0075, silver:0.005, gold:0.0035 };
   const tierKey = (tier || 'none').toLowerCase();
   const rate = RATES[tierKey] !== undefined ? RATES[tierKey] : 0.0075;
-  const HANDLES = { cashapp:'$jamesmoney192', venmo:'@Standoff2Tracker' };
+  const HANDLES = PAYMENT_HANDLES;
   const APPLE_DENOMS = [5,10,15,25,50,100];
   const GOOGLE_DENOMS = [10,15,25,50,100];
-  const CRYPTO = [
-    { name:'Bitcoin',  symbol:'BTC',  color:'#f7931a', addr:'bc1pgsmcq0036tdc8zfn8kfj0ngnkxyragj77vydmkmc8vu88xndyk4scx7kux' },
-    { name:'Ethereum', symbol:'ETH',  color:'#627eea', addr:'0x61bffb5ff4c4f9f730224cf2c7c0648877e8e1af' },
-    { name:'Solana',   symbol:'SOL',  color:'#9945ff', addr:'FoTPGikDL52vJTpxLUiW7DBpt94QZc1mDK1KwT3Hk7wy' },
-    { name:'USDT',     symbol:'USDT', color:'#26a17b', addr:'0x61bffb5ff4c4f9f730224cf2c7c0648877e8e1af', note:'ERC-20' },
-    { name:'USDC',     symbol:'USDC', color:'#2775ca', addr:'0x61bffb5ff4c4f9f730224cf2c7c0648877e8e1af', note:'ERC-20' },
-  ];
-  const METHODS = [
-    { id:'cashapp', label:'Cash App',  icon:'💸' },
-    { id:'venmo',   label:'Venmo',     icon:'🔵' },
-    { id:'kofi',    label:'Ko-fi/PayPal', icon:'☕' },
-    { id:'crypto',  label:'Crypto',    icon:'🪙' },
-    { id:'apple',   label:'Apple Card', icon:'🍎' },
-    { id:'google',  label:'Google Play', icon:'▶️' },
-  ];
+  const CRYPTO = CRYPTO_WALLETS;
+  const METHODS = PAYMENT_METHODS;
 
   const [method, setMethod] = useState('cashapp');
   const [amt, setAmt] = useState(2000);
@@ -654,7 +783,7 @@ function BuyGoldPanel({ user, tier, signIn, flashSale, lifetimeGold, hasPurchase
   const submit = async () => {
     if (!canSubmit()) return;
     setStep('submitting');
-    const methodLabel = { cashapp:'Cash App ($jamesmoney192)', venmo:'Venmo (@Standoff2Tracker)', kofi:'Ko-fi / PayPal', crypto:'Cryptocurrency', apple:'Apple Gift Card', google:'Google Play Gift Card' }[method];
+    const methodLabel = PAYMENT_METHOD_LABELS[method];
     const goldAmt = isCard ? gcGold : amt;
     const priceStr = disc.totalPct > 0 ? (`$${cost} (was $${baseCost.toFixed(2)}, ${disc.totalPct}% off)`) : (`$${cost}`);
     const amountStr = isCard ? (`$${gcDenom} gift card → ${fmt(gcGold)} G`) : (`${fmt(amt)} G — ${priceStr}`);
@@ -906,7 +1035,7 @@ function AdminPanel({ user, signIn, flashSale }) {
             <div key={o.uid+o.ts} className="card" style={{transform:'none',flexDirection:'row',alignItems:'center',justifyContent:'space-between',gap:12,flexWrap:'wrap'}}>
               <div style={{flex:1,minWidth:200}}>
                 <div style={{fontWeight:600}}>{o.username || '(no name)'} <span style={{fontSize:12,color:o.status==='complete'?'var(--green)':'var(--gold)',marginLeft:8}}>● {o.status}</span></div>
-                <div className="sub" style={{marginBottom:0}}>{fmt(o.amount||0)} G · {o.method}{o.tier?' · '+o.tier:''} · {o.createdAt ? new Date(o.createdAt).toLocaleString() : ''}</div>
+                <div className="sub" style={{marginBottom:0}}>{o.amount ? fmt(o.amount)+' G' : (o.label || o.type || 'Order')} · {o.method}{o.tier?' · '+o.tier:''}{o.price?' · $'+o.price:''} · {o.createdAt ? new Date(o.createdAt).toLocaleString() : ''}</div>
                 {o.gcCode && <div style={{fontSize:12,fontFamily:'monospace',color:'var(--gold)',marginTop:4}}>Gift code: {o.gcCode}</div>}
               </div>
               {o.status !== 'complete' && <button className="btn btn-gold btn-sm" onClick={()=>markComplete(o)}>Mark complete</button>}
@@ -1077,7 +1206,7 @@ function App() {
       ) : page === 'admin' ? (
         <AdminPanel user={user} signIn={signIn} flashSale={flashSale} />
       ) : (
-        <Dashboard user={user} signIn={signIn} lifetimeGold={lifetimeGold} />
+        <Dashboard user={user} signIn={signIn} lifetimeGold={lifetimeGold} go={go} />
       )}
 
       <footer><div className="wrap fgrid">
