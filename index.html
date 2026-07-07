@@ -197,6 +197,25 @@ const TIERS = [
 
 const fmt = n => n.toLocaleString('en-US');
 
+// ---- Discount system ----
+const LOYALTY_THRESHOLD = 25000;
+const LOYALTY_PCT = 5;
+const FIRST_PCT = 10;
+function bulkPct(amt) { if (amt >= 25000) return 10; if (amt >= 10000) return 5; return 0; }
+function flashActive(fs) { return !!(fs && fs.active && (!fs.endsAt || Date.now() < fs.endsAt) && fs.percent > 0); }
+function computeDiscounts(baseCost, amt, opts) {
+  const lines = [];
+  const bp = bulkPct(amt);
+  if (bp > 0) lines.push({ label: 'Bulk discount (' + fmt(amt) + '+ G)', pct: bp });
+  if (opts.flash && flashActive(opts.flash)) lines.push({ label: opts.flash.label || 'Flash sale', pct: opts.flash.percent });
+  if (opts.loyalty) lines.push({ label: 'Loyalty reward', pct: LOYALTY_PCT });
+  if (opts.first) lines.push({ label: 'First purchase', pct: FIRST_PCT });
+  let cost = baseCost;
+  lines.forEach(l => { cost = cost * (1 - l.pct / 100); });
+  const totalPct = baseCost > 0 ? Math.round((1 - cost / baseCost) * 100) : 0;
+  return { finalCost: cost, baseCost, lines, totalPct };
+}
+
 async function submitOrder(order) {
   const lines = Object.entries(order).map(([k,v]) => `**${k}:** ${v}`).join('\n');
   let webhookOk = false;
@@ -409,13 +428,21 @@ function FAQ() {
   );
 }
 
-function Dashboard({ user, signIn }) {
+function Dashboard({ user, signIn, lifetimeGold }) {
   const [data, setData] = useState(null);
+  const [orders, setOrders] = useState([]);
   useEffect(() => {
     if (!user) return;
     const ref = db.ref('users/' + user.uid);
-    const cb = ref.on ? ref.on('value', s => setData(s.val())) : null;
-    return () => { try { ref.off('value'); } catch(e){} };
+    ref.on('value', s => setData(s.val()));
+    const oref = db.ref('goldPurchases/' + user.uid);
+    oref.on('value', s => {
+      const dd = s.val() || {};
+      const list = Object.keys(dd).map(ts => Object.assign({ ts }, dd[ts]));
+      list.sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||''));
+      setOrders(list);
+    });
+    return () => { try { ref.off('value'); oref.off('value'); } catch(e){} };
   }, [user]);
   if (!user) return (
     <section><div className="wrap" style={{textAlign:'center',maxWidth:520}}>
@@ -429,6 +456,10 @@ function Dashboard({ user, signIn }) {
     await submitOrder({ Type:'Daily Claim', Item:'Subscription daily gold claim', Price:'$0.00', 'Standoff 2 ID': data?.standoffId || 'on file', Discord: data?.discord || 'on file', Account: user.email || user.uid });
     alert('Claim sent! Our team will credit your gold shortly.');
   };
+  const lg = lifetimeGold || 0;
+  const loyaltyUnlocked = lg >= LOYALTY_THRESHOLD;
+  const loyaltyPct = Math.min(100, Math.round(lg / LOYALTY_THRESHOLD * 100));
+  const statusColor = st => (st === 'complete' || st === 'delivered') ? 'var(--green)' : 'var(--gold)';
   return (
     <section><div className="wrap">
       <div className="sect-head"><div className="eyebrow">Dashboard</div><h2>Welcome back, <span className="goldtext">{(user.displayName||'player').split(' ')[0]}</span></h2></div>
@@ -436,6 +467,38 @@ function Dashboard({ user, signIn }) {
         <div className="card"><div className="sub">Gold balance</div><div className="statnum">🥇 {fmt(data?.goldBalance || 0)}</div></div>
         <div className="card"><div className="sub">Subscription</div><div className="statnum" style={{fontSize:30}}>{data?.subscriptionTier ? data.subscriptionTier.toUpperCase() : 'None yet'}</div>{!data?.subscriptionTier && <a href="#subs" style={{fontSize:13}}>Pick a tier →</a>}</div>
         <div className="card"><div className="sub">Daily claim</div>{data?.subscriptionTier ? <button className="btn btn-gold btn-sm" onClick={claim} style={{marginTop:8}}>Claim today's gold</button> : <p style={{color:'var(--muted)',fontSize:13,marginTop:8}}>Subscribe to unlock daily claims.</p>}</div>
+      </div>
+
+      <div className="card" style={{transform:'none',marginTop:22}}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',marginBottom:8}}>
+          <div style={{fontWeight:700,fontFamily:'Rajdhani',fontSize:18}}>💎 Loyalty {loyaltyUnlocked && <span style={{color:'var(--green)',fontSize:13}}>· 5% OFF UNLOCKED</span>}</div>
+          <div className="sub" style={{marginBottom:0}}>{fmt(lg)} / {fmt(LOYALTY_THRESHOLD)} G lifetime</div>
+        </div>
+        <div style={{background:'rgba(0,0,0,.3)',borderRadius:20,height:12,overflow:'hidden'}}>
+          <div style={{width:loyaltyPct+'%',height:'100%',background:loyaltyUnlocked?'var(--green)':'linear-gradient(90deg,var(--gold-hot),var(--gold))',transition:'width .4s'}}></div>
+        </div>
+        <p className="msub" style={{marginTop:8,marginBottom:0}}>{loyaltyUnlocked ? 'You have unlocked a permanent 5% discount on all gold purchases. Thank you!' : `Buy ${fmt(LOYALTY_THRESHOLD - lg)} more lifetime gold to unlock a permanent 5% discount.`}</p>
+      </div>
+
+      <div style={{marginTop:22}}>
+        <h3 style={{fontFamily:'Rajdhani',fontSize:20,marginBottom:12}}>Your orders</h3>
+        {orders.length === 0 ? (
+          <p className="msub">No orders yet.</p>
+        ) : (
+          <div style={{display:'flex',flexDirection:'column',gap:8}}>
+            {orders.map(o => (
+              <div key={o.ts} className="card" style={{transform:'none',flexDirection:'row',alignItems:'center',justifyContent:'space-between',gap:12,flexWrap:'wrap',padding:'14px 18px'}}>
+                <div>
+                  <div style={{fontWeight:600}}>🥇 {fmt(o.amount||0)} gold {o.discountPct>0 && <span style={{fontSize:12,color:'var(--green)'}}>({o.discountPct}% off)</span>}</div>
+                  <div className="sub" style={{marginBottom:0}}>{o.method} · {o.createdAt ? new Date(o.createdAt).toLocaleDateString() : ''}{o.price?` · $${o.price}`:''}</div>
+                </div>
+                <div style={{fontWeight:700,fontSize:13,color:statusColor(o.status),textTransform:'uppercase',fontFamily:'Rajdhani',letterSpacing:'.05em'}}>
+                  {o.status === 'complete' || o.status === 'delivered' ? '✓ Delivered' : '⏳ ' + (o.status || 'pending')}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div></section>
   );
@@ -523,7 +586,7 @@ function AuthPanel({ onClose }) {
   );
 }
 
-function BuyGoldPanel({ user, tier, signIn }) {
+function BuyGoldPanel({ user, tier, signIn, flashSale, lifetimeGold, hasPurchased, avgDeliveryHrs }) {
   const RATES = { none:0.0075, bronze:0.0075, silver:0.005, gold:0.0035 };
   const tierKey = (tier || 'none').toLowerCase();
   const rate = RATES[tierKey] !== undefined ? RATES[tierKey] : 0.0075;
@@ -558,7 +621,12 @@ function BuyGoldPanel({ user, tier, signIn }) {
   const isDirect = method === 'cashapp' || method === 'venmo';
   const isKofi = method === 'kofi';
   const isCrypto = method === 'crypto';
-  const cost = (amt * rate).toFixed(2);
+  const goldForCalc = isCard ? Math.round(gcDenom / rate) : amt;
+  const baseCost = goldForCalc * rate;
+  const loyaltyUnlocked = (lifetimeGold || 0) >= LOYALTY_THRESHOLD;
+  const isFirst = user && !hasPurchased;
+  const disc = computeDiscounts(baseCost, goldForCalc, { flash: flashSale, loyalty: loyaltyUnlocked, first: isFirst });
+  const cost = disc.finalCost.toFixed(2);
   const gcGold = Math.round(gcDenom / rate);
 
   const copyText = (t, key) => { navigator.clipboard.writeText(t).catch(()=>{}); setCopied(key); setTimeout(()=>setCopied(''), 1500); };
@@ -568,20 +636,27 @@ function BuyGoldPanel({ user, tier, signIn }) {
     if (!canSubmit()) return;
     setStep('submitting');
     const methodLabel = { cashapp:'Cash App ($jamesmoney192)', venmo:'Venmo (@Standoff2Tracker)', kofi:'Ko-fi / PayPal', crypto:'Cryptocurrency', apple:'Apple Gift Card', google:'Google Play Gift Card' }[method];
-    const amountStr = isCard ? (`$${gcDenom} gift card → ${fmt(gcGold)} G`) : (`${fmt(amt)} G ($${cost})`);
+    const goldAmt = isCard ? gcGold : amt;
+    const priceStr = disc.totalPct > 0 ? (`$${cost} (was $${baseCost.toFixed(2)}, ${disc.totalPct}% off)`) : (`$${cost}`);
+    const amountStr = isCard ? (`$${gcDenom} gift card → ${fmt(gcGold)} G`) : (`${fmt(amt)} G — ${priceStr}`);
     const order = {
       Type: 'Custom Gold', Username: username.trim(), Tier: tier || 'None',
       Method: methodLabel, Amount: amountStr,
       Account: user ? (user.email || user.uid) : 'guest'
     };
+    if (disc.lines.length) order['Discounts'] = disc.lines.map(l => l.label + ' -' + l.pct + '%').join(', ');
     if (isCard) order['Gift Card Code'] = '||' + gcCode.trim() + '||';
     const ok = await submitOrder(order);
     try {
-      if (user) db.ref('goldPurchases/' + user.uid + '/' + Date.now()).set({
-        uid: user.uid, username: username.trim(), tier: tier || 'None', method,
-        status: 'pending', amount: isCard ? gcGold : amt, gcCode: isCard ? gcCode.trim() : null,
-        createdAt: new Date().toISOString()
-      });
+      if (user) {
+        db.ref('goldPurchases/' + user.uid + '/' + Date.now()).set({
+          uid: user.uid, username: username.trim(), tier: tier || 'None', method,
+          status: 'pending', amount: goldAmt, price: parseFloat(cost), discountPct: disc.totalPct,
+          gcCode: isCard ? gcCode.trim() : null, createdAt: new Date().toISOString()
+        });
+        db.ref('users/' + user.uid + '/hasPurchased').set(true);
+        db.ref('users/' + user.uid + '/lifetimeGold').transaction(v => (v || 0) + goldAmt);
+      }
     } catch(e) {}
     setStep(ok ? 'done' : 'error');
   };
@@ -607,6 +682,22 @@ function BuyGoldPanel({ user, tier, signIn }) {
       )}
       <div className="card" style={{transform:'none'}}>
         <div className="sub" style={{marginBottom:12}}>Your rate: <b style={{color:'var(--gold)'}}>${rate}/gold</b> {tierKey!=='none' && tierKey!=='bronze' ? `(${tier} discount applied)` : '— subscribe for a better rate'}</div>
+        {avgDeliveryHrs != null && avgDeliveryHrs > 0 && (
+          <div style={{fontSize:12,color:'var(--green)',marginBottom:12,marginTop:-6}}>⚡ Avg delivery time: ~{avgDeliveryHrs < 1 ? Math.round(avgDeliveryHrs*60)+' min' : avgDeliveryHrs.toFixed(1)+' hrs'}</div>
+        )}
+        {disc.lines.length > 0 && (
+          <div style={{background:'var(--gold-dim)',border:'1px dashed var(--gold)',borderRadius:8,padding:'10px 12px',marginBottom:14}}>
+            <div style={{fontSize:12,fontWeight:700,color:'var(--gold)',marginBottom:6}}>🎉 Discounts applied</div>
+            {disc.lines.map((l,i) => (
+              <div key={i} style={{display:'flex',justifyContent:'space-between',fontSize:12,color:'var(--muted)',marginBottom:2}}>
+                <span>{l.label}</span><span style={{color:'var(--green)'}}>−{l.pct}%</span>
+              </div>
+            ))}
+            <div style={{borderTop:'1px solid var(--line)',marginTop:6,paddingTop:6,display:'flex',justifyContent:'space-between',fontSize:13,fontWeight:700}}>
+              <span>Total savings</span><span style={{color:'var(--green)'}}>−{disc.totalPct}% (${(disc.baseCost - disc.finalCost).toFixed(2)})</span>
+            </div>
+          </div>
+        )}
 
         <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>Payment method</label>
         <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:6,marginBottom:16}}>
@@ -672,7 +763,7 @@ function BuyGoldPanel({ user, tier, signIn }) {
           <div>
             <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>Amount of gold</label>
             <input type="number" value={amt} min={100} step={100} onChange={e=>setAmt(Math.max(0,parseInt(e.target.value)||0))} style={{fontFamily:'monospace',marginBottom:10}} />
-            <div className="quote" style={{display:'flex',justifyContent:'space-between',marginBottom:12}}><span>You pay{isKofi?' on Ko-fi':isCrypto?' in crypto':''}</span><b style={{color:'var(--gold)',fontSize:22}}>${cost}</b></div>
+            <div className="quote" style={{display:'flex',justifyContent:'space-between',marginBottom:12}}><span>You pay{isKofi?' on Ko-fi':isCrypto?' in crypto':''}</span><span>{disc.totalPct > 0 && <span style={{textDecoration:'line-through',color:'var(--muted)',fontSize:15,marginRight:8}}>${disc.baseCost.toFixed(2)}</span>}<b style={{color:'var(--gold)',fontSize:22}}>${cost}</b></span></div>
           </div>
         )}
 
@@ -687,7 +778,7 @@ function BuyGoldPanel({ user, tier, signIn }) {
     </div>
   );
 }
-function AdminPanel({ user, signIn }) {
+function AdminPanel({ user, signIn, flashSale }) {
   const [authed, setAuthed] = useState(false);
   const [checking, setChecking] = useState(true);
   const [tab, setTab] = useState('orders');
@@ -695,6 +786,9 @@ function AdminPanel({ user, signIn }) {
   const [orders, setOrders] = useState([]);
   const [search, setSearch] = useState('');
   const [msg, setMsg] = useState(null);
+  const [fsLabel, setFsLabel] = useState('Weekend Flash Sale');
+  const [fsPct, setFsPct] = useState(15);
+  const [fsHours, setFsHours] = useState(48);
 
   useEffect(() => {
     if (!user) { setChecking(false); return; }
@@ -721,7 +815,21 @@ function AdminPanel({ user, signIn }) {
   });
 
   const flash = (type, text) => { setMsg({ type, text }); setTimeout(()=>setMsg(null), 2500); };
-  const markComplete = (o) => { db.ref('goldPurchases/' + o.uid + '/' + o.ts + '/status').set('complete'); flash('ok','Order marked complete'); setTimeout(loadOrders, 300); };
+  const markComplete = (o) => {
+    const completedAt = Date.now();
+    db.ref('goldPurchases/' + o.uid + '/' + o.ts + '/status').set('complete');
+    db.ref('goldPurchases/' + o.uid + '/' + o.ts + '/completedAt').set(completedAt);
+    if (o.createdAt) {
+      const hrs = (completedAt - new Date(o.createdAt).getTime()) / 3600000;
+      if (hrs > 0 && hrs < 720) db.ref('deliveryStats').transaction(cur => {
+        cur = cur || { avgHrs: hrs, count: 0 };
+        const count = (cur.count || 0) + 1;
+        const avgHrs = ((cur.avgHrs || hrs) * (count - 1) + hrs) / count;
+        return { avgHrs: Math.round(avgHrs * 10) / 10, count };
+      });
+    }
+    flash('ok','Order marked complete'); setTimeout(loadOrders, 300);
+  };
   const setTier = (uid, t) => { db.ref('users/' + uid + '/subscriptionTier').set(t); flash('ok','Tier → ' + t); setTimeout(loadUsers, 300); };
   const adjustBalance = (uid, cur) => {
     const v = prompt('Set gold balance for this user:', cur || 0);
@@ -729,6 +837,13 @@ function AdminPanel({ user, signIn }) {
     const n = parseInt(v); if (isNaN(n)) return flash('err','Invalid number');
     db.ref('users/' + uid + '/goldBalance').set(n); flash('ok','Balance → ' + fmt(n)); setTimeout(loadUsers, 300);
   };
+  const startFlash = () => {
+    const pct = parseInt(fsPct), hrs = parseFloat(fsHours);
+    if (isNaN(pct) || pct <= 0 || pct > 90) return flash('err','Enter a percent between 1 and 90');
+    db.ref('flashSale').set({ active: true, label: fsLabel.trim() || 'Flash Sale', percent: pct, endsAt: hrs > 0 ? Date.now() + hrs*3600000 : null });
+    flash('ok','Flash sale started!');
+  };
+  const stopFlash = () => { db.ref('flashSale').set({ active: false }); flash('ok','Flash sale stopped'); };
 
   if (checking) return <section><div className="wrap" style={{textAlign:'center',color:'var(--muted)'}}>Checking admin access…</div></section>;
   if (!user) return (
@@ -759,6 +874,7 @@ function AdminPanel({ user, signIn }) {
       <div className="toggle" style={{marginBottom:18}}>
         <button className={tab==='orders'?'on':''} onClick={()=>setTab('orders')}>Orders {pending>0?`(${pending})`:''}</button>
         <button className={tab==='users'?'on':''} onClick={()=>setTab('users')}>Users ({users.length})</button>
+        <button className={tab==='flash'?'on':''} onClick={()=>setTab('flash')}>Flash Sale</button>
       </div>
       <div className="field" style={{maxWidth:400,margin:'0 auto 20px'}}>
         <input value={search} onChange={e=>setSearch(e.target.value)} placeholder={tab==='orders'?'Search orders by username/method…':'Search users by name/email/UID…'} />
@@ -802,7 +918,46 @@ function AdminPanel({ user, signIn }) {
           ))}
         </div>
       )}
+
+      {tab === 'flash' && (
+        <div style={{maxWidth:480,margin:'0 auto'}}>
+          {flashActive(flashSale) ? (
+            <div className="card" style={{transform:'none',marginBottom:16}}>
+              <div style={{fontWeight:700,color:'var(--green)',marginBottom:6}}>● Flash sale is LIVE</div>
+              <div className="sub" style={{marginBottom:4}}>{flashSale.label} — {flashSale.percent}% off</div>
+              {flashSale.endsAt && <div className="sub" style={{marginBottom:12}}>Ends {new Date(flashSale.endsAt).toLocaleString()}</div>}
+              <button className="btn btn-ghost btn-sm" onClick={stopFlash}>Stop sale now</button>
+            </div>
+          ) : (
+            <p className="msub" style={{marginBottom:16}}>No active flash sale. Start one below — it shows a sitewide countdown banner and applies the discount to all custom gold orders.</p>
+          )}
+          <div className="card" style={{transform:'none'}}>
+            <div className="field"><label>Sale label</label><input value={fsLabel} onChange={e=>setFsLabel(e.target.value)} placeholder="Weekend Flash Sale" /></div>
+            <div className="field"><label>Discount percent</label><input type="number" min="1" max="90" value={fsPct} onChange={e=>setFsPct(e.target.value)} /></div>
+            <div className="field"><label>Duration (hours, 0 = no end time)</label><input type="number" min="0" value={fsHours} onChange={e=>setFsHours(e.target.value)} /></div>
+            <button className="btn btn-gold" style={{width:'100%'}} onClick={startFlash}>{flashActive(flashSale) ? 'Replace active sale' : 'Start flash sale'}</button>
+          </div>
+        </div>
+      )}
     </div></section>
+  );
+}
+
+function FlashBanner({ flashSale, onShop }) {
+  const [now, setNow] = useState(Date.now());
+  useEffect(() => { const i = setInterval(() => setNow(Date.now()), 1000); return () => clearInterval(i); }, []);
+  let countdown = null;
+  if (flashSale.endsAt) {
+    const ms = flashSale.endsAt - now;
+    if (ms > 0) {
+      const h = Math.floor(ms/3600000), m = Math.floor((ms%3600000)/60000), s = Math.floor((ms%60000)/1000);
+      countdown = (h>0?h+'h ':'') + String(m).padStart(2,'0') + 'm ' + String(s).padStart(2,'0') + 's';
+    }
+  }
+  return (
+    <div onClick={onShop} style={{background:'repeating-linear-gradient(45deg,var(--gold) 0 18px,var(--gold-hot) 18px 36px)',color:'#141000',padding:'9px 16px',textAlign:'center',fontFamily:'Rajdhani',fontWeight:700,fontSize:15,letterSpacing:'.03em',cursor:'pointer'}}>
+      🔥 {flashSale.label || 'FLASH SALE'} — {flashSale.percent}% OFF ALL GOLD{countdown ? ' · ENDS IN ' + countdown : ''} · TAP TO SHOP
+    </div>
   );
 }
 
@@ -813,6 +968,10 @@ function App() {
   const [authOpen, setAuthOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [userTier, setUserTier] = useState(null);
+  const [lifetimeGold, setLifetimeGold] = useState(0);
+  const [hasPurchased, setHasPurchased] = useState(false);
+  const [flashSale, setFlashSale] = useState(null);
+  const [avgDeliveryHrs, setAvgDeliveryHrs] = useState(null);
   useEffect(() => auth.onAuthStateChanged(u => {
     const vu = u && u.emailVerified ? u : null;
     setUser(vu);
@@ -820,14 +979,25 @@ function App() {
       setAuthOpen(false);
       db.ref('admins/' + vu.uid).once('value', s => setIsAdmin(s.val() === true)).catch(()=>setIsAdmin(false));
       db.ref('users/' + vu.uid + '/subscriptionTier').on('value', s => setUserTier(s.val() || null));
-    } else { setIsAdmin(false); setUserTier(null); }
+      db.ref('users/' + vu.uid + '/lifetimeGold').on('value', s => setLifetimeGold(s.val() || 0));
+      db.ref('users/' + vu.uid + '/hasPurchased').on('value', s => setHasPurchased(s.val() === true));
+    } else { setIsAdmin(false); setUserTier(null); setLifetimeGold(0); setHasPurchased(false); }
   }), []);
+  useEffect(() => {
+    const r = db.ref('flashSale');
+    const cb = r.on('value', s => setFlashSale(s.val() || null));
+    return () => { try { r.off('value', cb); } catch(e){} };
+  }, []);
+  useEffect(() => {
+    db.ref('deliveryStats/avgHrs').once('value', s => { const v = s.val(); if (v != null) setAvgDeliveryHrs(v); }).catch(()=>{});
+  }, []);
   const signIn = () => setAuthOpen(true);
   const buy = item => setCheckout(item);
   const go = (id) => { setPage('home'); setTimeout(() => document.getElementById(id)?.scrollIntoView({behavior:'smooth'}), 30); };
   return (
     <div>
       <div className="annc">🎁 Weekly skin giveaways on our main site — <a href="https://standoff2markettracker.com" target="_blank" rel="noopener"><b>standoff2markettracker.com</b></a></div>
+      {flashActive(flashSale) && <FlashBanner flashSale={flashSale} onShop={()=>setPage('buy')} />}
       <header><div className="wrap nav">
         <div className="logo">🥇 Cheap<span>Standoff2</span>Gold</div>
         <ul className="navlinks">
@@ -871,7 +1041,7 @@ function App() {
           <section id="buy-custom" style={{paddingTop:0}}>
             <div className="wrap">
               <div className="sect-head"><div className="eyebrow">Buy Any Amount</div><h2>Need a <span className="goldtext">specific amount?</span></h2><p>Type the exact gold you want and pay your way — cards, PayPal, crypto, or gift cards.</p></div>
-              <BuyGoldPanel user={user} tier={userTier} signIn={signIn} />
+              <BuyGoldPanel user={user} tier={userTier} signIn={signIn} flashSale={flashSale} lifetimeGold={lifetimeGold} hasPurchased={hasPurchased} avgDeliveryHrs={avgDeliveryHrs} />
             </div>
           </section>
           <Packs buy={buy} />
@@ -883,12 +1053,12 @@ function App() {
       ) : page === 'buy' ? (
         <section><div className="wrap">
           <div className="sect-head"><div className="eyebrow">Buy Gold</div><h2>Buy <span className="goldtext">any amount</span> of gold</h2><p>Type the exact amount you want and choose how to pay.</p></div>
-          <BuyGoldPanel user={user} tier={userTier} signIn={signIn} />
+          <BuyGoldPanel user={user} tier={userTier} signIn={signIn} flashSale={flashSale} lifetimeGold={lifetimeGold} hasPurchased={hasPurchased} avgDeliveryHrs={avgDeliveryHrs} />
         </div></section>
       ) : page === 'admin' ? (
-        <AdminPanel user={user} signIn={signIn} />
+        <AdminPanel user={user} signIn={signIn} flashSale={flashSale} />
       ) : (
-        <Dashboard user={user} signIn={signIn} />
+        <Dashboard user={user} signIn={signIn} lifetimeGold={lifetimeGold} />
       )}
 
       <footer><div className="wrap fgrid">
