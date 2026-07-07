@@ -530,7 +530,14 @@ function AuthPanel({ onClose }) {
           ]).catch(() => {});
         }))
       .then(() => { window.firebase.auth().signOut(); setBusy(false); setSuccess('Account created! Check your email (and spam folder) to verify, then sign in.'); })
-      .catch(e => { setBusy(false); setError(e.message); });
+      .catch(e => {
+        setBusy(false);
+        if (e.code === 'auth/email-already-in-use') {
+          setError('That email already has an account (maybe from our main site?). Tap "Sign in" above instead — or use "Forgot password?" if you don’t remember it.');
+        } else {
+          setError(e.message);
+        }
+      });
   };
 
   const handleLogin = () => {
@@ -548,6 +555,15 @@ function AuthPanel({ onClose }) {
         }
         setBusy(false); setSuccess('Signed in!'); setTimeout(onClose, 700);
       })
+      .catch(e => { setBusy(false); setError(e.message); });
+  };
+
+  const handleReset = () => {
+    setError(null); setSuccess(null);
+    if (!email) { setError('Enter your email above first, then tap "Forgot password?" again.'); return; }
+    setBusy(true);
+    window.firebase.auth().sendPasswordResetEmail(email)
+      .then(() => { setBusy(false); setSuccess('Password reset email sent — check your inbox (and spam folder).'); })
       .catch(e => { setBusy(false); setError(e.message); });
   };
 
@@ -575,6 +591,9 @@ function AuthPanel({ onClose }) {
           <label>Password</label>
           <input type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="••••••••" />
         </div>
+        {mode === 'login' && (
+          <button type="button" onClick={handleReset} style={{background:'none',border:'none',color:'var(--muted)',fontSize:12,cursor:'pointer',padding:0,marginBottom:14,textDecoration:'underline'}}>Forgot password?</button>
+        )}
         {error && <div className="alert err">{error}</div>}
         {success && <div className="alert" style={{borderColor:'var(--green)',color:'var(--green)',background:'rgba(61,214,140,.08)'}}>{success}</div>}
         <button className="btn btn-gold" style={{width:'100%',marginTop:8}} disabled={busy} onClick={mode==='signup'?handleSignUp:handleLogin}>
