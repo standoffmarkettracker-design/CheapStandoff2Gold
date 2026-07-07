@@ -549,17 +549,7 @@ function ClaimModal({ user, tier, amount, username: initialUsername, onClose, on
     if (!canSubmit) return;
     setStep('submitting');
     try {
-      const ext = (screenshot.name.match(/\.[a-zA-Z0-9]+$/) || ['.png'])[0];
-      const path = 'claimScreenshots/' + user.uid + '/' + Date.now() + ext;
-      const ref = storage.ref().child(path);
-      await ref.put(screenshot);
-      const screenshotUrl = await ref.getDownloadURL();
       const today = new Date().toISOString().slice(0,10);
-      await db.ref('dailyClaims/' + user.uid).set({
-        uid: user.uid, displayName: user.displayName || '', email: user.email || '',
-        discord: discord.trim(), username: username.trim(), tier, amount,
-        screenshotUrl, status: 'pending', createdAt: new Date().toISOString(), claimDate: today
-      });
       const payload = { embeds: [{
         title: '💰 New Daily Gold Claim', color: 16766720,
         fields: [
@@ -571,10 +561,18 @@ function ClaimModal({ user, tier, amount, username: initialUsername, onClose, on
         description: 'Screenshot attached below. Verify the profile, then mark complete in admin.',
         timestamp: new Date().toISOString()
       }] };
+      const ext = (screenshot.name.match(/\.[a-zA-Z0-9]+$/) || ['.png'])[0];
       const fd = new FormData();
       fd.append('payload_json', JSON.stringify(payload));
       fd.append('files[0]', screenshot, 'claim-screenshot' + ext);
-      await fetch(WEBHOOK, { method: 'POST', body: fd });
+      const res = await fetch(WEBHOOK + '?wait=true', { method: 'POST', body: fd });
+      let screenshotUrl = null;
+      try { const msg = await res.json(); screenshotUrl = msg?.attachments?.[0]?.url || null; } catch(e) {}
+      await db.ref('dailyClaims/' + user.uid).set({
+        uid: user.uid, displayName: user.displayName || '', email: user.email || '',
+        discord: discord.trim(), username: username.trim(), tier, amount,
+        screenshotUrl, status: 'pending', createdAt: new Date().toISOString(), claimDate: today
+      });
       setStep('submitted');
       onClaimed();
     } catch (e) {
