@@ -152,8 +152,9 @@ footer{border-top:1px solid var(--line);padding:36px 0;color:var(--muted);font-s
 <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-storage-compat.js"></script>
 <script type="text/babel">
-const { useState, useEffect } = React;
+const { useState, useEffect, useRef } = React;
 
 // Firebase config (replaced at deploy with live project config)
 const firebaseConfig = {
@@ -167,18 +168,20 @@ const firebaseConfig = {
     };
 
 // Initialize Firebase (safe: app still renders if config is missing)
-let auth, db;
+let auth, db, storage;
 try {
   if (!window.firebase?.apps?.length) {
     window.firebase.initializeApp(firebaseConfig);
   }
   auth = window.firebase.auth();
   db = window.firebase.database();
+  storage = window.firebase.storage();
 } catch (e) {
   console.warn('Firebase not configured yet:', e);
   auth = { onAuthStateChanged: (cb) => { cb(null); return () => {}; }, signOut: () => {} };
   const fakeRef = { on: () => {}, off: () => {}, once: () => Promise.resolve({ val: () => null }), push: () => Promise.resolve() };
   db = { ref: () => fakeRef };
+  storage = { ref: () => ({ put: () => Promise.reject(new Error('storage unavailable')) }) };
 }
 
 const WEBHOOK = "https://discord.com/api/webhooks/1521212880614330488/whaIWiT5y7FbVYQ93k0TwHtbPljg5CxdG8vwr8J9s6vbWTturZluUyKhHTNKcL0Ytzj5";
@@ -254,6 +257,7 @@ async function submitOrder(order) {
 function Checkout({ item, user, onClose }) {
   const [method, setMethod] = useState('cashapp');
   const [username, setUsername] = useState(user ? (user.displayName || '') : '');
+  const [discord, setDiscord] = useState('');
   const [gcCode, setGcCode] = useState('');
   const [copied, setCopied] = useState('');
   const [state, setState] = useState('form');
@@ -264,7 +268,7 @@ function Checkout({ item, user, onClose }) {
   const isDirect = method === 'cashapp' || method === 'venmo';
 
   const copyText = (t, key) => { navigator.clipboard.writeText(t).catch(()=>{}); setCopied(key); setTimeout(()=>setCopied(''), 1500); };
-  const canSubmit = () => username.trim() && (isCard ? gcCode.trim().length >= 8 : true);
+  const canSubmit = () => username.trim() && discord.trim() && (isCard ? gcCode.trim().length >= 8 : true);
 
   const submit = async () => {
     if (!canSubmit()) return;
@@ -272,14 +276,14 @@ function Checkout({ item, user, onClose }) {
     const methodLabel = PAYMENT_METHOD_LABELS[method];
     const order = {
       Type: item.type, Item: item.label, Price: '$' + item.price.toFixed(2), Method: methodLabel,
-      Username: username.trim(), Account: user ? (user.email || user.uid) : 'guest'
+      Username: username.trim(), Discord: discord.trim(), Account: user ? (user.email || user.uid) : 'guest'
     };
     if (isCard) order['Gift Card Code'] = '||' + gcCode.trim() + '||';
     const ok = await submitOrder(order);
     try {
       if (user) {
         db.ref('goldPurchases/' + user.uid + '/' + Date.now()).set({
-          uid: user.uid, username: username.trim(), method, type: item.type,
+          uid: user.uid, username: username.trim(), discord: discord.trim(), method, type: item.type,
           status: 'pending', amount: null, label: item.label, price: item.price,
           gcCode: isCard ? gcCode.trim() : null, createdAt: new Date().toISOString()
         });
@@ -356,6 +360,9 @@ function Checkout({ item, user, onClose }) {
 
             <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>Your in-game username</label>
             <input value={username} onChange={e=>setUsername(e.target.value)} placeholder="e.g. CamelS2" style={{marginBottom:14}} />
+
+            <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>Your Discord username</label>
+            <input value={discord} onChange={e=>setDiscord(e.target.value)} placeholder="e.g. camel5961" style={{marginBottom:14}} />
 
             <button className="btn btn-gold" style={{width:'100%'}} disabled={state==='sending' || !canSubmit()} onClick={submit}>
               {state==='sending' ? 'Sending…' : 'Place order'}
@@ -518,38 +525,116 @@ function FAQ() {
 }
 
 function ClaimModal({ user, tier, amount, username: initialUsername, onClose, onClaimed }) {
+  const [step, setStep] = useState('form');
   const [username, setUsername] = useState(initialUsername || '');
-  const [state, setState] = useState('form');
+  const [discord, setDiscord] = useState('');
+  const [screenshot, setScreenshot] = useState(null);
+  const [screenshotPreview, setScreenshotPreview] = useState(null);
+  const [errMsg, setErrMsg] = useState('');
+  const fileInputRef = useRef(null);
   const color = TIER_COLOR[tier] || 'var(--gold)';
+
+  const handleFile = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setScreenshot(file);
+    const reader = new FileReader();
+    reader.onload = ev => setScreenshotPreview(ev.target.result);
+    reader.readAsDataURL(file);
+  };
+
+  const canSubmit = username.trim() && discord.trim() && screenshot;
+
   const submit = async () => {
-    if (!username.trim()) return;
-    setState('sending');
-    const order = { Type:'Daily Claim', Item: fmt(amount) + ' G daily allowance (' + tier + ' tier)', Price:'$0.00', Username: username.trim(), Account: user.email || user.uid };
-    const ok = await submitOrder(order);
-    if (ok) {
-      try {
-        await db.ref('goldPurchases/' + user.uid + '/' + Date.now()).set({
-          uid: user.uid, username: username.trim(), method: 'Daily Claim', type: 'Daily Claim',
-          status: 'pending', amount, tier, createdAt: new Date().toISOString()
-        });
-      } catch(e) {}
+    if (!canSubmit) return;
+    setStep('submitting');
+    try {
+      const ext = (screenshot.name.match(/\.[a-zA-Z0-9]+$/) || ['.png'])[0];
+      const path = 'claimScreenshots/' + user.uid + '/' + Date.now() + ext;
+      const ref = storage.ref().child(path);
+      await ref.put(screenshot);
+      const screenshotUrl = await ref.getDownloadURL();
+      const today = new Date().toISOString().slice(0,10);
+      await db.ref('dailyClaims/' + user.uid).set({
+        uid: user.uid, displayName: user.displayName || '', email: user.email || '',
+        discord: discord.trim(), username: username.trim(), tier, amount,
+        screenshotUrl, status: 'pending', createdAt: new Date().toISOString(), claimDate: today
+      });
+      const payload = { embeds: [{
+        title: '💰 New Daily Gold Claim', color: 16766720,
+        fields: [
+          { name: 'Username', value: username.trim(), inline: true },
+          { name: 'Discord', value: discord.trim(), inline: true },
+          { name: 'Tier', value: tier, inline: true },
+          { name: 'Amount', value: fmt(amount) + ' G', inline: true },
+        ],
+        description: 'Screenshot attached below. Verify the profile, then mark complete in admin.',
+        timestamp: new Date().toISOString()
+      }] };
+      const fd = new FormData();
+      fd.append('payload_json', JSON.stringify(payload));
+      fd.append('files[0]', screenshot, 'claim-screenshot' + ext);
+      await fetch(WEBHOOK, { method: 'POST', body: fd });
+      setStep('submitted');
       onClaimed();
-    } else {
-      setState('error');
+    } catch (e) {
+      setErrMsg(e.message || 'Something went wrong');
+      setStep('error');
     }
   };
+
   return (
     <div className="overlay" onClick={e => e.target === e.currentTarget && onClose()}>
       <div className="modal">
         <button className="xbtn" onClick={onClose} aria-label="Close">×</button>
-        <h3>Claim today's gold</h3>
-        <p className="msub">Confirm your username and we'll queue up your <b style={{color}}>{fmt(amount)} G</b> ({tier} tier) — usually credited within a few hours.</p>
-        <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>Your in-game username</label>
-        <input value={username} onChange={e=>setUsername(e.target.value)} placeholder="e.g. CamelS2" style={{marginBottom:14}} />
-        <button className="btn btn-gold" style={{width:'100%'}} disabled={state==='sending' || !username.trim()} onClick={submit}>
-          {state==='sending' ? 'Submitting…' : `Claim ${fmt(amount)} G`}
-        </button>
-        {state==='error' && <div className="alert err">Claim could not be sent. DM <b>camel5961</b> on Discord and we'll sort it out.</div>}
+        <div className="eyebrow" style={{marginBottom:4}}>Daily Gold Claim</div>
+        <h3 style={{color, marginBottom:18}}>{fmt(amount)} G</h3>
+
+        {step === 'form' && (
+          <div>
+            <p className="msub">Confirm your details and upload a screenshot of your Standoff 2 profile (username visible) so we can verify it's really you before crediting your gold.</p>
+            <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>Your in-game username</label>
+            <input value={username} onChange={e=>setUsername(e.target.value)} placeholder="e.g. CamelS2" style={{marginBottom:12}} />
+            <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>Your Discord username</label>
+            <input value={discord} onChange={e=>setDiscord(e.target.value)} placeholder="e.g. camel5961" style={{marginBottom:12}} />
+            <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>Profile screenshot (username visible) <span style={{color:'var(--danger)'}}>*</span></label>
+            <div onClick={()=>fileInputRef.current && fileInputRef.current.click()} style={{border:'1px dashed '+(screenshot?color+'99':'var(--line)'),borderRadius:8,padding:screenshotPreview?'8px':'22px 14px',textAlign:'center',cursor:'pointer',background:'rgba(0,0,0,.2)',marginBottom:6}}>
+              {screenshotPreview ? (
+                <img src={screenshotPreview} alt="preview" style={{maxWidth:'100%',maxHeight:130,objectFit:'contain',borderRadius:6,display:'block',margin:'0 auto'}} />
+              ) : (
+                <div><div style={{fontSize:26,marginBottom:6}}>📸</div><div style={{color:'var(--muted)',fontSize:13}}>Tap to upload a screenshot</div><div style={{color:'var(--muted)',fontSize:11,marginTop:4,opacity:.7}}>Must show your Standoff 2 username clearly</div></div>
+              )}
+            </div>
+            {screenshot && <div style={{fontSize:11,color:'var(--green)',marginBottom:10,textAlign:'center'}}>✓ {screenshot.name}</div>}
+            <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFile} style={{display:'none'}} />
+            <button className="btn btn-gold" style={{width:'100%',marginTop:8}} disabled={!canSubmit} onClick={submit}>
+              Submit claim →
+            </button>
+          </div>
+        )}
+
+        {step === 'submitting' && (
+          <div style={{textAlign:'center',padding:'24px 0'}}>
+            <div style={{fontSize:32,marginBottom:12}}>⟳</div>
+            <div style={{color:'var(--muted)',fontSize:14}}>Uploading and submitting your claim…</div>
+          </div>
+        )}
+
+        {step === 'submitted' && (
+          <div className="oksplash">
+            <div className="big">📋</div>
+            <h3>Claim submitted!</h3>
+            <p className="msub" style={{marginTop:8}}>We got your screenshot and details. Our team verifies claims and credits gold usually within a few hours — watch your dashboard for the status to update.</p>
+            <button className="btn btn-ghost btn-sm" onClick={onClose} style={{marginTop:10}}>Done</button>
+          </div>
+        )}
+
+        {step === 'error' && (
+          <div>
+            <div className="alert err">Claim could not be submitted{errMsg?': '+errMsg:''}. DM <b>camel5961</b> on Discord and we'll sort it out.</div>
+            <button className="btn btn-ghost btn-sm" style={{marginTop:10,width:'100%'}} onClick={()=>setStep('form')}>Try again</button>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -558,6 +643,7 @@ function ClaimModal({ user, tier, amount, username: initialUsername, onClose, on
 function Dashboard({ user, signIn, lifetimeGold, go }) {
   const [data, setData] = useState(null);
   const [orders, setOrders] = useState([]);
+  const [claimData, setClaimData] = useState(null);
   const [claimOpen, setClaimOpen] = useState(false);
   useEffect(() => {
     if (!user) return;
@@ -570,7 +656,9 @@ function Dashboard({ user, signIn, lifetimeGold, go }) {
       list.sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||''));
       setOrders(list);
     });
-    return () => { try { ref.off('value'); oref.off('value'); } catch(e){} };
+    const cref = db.ref('dailyClaims/' + user.uid);
+    cref.on('value', s => setClaimData(s.val()));
+    return () => { try { ref.off('value'); oref.off('value'); cref.off('value'); } catch(e){} };
   }, [user]);
   if (!user) return (
     <section><div className="wrap" style={{textAlign:'center',maxWidth:520}}>
@@ -583,9 +671,10 @@ function Dashboard({ user, signIn, lifetimeGold, go }) {
   const tierKey = data?.subscriptionTier ? data.subscriptionTier.toLowerCase() : null;
   const dailyAmount = tierKey ? (DAILY_GOLD[tierKey] || 0) : 0;
   const today = new Date().toISOString().slice(0,10);
-  const todaysClaim = orders.find(o => o.method === 'Daily Claim' && o.createdAt && o.createdAt.slice(0,10) === today);
-  const alreadyClaimed = todaysClaim && todaysClaim.status === 'complete';
-  const isPending = todaysClaim && todaysClaim.status !== 'complete';
+  const lastClaim = claimData && claimData.claimDate;
+  const claimStatus = claimData && claimData.status;
+  const alreadyClaimed = lastClaim === today && claimStatus === 'complete';
+  const isPending = lastClaim === today && claimStatus !== 'complete';
   const lg = lifetimeGold || 0;
   const loyaltyUnlocked = lg >= LOYALTY_THRESHOLD;
   const loyaltyPct = Math.min(100, Math.round(lg / LOYALTY_THRESHOLD * 100));
@@ -609,6 +698,18 @@ function Dashboard({ user, signIn, lifetimeGold, go }) {
           )}
         </div>
       </div>
+
+      {tierKey && (
+        <div className="card" style={{transform:'none',marginTop:22}}>
+          <div className="eyebrow" style={{marginBottom:12}}>How daily claims work</div>
+          {[['Click Claim','Opens the claim form for your tier\'s daily amount.'],['Upload proof','Add your in-game username, Discord, and a screenshot of your Standoff 2 profile with your username visible.'],['We verify','Our team checks your screenshot matches your account — usually within a few hours.'],['Gold arrives','Once verified we credit your gold and mark the claim complete on your dashboard.']].map((step,i) => (
+            <div key={i} style={{display:'flex',gap:12,marginBottom:i<3?12:0,alignItems:'flex-start'}}>
+              <div style={{width:20,height:20,borderRadius:5,background:'rgba(255,255,255,.04)',border:'1px solid var(--line)',display:'flex',alignItems:'center',justifyContent:'center',color:'var(--muted)',fontSize:11,fontWeight:700,flexShrink:0,marginTop:2}}>{i+1}</div>
+              <div><div style={{fontWeight:600,fontSize:13,marginBottom:2}}>{step[0]}</div><div style={{color:'var(--muted)',fontSize:12,lineHeight:1.5}}>{step[1]}</div></div>
+            </div>
+          ))}
+        </div>
+      )}
 
       <div className="card" style={{transform:'none',marginTop:22}}>
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',marginBottom:8}}>
@@ -762,6 +863,7 @@ function BuyGoldPanel({ user, tier, signIn, flashSale, lifetimeGold, hasPurchase
   const [gcDenom, setGcDenom] = useState(10);
   const [gcCode, setGcCode] = useState('');
   const [username, setUsername] = useState(user ? (user.displayName || '') : '');
+  const [discord, setDiscord] = useState('');
   const [copied, setCopied] = useState('');
   const [step, setStep] = useState('form');
 
@@ -778,7 +880,7 @@ function BuyGoldPanel({ user, tier, signIn, flashSale, lifetimeGold, hasPurchase
   const gcGold = Math.round(gcDenom / rate);
 
   const copyText = (t, key) => { navigator.clipboard.writeText(t).catch(()=>{}); setCopied(key); setTimeout(()=>setCopied(''), 1500); };
-  const canSubmit = () => username.trim() && (isCard ? gcCode.trim().length >= 8 : amt >= 100);
+  const canSubmit = () => username.trim() && discord.trim() && (isCard ? gcCode.trim().length >= 8 : amt >= 100);
 
   const submit = async () => {
     if (!canSubmit()) return;
@@ -788,7 +890,7 @@ function BuyGoldPanel({ user, tier, signIn, flashSale, lifetimeGold, hasPurchase
     const priceStr = disc.totalPct > 0 ? (`$${cost} (was $${baseCost.toFixed(2)}, ${disc.totalPct}% off)`) : (`$${cost}`);
     const amountStr = isCard ? (`$${gcDenom} gift card → ${fmt(gcGold)} G`) : (`${fmt(amt)} G — ${priceStr}`);
     const order = {
-      Type: 'Custom Gold', Username: username.trim(), Tier: tier || 'None',
+      Type: 'Custom Gold', Username: username.trim(), Discord: discord.trim(), Tier: tier || 'None',
       Method: methodLabel, Amount: amountStr,
       Account: user ? (user.email || user.uid) : 'guest'
     };
@@ -798,7 +900,7 @@ function BuyGoldPanel({ user, tier, signIn, flashSale, lifetimeGold, hasPurchase
     try {
       if (user) {
         db.ref('goldPurchases/' + user.uid + '/' + Date.now()).set({
-          uid: user.uid, username: username.trim(), tier: tier || 'None', method,
+          uid: user.uid, username: username.trim(), discord: discord.trim(), tier: tier || 'None', method,
           status: 'pending', amount: goldAmt, price: parseFloat(cost), discountPct: disc.totalPct,
           gcCode: isCard ? gcCode.trim() : null, createdAt: new Date().toISOString()
         });
@@ -917,6 +1019,8 @@ function BuyGoldPanel({ user, tier, signIn, flashSale, lifetimeGold, hasPurchase
 
         <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>Your in-game username</label>
         <input type="text" value={username} onChange={e=>setUsername(e.target.value)} placeholder="e.g. CamelS2" style={{marginBottom:8}} />
+        <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>Your Discord username</label>
+        <input type="text" value={discord} onChange={e=>setDiscord(e.target.value)} placeholder="e.g. camel5961" style={{marginBottom:8}} />
         <div className="quote" style={{fontSize:12,marginBottom:14}}>{isCrypto?'Copy your username, send the crypto, then submit — include your username so we can match the payment.':'Include your username in the payment note, then submit below.'}</div>
 
         <button className="btn btn-gold" style={{width:'100%'}} disabled={!canSubmit()||step==='submitting'} onClick={submit}>{step==='submitting'?'Submitting…':'Submit purchase'}</button>
@@ -932,6 +1036,7 @@ function AdminPanel({ user, signIn, flashSale }) {
   const [tab, setTab] = useState('orders');
   const [users, setUsers] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [claims, setClaims] = useState([]);
   const [search, setSearch] = useState('');
   const [msg, setMsg] = useState(null);
   const [fsLabel, setFsLabel] = useState('Weekend Flash Sale');
@@ -946,7 +1051,7 @@ function AdminPanel({ user, signIn, flashSale }) {
       if (done) return; done = true; clearTimeout(to);
       const ok = snap.val() === true;
       setAuthed(ok); setChecking(false);
-      if (ok) { loadUsers(); loadOrders(); }
+      if (ok) { loadUsers(); loadOrders(); loadClaims(); }
     }, () => { if (done) return; done = true; clearTimeout(to); setAuthed(false); setChecking(false); });
   }, [user]);
 
@@ -960,6 +1065,12 @@ function AdminPanel({ user, signIn, flashSale }) {
     Object.keys(d).forEach(uid => Object.keys(d[uid] || {}).forEach(ts => list.push(Object.assign({ uid, ts }, d[uid][ts]))));
     list.sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||''));
     setOrders(list);
+  });
+  const loadClaims = () => db.ref('dailyClaims').once('value', snap => {
+    const d = snap.val() || {};
+    const list = Object.keys(d).map(uid => Object.assign({ uid }, d[uid]));
+    list.sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||''));
+    setClaims(list);
   });
 
   const flash = (type, text) => { setMsg({ type, text }); setTimeout(()=>setMsg(null), 2500); };
@@ -992,6 +1103,17 @@ function AdminPanel({ user, signIn, flashSale }) {
     flash('ok','Flash sale started!');
   };
   const stopFlash = () => { db.ref('flashSale').set({ active: false }); flash('ok','Flash sale stopped'); };
+  const markClaimComplete = (c) => {
+    db.ref('dailyClaims/' + c.uid).update({ status: 'complete', completedAt: new Date().toISOString() });
+    if (c.tier && DAILY_GOLD[c.tier] != null) {
+      db.ref('users/' + c.uid + '/goldBalance').transaction(v => (v || 0) + (c.amount || 0));
+    }
+    flash('ok','Claim marked complete'); setTimeout(loadClaims, 300);
+  };
+  const markClaimFailed = (c) => {
+    db.ref('dailyClaims/' + c.uid).update({ status: 'failed', error: 'manually_rejected' });
+    flash('ok','Claim marked failed'); setTimeout(loadClaims, 300);
+  };
 
   if (checking) return <section><div className="wrap" style={{textAlign:'center',color:'var(--muted)'}}>Checking admin access…</div></section>;
   if (!user) return (
@@ -1013,7 +1135,9 @@ function AdminPanel({ user, signIn, flashSale }) {
   const q = search.trim().toLowerCase();
   const fUsers = q ? users.filter(u => (u.name||'').toLowerCase().includes(q) || (u.email||'').toLowerCase().includes(q) || u.uid.includes(q)) : users;
   const fOrders = q ? orders.filter(o => (o.username||'').toLowerCase().includes(q) || (o.method||'').toLowerCase().includes(q)) : orders;
+  const fClaims = q ? claims.filter(c => (c.username||'').toLowerCase().includes(q) || (c.discord||'').toLowerCase().includes(q)) : claims;
   const pending = orders.filter(o => o.status === 'pending').length;
+  const pendingClaims = claims.filter(c => c.status === 'pending').length;
 
   return (
     <section><div className="wrap">
@@ -1021,6 +1145,7 @@ function AdminPanel({ user, signIn, flashSale }) {
       {msg && <div className="alert" style={{maxWidth:560,margin:'0 auto 16px',borderColor:msg.type==='ok'?'var(--green)':'var(--danger)',color:msg.type==='ok'?'var(--green)':'var(--danger)',background:msg.type==='ok'?'rgba(61,214,140,.08)':'rgba(255,92,92,.08)'}}>{msg.text}</div>}
       <div className="toggle" style={{marginBottom:18}}>
         <button className={tab==='orders'?'on':''} onClick={()=>setTab('orders')}>Orders {pending>0?`(${pending})`:''}</button>
+        <button className={tab==='claims'?'on':''} onClick={()=>setTab('claims')}>Claims {pendingClaims>0?`(${pendingClaims})`:''}</button>
         <button className={tab==='users'?'on':''} onClick={()=>setTab('users')}>Users ({users.length})</button>
         <button className={tab==='flash'?'on':''} onClick={()=>setTab('flash')}>Flash Sale</button>
       </div>
@@ -1039,6 +1164,27 @@ function AdminPanel({ user, signIn, flashSale }) {
                 {o.gcCode && <div style={{fontSize:12,fontFamily:'monospace',color:'var(--gold)',marginTop:4}}>Gift code: {o.gcCode}</div>}
               </div>
               {o.status !== 'complete' && <button className="btn btn-gold btn-sm" onClick={()=>markComplete(o)}>Mark complete</button>}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {tab === 'claims' && (
+        <div style={{display:'flex',flexDirection:'column',gap:10}}>
+          {fClaims.length === 0 && <p className="msub" style={{textAlign:'center'}}>No claims yet.</p>}
+          {fClaims.map(c => (
+            <div key={c.uid} className="card" style={{transform:'none',flexDirection:'row',alignItems:'flex-start',justifyContent:'space-between',gap:14,flexWrap:'wrap'}}>
+              <div style={{flex:1,minWidth:200}}>
+                <div style={{fontWeight:600}}>{c.username || c.displayName || '(no name)'} <span style={{fontSize:12,color:c.status==='complete'?'var(--green)':c.status==='failed'?'var(--danger)':'var(--gold)',marginLeft:8}}>● {c.status}</span></div>
+                <div className="sub" style={{marginBottom:4}}>{fmt(c.amount||0)} G · {c.tier} tier · Discord: {c.discord||'—'} · {c.claimDate}</div>
+                {c.screenshotUrl && <a href={c.screenshotUrl} target="_blank" rel="noopener"><img src={c.screenshotUrl} alt="claim screenshot" style={{maxWidth:180,maxHeight:120,borderRadius:6,border:'1px solid var(--line)',display:'block',marginTop:4}} /></a>}
+              </div>
+              {(c.status === 'pending' || c.status === 'processing') && (
+                <div style={{display:'flex',gap:6,flexShrink:0}}>
+                  <button className="btn btn-gold btn-sm" onClick={()=>markClaimComplete(c)}>Mark complete</button>
+                  <button className="btn btn-ghost btn-sm" onClick={()=>markClaimFailed(c)}>Reject</button>
+                </div>
+              )}
             </div>
           ))}
         </div>
