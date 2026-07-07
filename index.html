@@ -554,7 +554,7 @@ function AuthPanel({ onClose }) {
   return (
     <div className="overlay" onClick={e => e.target === e.currentTarget && onClose()}>
       <div className="modal">
-        <button className="xbtn" onClick={onClose} aria-label="Close">\u00d7</button>
+        <button className="xbtn" onClick={onClose} aria-label="Close">×</button>
         <h3>{mode === 'signup' ? 'Create your account' : 'Sign in'}</h3>
         <p className="msub">{mode === 'signup' ? 'One free account works across both our sites.' : 'Welcome back \u2014 sign in to claim and track your gold.'}</p>
         <div className="toggle" style={{marginBottom:18}}>
@@ -573,7 +573,7 @@ function AuthPanel({ onClose }) {
         </div>
         <div className="field">
           <label>Password</label>
-          <input type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022" />
+          <input type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="••••••••" />
         </div>
         {error && <div className="alert err">{error}</div>}
         {success && <div className="alert" style={{borderColor:'var(--green)',color:'var(--green)',background:'rgba(61,214,140,.08)'}}>{success}</div>}
