@@ -209,7 +209,7 @@ const DAILY_GOLD = { bronze: 5, silver: 67, gold: 200 };
 const TIER_COLOR = { bronze:'#c98f12', silver:'#c7cdd6', gold:'var(--gold)' };
 
 const PACKS = [
-  { id:'scout',  name:'Scout Pack',  gold:1000,  bonus:0,    price:7.99,  tag:null,          blurb:'Quick top-up for your next skin.' },
+  { id:'scout',  name:'Scout Pack',  gold:1000,  bonus:0,    price:6.99,  tag:null,          blurb:'Quick top-up for your next skin.' },
   { id:'raider', name:'Raider Pack', gold:5000,  bonus:0,    price:34.99, tag:'MOST POPULAR', blurb:'The sweet spot for serious loadouts.' },
   { id:'vault',  name:'Vault Pack',  gold:10000, bonus:2000, price:69.99, tag:'+2,000 BONUS', blurb:'Maximum gold, maximum bonus.' },
 ];
@@ -569,7 +569,7 @@ function ClaimModal({ user, tier, amount, username: initialUsername, onClose, on
       const res = await fetch(WEBHOOK + '?wait=true', { method: 'POST', body: fd });
       let screenshotUrl = null;
       try { const msg = await res.json(); screenshotUrl = msg?.attachments?.[0]?.url || null; } catch(e) {}
-      await db.ref('dailyClaims/' + user.uid).set({
+      await db.ref('dailyClaims/' + user.uid + '/' + today).set({
         uid: user.uid, displayName: user.displayName || '', email: user.email || '',
         discord: discord.trim(), username: username.trim(), tier, amount,
         screenshotUrl, status: 'pending', createdAt: new Date().toISOString(), claimDate: today
@@ -642,7 +642,7 @@ function ClaimModal({ user, tier, amount, username: initialUsername, onClose, on
 function Dashboard({ user, signIn, lifetimeGold, go }) {
   const [data, setData] = useState(null);
   const [orders, setOrders] = useState([]);
-  const [claimData, setClaimData] = useState(null);
+  const [claims, setClaims] = useState([]);
   const [claimOpen, setClaimOpen] = useState(false);
   useEffect(() => {
     if (!user) return;
@@ -656,7 +656,12 @@ function Dashboard({ user, signIn, lifetimeGold, go }) {
       setOrders(list);
     });
     const cref = db.ref('dailyClaims/' + user.uid);
-    cref.on('value', s => setClaimData(s.val()));
+    cref.on('value', s => {
+      const dd = s.val() || {};
+      const list = Object.keys(dd).map(date => Object.assign({ date }, dd[date]));
+      list.sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||''));
+      setClaims(list);
+    });
     return () => { try { ref.off('value'); oref.off('value'); cref.off('value'); } catch(e){} };
   }, [user]);
   if (!user) return (
@@ -670,10 +675,9 @@ function Dashboard({ user, signIn, lifetimeGold, go }) {
   const tierKey = data?.subscriptionTier ? data.subscriptionTier.toLowerCase() : null;
   const dailyAmount = tierKey ? (DAILY_GOLD[tierKey] || 0) : 0;
   const today = new Date().toISOString().slice(0,10);
-  const lastClaim = claimData && claimData.claimDate;
-  const claimStatus = claimData && claimData.status;
-  const alreadyClaimed = lastClaim === today && claimStatus === 'complete';
-  const isPending = lastClaim === today && claimStatus !== 'complete';
+  const todaysClaim = claims.find(c => c.date === today);
+  const alreadyClaimed = todaysClaim && todaysClaim.status === 'complete';
+  const isPending = todaysClaim && todaysClaim.status !== 'complete';
   const lg = lifetimeGold || 0;
   const loyaltyUnlocked = lg >= LOYALTY_THRESHOLD;
   const loyaltyPct = Math.min(100, Math.round(lg / LOYALTY_THRESHOLD * 100));
@@ -722,24 +726,34 @@ function Dashboard({ user, signIn, lifetimeGold, go }) {
       </div>
 
       <div style={{marginTop:22}}>
-        <h3 style={{fontFamily:'Rajdhani',fontSize:20,marginBottom:12}}>Your orders</h3>
-        {orders.length === 0 ? (
-          <p className="msub">No orders yet.</p>
-        ) : (
-          <div style={{display:'flex',flexDirection:'column',gap:8}}>
-            {orders.map(o => (
-              <div key={o.ts} className="card" style={{transform:'none',flexDirection:'row',alignItems:'center',justifyContent:'space-between',gap:12,flexWrap:'wrap',padding:'14px 18px'}}>
-                <div>
-                  <div style={{fontWeight:600}}>{o.amount ? <React.Fragment>🥇 {fmt(o.amount)} gold {o.discountPct>0 && <span style={{fontSize:12,color:'var(--green)'}}>({o.discountPct}% off)</span>}</React.Fragment> : (o.label || o.type || 'Order')}</div>
-                  <div className="sub" style={{marginBottom:0}}>{o.method}{o.tier?' · '+o.tier:''} · {o.createdAt ? new Date(o.createdAt).toLocaleDateString() : ''}{o.price?` · $${o.price}`:''}</div>
+        <h3 style={{fontFamily:'Rajdhani',fontSize:20,marginBottom:12}}>Order &amp; claim history</h3>
+        {(() => {
+          const combined = [
+            ...orders.map(o => ({ kind:'order', key:'o'+o.ts, createdAt:o.createdAt, status:o.status,
+              title: o.amount ? (fmt(o.amount)+' gold'+(o.discountPct>0?` (${o.discountPct}% off)`:'')) : (o.label || o.type || 'Order'),
+              sub: [o.method, o.tier, o.price?('$'+o.price):null].filter(Boolean).join(' · ') })),
+            ...claims.map(c => ({ kind:'claim', key:'c'+c.date, createdAt:c.createdAt, status:c.status,
+              title: fmt(c.amount||0)+' gold claim',
+              sub: [c.tier+' tier', c.date].filter(Boolean).join(' · ') }))
+          ];
+          combined.sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||''));
+          if (combined.length === 0) return <p className="msub">No orders or claims yet.</p>;
+          return (
+            <div style={{display:'flex',flexDirection:'column',gap:8}}>
+              {combined.map(h => (
+                <div key={h.key} className="card" style={{transform:'none',flexDirection:'row',alignItems:'center',justifyContent:'space-between',gap:12,flexWrap:'wrap',padding:'14px 18px'}}>
+                  <div>
+                    <div style={{fontWeight:600}}>{h.kind==='claim' ? '💰 ' : '🥇 '}{h.title}</div>
+                    <div className="sub" style={{marginBottom:0}}>{h.sub} · {h.createdAt ? new Date(h.createdAt).toLocaleDateString() : ''}</div>
+                  </div>
+                  <div style={{fontWeight:700,fontSize:13,color:statusColor(h.status),textTransform:'uppercase',fontFamily:'Rajdhani',letterSpacing:'.05em'}}>
+                    {h.status === 'complete' || h.status === 'delivered' ? '✓ Delivered' : h.status === 'failed' ? '✕ Failed' : '⏳ ' + (h.status || 'pending')}
+                  </div>
                 </div>
-                <div style={{fontWeight:700,fontSize:13,color:statusColor(o.status),textTransform:'uppercase',fontFamily:'Rajdhani',letterSpacing:'.05em'}}>
-                  {o.status === 'complete' || o.status === 'delivered' ? '✓ Delivered' : '⏳ ' + (o.status || 'pending')}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          );
+        })()}
       </div>
       {claimOpen && <ClaimModal user={user} tier={tierKey} amount={dailyAmount} username={data?.standoffUsername || user.displayName} onClose={()=>setClaimOpen(false)} onClaimed={()=>setClaimOpen(false)} />}
     </div></section>
@@ -1067,7 +1081,8 @@ function AdminPanel({ user, signIn, flashSale }) {
   });
   const loadClaims = () => db.ref('dailyClaims').once('value', snap => {
     const d = snap.val() || {};
-    const list = Object.keys(d).map(uid => Object.assign({ uid }, d[uid]));
+    const list = [];
+    Object.keys(d).forEach(uid => Object.keys(d[uid] || {}).forEach(date => list.push(Object.assign({ uid, date }, d[uid][date]))));
     list.sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||''));
     setClaims(list);
   });
@@ -1103,14 +1118,14 @@ function AdminPanel({ user, signIn, flashSale }) {
   };
   const stopFlash = () => { db.ref('flashSale').set({ active: false }); flash('ok','Flash sale stopped'); };
   const markClaimComplete = (c) => {
-    db.ref('dailyClaims/' + c.uid).update({ status: 'complete', completedAt: new Date().toISOString() });
+    db.ref('dailyClaims/' + c.uid + '/' + c.date).update({ status: 'complete', completedAt: new Date().toISOString() });
     if (c.tier && DAILY_GOLD[c.tier] != null) {
       db.ref('users/' + c.uid + '/goldBalance').transaction(v => (v || 0) + (c.amount || 0));
     }
     flash('ok','Claim marked complete'); setTimeout(loadClaims, 300);
   };
   const markClaimFailed = (c) => {
-    db.ref('dailyClaims/' + c.uid).update({ status: 'failed', error: 'manually_rejected' });
+    db.ref('dailyClaims/' + c.uid + '/' + c.date).update({ status: 'failed', error: 'manually_rejected' });
     flash('ok','Claim marked failed'); setTimeout(loadClaims, 300);
   };
 
@@ -1172,7 +1187,7 @@ function AdminPanel({ user, signIn, flashSale }) {
         <div style={{display:'flex',flexDirection:'column',gap:10}}>
           {fClaims.length === 0 && <p className="msub" style={{textAlign:'center'}}>No claims yet.</p>}
           {fClaims.map(c => (
-            <div key={c.uid} className="card" style={{transform:'none',flexDirection:'row',alignItems:'flex-start',justifyContent:'space-between',gap:14,flexWrap:'wrap'}}>
+            <div key={c.uid+c.date} className="card" style={{transform:'none',flexDirection:'row',alignItems:'flex-start',justifyContent:'space-between',gap:14,flexWrap:'wrap'}}>
               <div style={{flex:1,minWidth:200}}>
                 <div style={{fontWeight:600}}>{c.username || c.displayName || '(no name)'} <span style={{fontSize:12,color:c.status==='complete'?'var(--green)':c.status==='failed'?'var(--danger)':'var(--gold)',marginLeft:8}}>● {c.status}</span></div>
                 <div className="sub" style={{marginBottom:4}}>{fmt(c.amount||0)} G · {c.tier} tier · Discord: {c.discord||'—'} · {c.claimDate}</div>
