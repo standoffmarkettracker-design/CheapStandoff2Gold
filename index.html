@@ -537,7 +537,7 @@ function Packs({ buy, lang }) {
               {p.tag && <div className="badge">{p.tag}</div>}
               <h3>{p.name}</h3>
               <div className="sub">{p.blurb}</div>
-              <div className="goldamt goldtext">🥇 {fmt(p.gold + p.bonus)} gold</div>
+              <div className="goldamt goldtext">{fmt(p.gold + p.bonus)} gold</div>
               {p.bonus > 0 && <div className="permo">{fmt(p.gold)} + {fmt(p.bonus)} bonus included</div>}
               <div className="price" style={{marginTop:10}}>${p.price}</div>
               <ul className="feat">
@@ -584,7 +584,7 @@ function Subs({ buy, lang }) {
                 <div className="sub">≈ {fmt(daily)} gold claimable daily</div>
                 <div className="price">${price}<small>/{yearly?'yr':'mo'}</small>{yearly && <span className="was">${(t.mo*12).toFixed(2)}</span>}</div>
                 {yearly && <div className="permo">≈ ${perMo.toFixed(2)}/mo — rate locked for a year</div>}
-                <div className="goldamt goldtext">🥇 {fmt(moGold)} gold / month</div>
+                <div className="goldamt goldtext">{fmt(moGold)} gold / month</div>
                 <ul className="feat">
                   <li>{fmt(moGold)} gold per month total</li>
                   <li>≈ {fmt(daily)} gold to claim each day</li>
@@ -748,7 +748,7 @@ function ClaimModal({ user, tier, amount, username: initialUsername, onClose, on
               {screenshotPreview ? (
                 <img src={screenshotPreview} alt="preview" style={{maxWidth:'100%',maxHeight:130,objectFit:'contain',borderRadius:6,display:'block',margin:'0 auto'}} />
               ) : (
-                <div><div style={{fontSize:26,marginBottom:6}}>📸</div><div style={{color:'var(--muted)',fontSize:13}}>Tap to upload a screenshot</div><div style={{color:'var(--muted)',fontSize:11,marginTop:4,opacity:.7}}>Must show your Standoff 2 username clearly</div></div>
+                <div><div style={{color:'var(--muted)',fontSize:13}}>Tap to upload a screenshot</div><div style={{color:'var(--muted)',fontSize:11,marginTop:4,opacity:.7}}>Must show your Standoff 2 username clearly</div></div>
               )}
             </div>
             {screenshot && <div style={{fontSize:11,color:'var(--green)',marginBottom:10,textAlign:'center'}}>✓ {screenshot.name}</div>}
@@ -833,7 +833,7 @@ function Dashboard({ user, signIn, lifetimeGold, go }) {
     <section><div className="wrap">
       <div className="sect-head"><div className="eyebrow">Dashboard</div><h2>Welcome back, <span className="goldtext">{(user.displayName||'player').split(' ')[0]}</span></h2></div>
       <div className="dash">
-        <div className="card"><div className="sub">Gold balance</div><div className="statnum">🥇 {fmt(data?.goldBalance || 0)}</div></div>
+        <div className="card"><div className="sub">Gold balance</div><div className="statnum">{fmt(data?.goldBalance || 0)}</div></div>
         <div className="card"><div className="sub">Subscription</div><div className="statnum" style={{fontSize:30}}>{tierKey ? tierKey.toUpperCase() : 'None yet'}</div>{!tierKey && <button onClick={()=>go('subs')} style={{fontSize:13,background:'none',border:'none',color:'var(--gold)',cursor:'pointer',padding:0,textDecoration:'underline'}}>Pick a tier →</button>}</div>
         <div className="card">
           <div className="sub">Daily claim</div>
@@ -842,7 +842,7 @@ function Dashboard({ user, signIn, lifetimeGold, go }) {
           ) : alreadyClaimed ? (
             <p style={{color:'var(--green)',fontSize:13,marginTop:8}}>✓ Claimed today — resets at 00:00 UTC.</p>
           ) : isPending ? (
-            <p style={{color:'var(--gold)',fontSize:13,marginTop:8}}>⏳ Pending — we're on it!</p>
+            <p style={{color:'var(--gold)',fontSize:13,marginTop:8}}>Pending — we're on it!</p>
           ) : (
             <button className="btn btn-gold btn-sm" onClick={()=>setClaimOpen(true)} style={{marginTop:8}}>Claim {fmt(dailyAmount)} G</button>
           )}
@@ -890,12 +890,12 @@ function Dashboard({ user, signIn, lifetimeGold, go }) {
               {combined.map(h => (
                 <div key={h.key} className="card" style={{transform:'none',flexDirection:'row',alignItems:'center',justifyContent:'space-between',gap:12,flexWrap:'wrap',padding:'14px 18px'}}>
                   <div>
-                    <div style={{fontWeight:600}}>{h.kind==='claim' ? '💰 ' : '🥇 '}{h.title}</div>
+                    <div style={{fontWeight:600}}>{h.title}</div>
                     <div className="sub" style={{marginBottom:0}}>{h.sub} · {h.createdAt ? new Date(h.createdAt).toLocaleDateString() : ''}</div>
-                    {h.slaBonus > 0 && <div style={{fontSize:11,color:'var(--green)',marginTop:2}}>⚡ Delivery guarantee: +{fmt(h.slaBonus)} G bonus credited</div>}
+                    {h.slaBonus > 0 && <div style={{fontSize:11,color:'var(--green)',marginTop:2}}>Delivery guarantee: +{fmt(h.slaBonus)} G bonus credited</div>}
                   </div>
                   <div style={{fontWeight:700,fontSize:13,color:statusColor(h.status),textTransform:'uppercase',fontFamily:'Archivo',letterSpacing:'.05em'}}>
-                    {h.status === 'complete' || h.status === 'delivered' ? '✓ Delivered' : h.status === 'failed' ? '✕ Failed' : '⏳ ' + (h.status || 'pending')}
+                    {h.status === 'complete' || h.status === 'delivered' ? '✓ Delivered' : h.status === 'failed' ? '✕ Failed' : (h.status || 'pending')}
                   </div>
                 </div>
               ))}
@@ -1074,8 +1074,7 @@ function BuyGoldPanel({ user, tier, signIn, flashSale, lifetimeGold, hasPurchase
 
   if (step === 'done') return (
     <div className="card" style={{maxWidth:520,margin:'0 auto',textAlign:'center',transform:'none'}}>
-      <div style={{fontSize:48}}>🥇</div>
-      <h3 style={{marginTop:8}}>Order submitted!</h3>
+            <h3 style={{marginTop:8}}>Order submitted!</h3>
       <p className="msub" style={{marginTop:8}}>We got your order. Watch for a Discord DM from <b style={{color:'var(--gold)'}}>camel5961</b> with delivery instructions — usually within a few hours.</p>
       <button className="btn btn-ghost btn-sm" style={{marginTop:12}} onClick={()=>{setStep('form');setGcCode('');}}>Place another order</button>
     </div>
@@ -1085,8 +1084,7 @@ function BuyGoldPanel({ user, tier, signIn, flashSale, lifetimeGold, hasPurchase
     <div style={{maxWidth:560,margin:'0 auto',position:'relative'}}>
       {!user && (
         <div style={{position:'absolute',inset:0,zIndex:10,borderRadius:12,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',background:'rgba(11,14,26,.82)',backdropFilter:'blur(4px)'}}>
-          <div style={{fontSize:30,marginBottom:8}}>🔒</div>
-          <div style={{fontSize:17,fontWeight:700,marginBottom:6}}>Sign in to buy gold</div>
+                    <div style={{fontSize:17,fontWeight:700,marginBottom:6}}>Sign in to buy gold</div>
           <div className="msub" style={{textAlign:'center',padding:'0 32px',marginBottom:16}}>Create a free account to get started.</div>
           <button className="btn btn-gold" onClick={signIn}>Sign in / Create account</button>
         </div>
@@ -1094,11 +1092,11 @@ function BuyGoldPanel({ user, tier, signIn, flashSale, lifetimeGold, hasPurchase
       <div className="card" style={{transform:'none'}}>
         <div className="sub" style={{marginBottom:12}}>Your rate: <b style={{color:'var(--gold)'}}>${rate}/gold</b> {tierKey!=='none' && tierKey!=='bronze' ? `(${tier} discount applied)` : '— subscribe for a better rate'}</div>
         {avgDeliveryHrs != null && avgDeliveryHrs > 0 && (
-          <div style={{fontSize:12,color:'var(--green)',marginBottom:12,marginTop:-6}}>⚡ Avg delivery time: ~{avgDeliveryHrs < 1 ? Math.round(avgDeliveryHrs*60)+' min' : avgDeliveryHrs.toFixed(1)+' hrs'}</div>
+          <div style={{fontSize:12,color:'var(--green)',marginBottom:12,marginTop:-6}}>Avg delivery time: ~{avgDeliveryHrs < 1 ? Math.round(avgDeliveryHrs*60)+' min' : avgDeliveryHrs.toFixed(1)+' hrs'}</div>
         )}
         {disc.lines.length > 0 && (
           <div style={{background:'var(--gold-dim)',border:'1px dashed var(--gold)',borderRadius:8,padding:'10px 12px',marginBottom:14}}>
-            <div style={{fontSize:12,fontWeight:700,color:'var(--gold)',marginBottom:6}}>🎉 Discounts applied</div>
+            <div style={{fontSize:12,fontWeight:700,color:'var(--gold)',marginBottom:6}}>Discounts applied</div>
             {disc.lines.map((l,i) => (
               <div key={i} style={{display:'flex',justifyContent:'space-between',fontSize:12,color:'var(--muted)',marginBottom:2}}>
                 <span>{l.label}</span><span style={{color:'var(--green)'}}>−{l.pct}%</span>
@@ -1300,16 +1298,14 @@ function AdminPanel({ user, signIn, flashSale }) {
   if (checking) return <section><div className="wrap" style={{textAlign:'center',color:'var(--muted)'}}>Checking admin access…</div></section>;
   if (!user) return (
     <section><div className="wrap" style={{textAlign:'center',maxWidth:460}}>
-      <div style={{fontSize:40,marginBottom:12}}>🔒</div>
-      <h2 style={{marginBottom:12}}>Admin</h2>
+            <h2 style={{marginBottom:12}}>Admin</h2>
       <p className="msub" style={{marginBottom:18}}>Sign in to access the admin panel.</p>
       <button className="btn btn-gold" onClick={signIn}>Sign in</button>
     </div></section>
   );
   if (!authed) return (
     <section><div className="wrap" style={{textAlign:'center'}}>
-      <div style={{fontSize:40,marginBottom:12}}>⛔</div>
-      <h2>Access denied</h2>
+            <h2>Access denied</h2>
       <p className="msub" style={{marginTop:8}}>This account is not an admin.</p>
     </div></section>
   );
@@ -1379,7 +1375,7 @@ function AdminPanel({ user, signIn, flashSale }) {
             <div key={u.uid} className="card" style={{transform:'none',flexDirection:'row',alignItems:'center',justifyContent:'space-between',gap:12,flexWrap:'wrap'}}>
               <div style={{flex:1,minWidth:200}}>
                 <div style={{fontWeight:600}}>{u.name || '(no name)'} <span style={{fontSize:12,color:'var(--muted)'}}>{u.email||''}</span></div>
-                <div className="sub" style={{marginBottom:0}}>🥇 {fmt(u.goldBalance||0)} · Tier: {u.subscriptionTier || 'none'} · {u.uid.slice(0,10)}…</div>
+                <div className="sub" style={{marginBottom:0}}>{fmt(u.goldBalance||0)} · Tier: {u.subscriptionTier || 'none'} · {u.uid.slice(0,10)}…</div>
               </div>
               <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
                 <button className="btn btn-ghost btn-sm" onClick={()=>adjustBalance(u.uid, u.goldBalance)}>Set gold</button>
@@ -1553,7 +1549,7 @@ function App() {
         <div>{t(lang,'footer_support')}: <b style={{color:'var(--gold)'}}>camel5961</b> on Discord</div>
       </div></footer>
 
-      <div className="mcta"><button className="btn btn-gold" onClick={()=>{page!=='home'&&setPage('home');go('subs')}}>🥇 Get cheap gold</button></div>
+      <div className="mcta"><button className="btn btn-gold" onClick={()=>{page!=='home'&&setPage('home');go('subs')}}>Get cheap gold</button></div>
       {checkout && <Checkout item={checkout} user={user} onClose={()=>setCheckout(null)} />}
       {authOpen && <AuthPanel onClose={()=>setAuthOpen(false)} />}
     </div>
