@@ -140,6 +140,8 @@ footer{border-top:1px solid var(--line);padding:36px 0;color:var(--muted);font-s
   .sellgrid{grid-template-columns:1fr}
   .navlinks{display:none}
   .menubtn{display:block}
+  .uname{display:none}
+  .authbox .btn{display:none}
   .mcta{display:block}
   body{padding-bottom:64px}
   section{padding:52px 0}
@@ -1506,7 +1508,7 @@ function App() {
                 : (<button className="btn btn-ghost btn-sm" onClick={signIn}>{t(lang,'signin')}</button>)}
           <button className="menubtn" aria-label="Menu" onClick={()=>setMenuOpen(o=>!o)}>☰</button>
         </div>
-      </div>{menuOpen && (<div className="mobilemenu"><button onClick={()=>{setPage('buy');setMenuOpen(false);}}>{t(lang,'nav_buy')}</button><button onClick={()=>{go('packs');setMenuOpen(false);}}>{t(lang,'nav_packs')}</button><button onClick={()=>{go('subs');setMenuOpen(false);}}>{t(lang,'nav_subs')}</button><button onClick={()=>{go('sell');setMenuOpen(false);}}>{t(lang,'nav_sell')}</button><button onClick={()=>{setPage('dash');setMenuOpen(false);}}>{t(lang,'nav_dash')}</button>{isAdmin && <button onClick={()=>{setPage('admin');setMenuOpen(false);}}>{t(lang,'nav_admin')}</button>}</div>)}</header>
+      </div>{menuOpen && (<div className="mobilemenu"><button onClick={()=>{setPage('buy');setMenuOpen(false);}}>{t(lang,'nav_buy')}</button><button onClick={()=>{go('packs');setMenuOpen(false);}}>{t(lang,'nav_packs')}</button><button onClick={()=>{go('subs');setMenuOpen(false);}}>{t(lang,'nav_subs')}</button><button onClick={()=>{go('sell');setMenuOpen(false);}}>{t(lang,'nav_sell')}</button><button onClick={()=>{setPage('dash');setMenuOpen(false);}}>{t(lang,'nav_dash')}</button>{isAdmin && <button onClick={()=>{setPage('admin');setMenuOpen(false);}}>{t(lang,'nav_admin')}</button>}<button onClick={()=>{(user ? auth.signOut() : signIn());setMenuOpen(false);}}>{user ? t(lang,'signout') : t(lang,'signin')}</button></div>)}</header>
 
       {page === 'home' ? (
         <main>
