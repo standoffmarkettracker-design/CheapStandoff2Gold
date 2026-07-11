@@ -75,6 +75,9 @@ section{padding:72px 0}
 .sect-head p{color:var(--muted)}
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
 .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+#packs .card .sub{min-height:56px}
+#packs .permo{order:8;margin:0 0 14px}
+#packs .card .btn{order:9}
 /* cards */
 .card{background:var(--bg2);border:1px solid var(--line);padding:26px;position:relative;display:flex;flex-direction:column;transition:transform .18s,border-color .18s}
 .card:hover{transform:translateY(-5px);border-color:rgba(255,201,60,.45)}
@@ -141,6 +144,7 @@ footer{border-top:1px solid var(--line);padding:36px 0;color:var(--muted);font-s
 @media(max-width:900px){
   .herogrid{grid-template-columns:1fr}
   .grid3,.grid4,.steps,.dash{grid-template-columns:1fr}
+  #packs .card .sub{min-height:0}
   .sellgrid{grid-template-columns:1fr}
   .navlinks{display:none}
   .mcta{display:block}
