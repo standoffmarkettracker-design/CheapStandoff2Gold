@@ -14,131 +14,119 @@
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Barlow:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0B0E1A; --bg2:#121629; --bg3:#1A1F38;
-  --gold:#FFC93C; --gold-hot:#FFB020; --gold-dim:rgba(255,201,60,.14);
-  --ink:#E8EAF2; --muted:#8B90A5; --green:#3DD68C; --danger:#FF5C5C;
-  --line:rgba(255,201,60,.16);
+  --bg:#0c0e14; --bg2:#12151d; --bg3:#181c26;
+  --gold:#f2b32c; --gold-hot:#e0a11d; --gold-dim:rgba(242,179,44,.10);
+  --ink:#eceef4; --muted:#9299ab; --green:#34c383; --danger:#ff5f65;
+  --line:rgba(146,153,171,.16);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
-h1,h2,h3,.num{font-family:'Rajdhani',sans-serif;letter-spacing:.02em;line-height:1.1}
+body{font-family:'Barlow',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.num{font-family:'Archivo',sans-serif;letter-spacing:-0.015em;line-height:1.12}
 img{max-width:100%}
 a{color:var(--gold);text-decoration:none}
+a:hover{text-decoration:underline}
 .wrap{max-width:1120px;margin:0 auto;padding:0 20px}
-.eyebrow{font-family:'Rajdhani';font-weight:700;font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
-.goldtext{background:linear-gradient(100deg,#FFE28A 0%,var(--gold) 45%,#C98F12 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:'Rajdhani';font-weight:700;font-size:16px;letter-spacing:.06em;text-transform:uppercase;padding:14px 26px;border:none;cursor:pointer;transition:transform .15s,box-shadow .15s,background .15s;clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px)}
+.eyebrow{font-family:'Archivo';font-weight:600;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.goldtext{color:var(--gold)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:'Archivo';font-weight:600;font-size:15px;letter-spacing:0;padding:13px 24px;border:none;border-radius:9px;cursor:pointer;transition:background .15s,border-color .15s,box-shadow .15s,transform .1s}
 .btn:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
-.btn-gold{background:linear-gradient(120deg,#FFE28A,var(--gold) 55%,var(--gold-hot));color:#141000}
-.btn-gold:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(255,201,60,.35)}
-.btn-ghost{background:transparent;color:var(--gold);box-shadow:inset 0 0 0 1.5px var(--gold)}
-.btn-ghost:hover{background:var(--gold-dim)}
-.btn-sm{padding:10px 18px;font-size:14px}
+.btn:active{transform:translateY(1px)}
+.btn-gold{background:var(--gold);color:#1a1300}
+.btn-gold:hover{background:#f7c04a;box-shadow:0 6px 18px rgba(242,179,44,.22)}
+.btn-ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.btn-ghost:hover{background:rgba(255,255,255,.04);box-shadow:inset 0 0 0 1px rgba(146,153,171,.4)}
+.btn-sm{padding:9px 16px;font-size:14px}
 .btn[disabled]{opacity:.5;cursor:not-allowed;transform:none}
-/* announcement */
-.annc{background:linear-gradient(90deg,var(--gold-dim),transparent 60%);border-bottom:1px solid var(--line);font-size:13px;padding:8px 0;text-align:center;color:var(--muted)}
-.annc b{color:var(--gold)}
-/* header */
-header{position:sticky;top:0;z-index:50;background:rgba(11,14,26,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.annc{background:var(--bg2);border-bottom:1px solid var(--line);font-size:13px;padding:8px 0;text-align:center;color:var(--muted)}
+.annc b{color:var(--ink);font-weight:600}
+header{position:sticky;top:0;z-index:50;background:rgba(12,14,20,.88);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
 .nav{display:flex;align-items:center;justify-content:space-between;height:64px;gap:16px}
-.logo{font-family:'Rajdhani';font-weight:700;font-size:22px;color:var(--ink);display:flex;align-items:center;gap:8px;white-space:nowrap}
+.logo{font-family:'Archivo';font-weight:700;font-size:20px;letter-spacing:-0.01em;color:var(--ink);display:flex;align-items:center;gap:8px;white-space:nowrap}
 .logo span{color:var(--gold)}
-.navlinks{display:flex;gap:4px;list-style:none}
-.navlinks button{background:none;border:none;color:var(--muted);font:inherit;font-size:14px;font-weight:500;padding:8px 12px;cursor:pointer;border-radius:6px}
-.navlinks button:hover,.navlinks button.active{color:var(--gold);background:var(--gold-dim)}
+.navlinks{display:flex;gap:2px;list-style:none}
+.navlinks button{background:none;border:none;color:var(--muted);font:inherit;font-size:14px;font-weight:500;padding:8px 12px;cursor:pointer;border-radius:7px}
+.navlinks button:hover,.navlinks button.active{color:var(--ink);background:rgba(255,255,255,.05)}
 .authbox{display:flex;align-items:center;gap:10px}
-.uname{color:var(--gold);font-weight:600;font-size:14px;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-/* hero */
-.hero{padding:72px 0 56px;position:relative;overflow:hidden}
-.hero::before{content:"";position:absolute;inset:0;background:radial-gradient(700px 380px at 78% 8%,rgba(255,201,60,.10),transparent 65%);pointer-events:none}
+.uname{color:var(--ink);font-weight:600;font-size:14px;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hero{padding:76px 0 56px;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background:radial-gradient(720px 400px at 80% 0%,rgba(242,179,44,.06),transparent 65%);pointer-events:none}
 .herogrid{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center}
-.hero h1{font-size:clamp(38px,5.4vw,60px);font-weight:700;margin:14px 0 18px}
-.hero p.lead{color:var(--muted);font-size:18px;max-width:520px;margin-bottom:28px}
-.heroctas{display:flex;gap:14px;flex-wrap:wrap}
-.trustline{margin-top:26px;font-size:13px;color:var(--muted);display:flex;gap:18px;flex-wrap:wrap}
+.hero h1{font-size:clamp(34px,4.8vw,52px);font-weight:800;margin:14px 0 18px;letter-spacing:-0.025em}
+.hero p.lead{color:var(--muted);font-size:17px;max-width:520px;margin-bottom:28px}
+.heroctas{display:flex;gap:12px;flex-wrap:wrap}
+.trustline{margin-top:28px;font-size:13px;color:var(--muted);display:flex;gap:20px;flex-wrap:wrap}
 .trustline b{color:var(--ink)}
-/* hero deal card */
-.dealcard{background:linear-gradient(160deg,var(--bg3),var(--bg2));border:1px solid var(--line);padding:28px;position:relative;clip-path:polygon(16px 0,100% 0,100% calc(100% - 16px),calc(100% - 16px) 100%,0 100%,0 16px)}
-.dealcard .tag{position:absolute;top:0;right:0;background:var(--gold);color:#141000;font-family:'Rajdhani';font-weight:700;font-size:12px;letter-spacing:.14em;padding:5px 14px}
-.dealnum{font-size:56px;font-weight:700}
+.dealcard{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:28px;position:relative}
+.dealcard .tag{position:absolute;top:14px;right:14px;background:var(--gold-dim);color:var(--gold);border:1px solid rgba(242,179,44,.35);font-family:'Archivo';font-weight:600;font-size:11px;letter-spacing:.08em;padding:4px 12px;border-radius:99px}
+.dealnum{font-family:'JetBrains Mono',monospace;font-size:48px;font-weight:700;letter-spacing:-0.02em}
 .dealsub{color:var(--muted);font-size:14px;margin:2px 0 18px}
-.dealrow{display:flex;justify-content:space-between;padding:10px 0;border-top:1px dashed var(--line);font-size:14px}
-.dealrow b{font-family:'Rajdhani';font-size:16px;color:var(--gold)}
-/* sections */
+.dealrow{display:flex;justify-content:space-between;padding:10px 0;border-top:1px solid var(--line);font-size:14px}
+.dealrow b{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--ink);font-weight:600}
 section{padding:72px 0}
 .sect-head{text-align:center;max-width:640px;margin:0 auto 44px}
-.sect-head h2{font-size:clamp(28px,4vw,40px);margin:10px 0 12px}
+.sect-head h2{font-size:clamp(26px,3.6vw,36px);font-weight:800;letter-spacing:-0.02em;margin:10px 0 12px}
 .sect-head p{color:var(--muted)}
-.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
-.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
 #packs .card .sub{min-height:56px}
 #packs .permo{order:8;margin:0 0 14px}
 #packs .card .btn{order:9}
-/* cards */
-.card{background:var(--bg2);border:1px solid var(--line);padding:26px;position:relative;display:flex;flex-direction:column;transition:transform .18s,border-color .18s}
-.card:hover{transform:translateY(-5px);border-color:rgba(255,201,60,.45)}
-.card h3{font-size:22px;margin-bottom:4px}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:26px;position:relative;display:flex;flex-direction:column;transition:border-color .18s,box-shadow .18s}
+.card:hover{border-color:rgba(146,153,171,.35);box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.card h3{font-size:20px;font-weight:700;margin-bottom:4px}
 .card .sub{color:var(--muted);font-size:13px;margin-bottom:14px}
-.price{font-family:'Rajdhani';font-weight:700;font-size:40px;color:var(--gold)}
-.price small{font-size:15px;color:var(--muted);font-weight:600}
+.price{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:34px;color:var(--ink);letter-spacing:-0.02em}
+.price small{font-size:14px;color:var(--muted);font-weight:500;font-family:'Barlow',sans-serif}
 .was{color:var(--muted);text-decoration:line-through;font-size:14px;margin-left:8px}
-.goldamt{font-family:'Rajdhani';font-weight:700;font-size:26px;margin:10px 0 2px}
+.goldamt{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:22px;color:var(--gold);margin:10px 0 2px}
 .feat{list-style:none;margin:14px 0 20px;flex:1}
-.feat li{font-size:14px;color:var(--muted);padding:6px 0 6px 24px;position:relative}
-.feat li::before{content:"◆";position:absolute;left:2px;color:var(--gold);font-size:10px;top:9px}
-.badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--gold);color:#141000;font-family:'Rajdhani';font-weight:700;font-size:12px;letter-spacing:.12em;padding:4px 16px;white-space:nowrap}
-.card.best{border-color:var(--gold)}
-.card.best::before{content:"";position:absolute;top:0;left:0;right:0;height:8px;background:repeating-linear-gradient(45deg,var(--gold) 0 12px,#141000 12px 24px)}
+.feat li{font-size:14px;color:var(--muted);padding:6px 0 6px 26px;position:relative}
+.feat li::before{content:"✓";position:absolute;left:2px;color:var(--green);font-size:13px;font-weight:700;top:6px}
+.badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--gold);color:#1a1300;font-family:'Archivo';font-weight:700;font-size:11px;letter-spacing:.06em;padding:4px 14px;border-radius:99px;white-space:nowrap}
+.card.best{border-color:rgba(242,179,44,.5);box-shadow:0 0 0 1px rgba(242,179,44,.25)}
 .permo{font-size:12px;color:var(--green);font-weight:600;margin-top:6px}
-/* toggle */
-.toggle{display:flex;justify-content:center;gap:0;margin-bottom:36px}
-.toggle button{font-family:'Rajdhani';font-weight:700;font-size:15px;letter-spacing:.06em;text-transform:uppercase;padding:11px 26px;background:var(--bg2);color:var(--muted);border:1px solid var(--line);cursor:pointer}
-.toggle button.on{background:var(--gold);color:#141000;border-color:var(--gold)}
-.toggle .save{font-size:11px;display:block;letter-spacing:.04em}
-/* steps */
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;counter-reset:step}
-.step{background:var(--bg2);border:1px solid var(--line);padding:26px}
-.step::before{counter-increment:step;content:"0" counter(step);font-family:'Rajdhani';font-weight:700;font-size:40px;color:var(--gold-dim);-webkit-text-stroke:1px var(--gold);display:block;margin-bottom:8px}
-.step h3{font-size:19px;margin-bottom:8px}
+.toggle{display:inline-flex;justify-content:center;gap:4px;margin:0 auto 36px;background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:4px;left:50%;position:relative;transform:translateX(-50%)}
+.toggle button{font-family:'Archivo';font-weight:600;font-size:14px;letter-spacing:0;text-transform:none;padding:9px 20px;background:transparent;color:var(--muted);border:none;border-radius:8px;cursor:pointer}
+.toggle button.on{background:var(--gold);color:#1a1300}
+.toggle .save{font-size:11px;display:block;letter-spacing:0;font-weight:500}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;counter-reset:step}
+.step{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:26px}
+.step::before{counter-increment:step;content:counter(step);font-family:'Archivo';font-weight:700;font-size:15px;color:var(--gold);background:var(--gold-dim);border:1px solid rgba(242,179,44,.3);width:32px;height:32px;border-radius:99px;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.step h3{font-size:18px;font-weight:700;margin-bottom:8px}
 .step p{color:var(--muted);font-size:14px}
-/* sell */
 .sellgrid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
 .field{margin-bottom:16px}
 .field label{display:block;font-size:13px;color:var(--muted);font-weight:600;margin-bottom:6px}
-input,select,textarea{width:100%;padding:12px 14px;background:rgba(0,0,0,.35);border:1px solid var(--line);color:var(--ink);font:inherit;font-size:15px;border-radius:4px}
-input:focus,select:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(255,201,60,.15)}
-.quote{background:var(--gold-dim);border:1px solid var(--line);padding:16px;font-size:15px;margin-top:6px}
-.quote b{color:var(--green);font-family:'Rajdhani';font-size:22px}
-/* faq */
-details{background:var(--bg2);border:1px solid var(--line);margin-bottom:10px}
-summary{cursor:pointer;padding:18px 20px;font-weight:600;font-size:15px;list-style:none;display:flex;justify-content:space-between;align-items:center}
-summary::after{content:"+";font-family:'Rajdhani';font-size:22px;color:var(--gold)}
+input,select,textarea{width:100%;padding:12px 14px;background:var(--bg);border:1px solid var(--line);color:var(--ink);font:inherit;font-size:15px;border-radius:9px;transition:border-color .15s,box-shadow .15s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(242,179,44,.13)}
+.quote{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:16px;font-size:15px;margin-top:6px}
+.quote b{color:var(--green);font-family:'JetBrains Mono',monospace;font-size:19px}
+details{background:var(--bg2);border:1px solid var(--line);border-radius:11px;margin-bottom:10px}
+summary{cursor:pointer;padding:17px 20px;font-weight:600;font-size:15px;list-style:none;display:flex;justify-content:space-between;align-items:center}
+summary::after{content:"+";font-family:'Archivo';font-size:20px;color:var(--muted)}
 details[open] summary::after{content:"–"}
 details p{padding:0 20px 18px;color:var(--muted);font-size:14px}
-/* modal */
-.overlay{position:fixed;inset:0;background:rgba(5,7,15,.8);backdrop-filter:blur(6px);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
-.modal{background:var(--bg2);border:1px solid var(--gold);max-width:460px;width:100%;padding:30px;position:relative;clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px);max-height:90vh;overflow-y:auto}
-.modal h3{font-size:24px;margin-bottom:4px}
+.overlay{position:fixed;inset:0;background:rgba(6,8,12,.78);backdrop-filter:blur(6px);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal{background:var(--bg2);border:1px solid var(--line);border-radius:16px;max-width:460px;width:100%;padding:30px;position:relative;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.45)}
+.modal h3{font-size:22px;font-weight:700;margin-bottom:4px}
 .modal .msub{color:var(--muted);font-size:13px;margin-bottom:18px}
 .xbtn{position:absolute;top:12px;right:14px;background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer}
-.ordersum{background:var(--gold-dim);border:1px dashed var(--line);padding:12px 14px;font-size:14px;margin-bottom:18px;display:flex;justify-content:space-between}
-.ordersum b{color:var(--gold);font-family:'Rajdhani';font-size:17px}
+.xbtn:hover{color:var(--ink)}
+.ordersum{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:14px;margin-bottom:18px;display:flex;justify-content:space-between}
+.ordersum b{color:var(--ink);font-family:'JetBrains Mono',monospace;font-size:15px}
 .oksplash{text-align:center;padding:14px 0}
-.oksplash .big{font-size:52px}
-.alert{padding:12px 14px;font-size:13px;margin-top:12px;border:1px solid}
-.alert.err{border-color:var(--danger);color:var(--danger);background:rgba(255,92,92,.08)}
-/* dashboard */
-.dash{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
-.statnum{font-family:'Rajdhani';font-weight:700;font-size:44px;color:var(--gold)}
-/* footer */
+.oksplash .big{font-size:40px;color:var(--green);font-weight:700}
+.alert{padding:12px 14px;font-size:13px;margin-top:12px;border:1px solid;border-radius:9px}
+.alert.err{border-color:rgba(255,95,101,.4);color:var(--danger);background:rgba(255,95,101,.07)}
+.dash{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.statnum{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:38px;color:var(--ink);letter-spacing:-0.02em}
 footer{border-top:1px solid var(--line);padding:36px 0;color:var(--muted);font-size:13px}
 .fgrid{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}
-/* sticky mobile cta */
-.mcta{display:none;position:fixed;bottom:0;left:0;right:0;z-index:60;padding:10px 14px;background:rgba(11,14,26,.92);backdrop-filter:blur(10px);border-top:1px solid var(--line)}
+.mcta{display:none;position:fixed;bottom:0;left:0;right:0;z-index:60;padding:10px 14px;background:rgba(12,14,20,.94);backdrop-filter:blur(10px);border-top:1px solid var(--line)}
 .mcta .btn{width:100%}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}html{scroll-behavior:auto}}
 @media(max-width:900px){
@@ -156,15 +144,15 @@ footer{border-top:1px solid var(--line);padding:36px 0;color:var(--muted);font-s
   .hero{padding:40px 0 32px}
   .modal{padding:22px 18px;max-width:100%;margin:0 8px}
   .dealcard{padding:20px}
-  .dealnum{font-size:42px}
+  .dealnum{font-size:38px}
   input,select,textarea,button.btn{min-height:44px}
   .btn{padding:12px 20px;font-size:15px}
   .btn-sm{min-height:38px;padding:9px 16px}
   .card{padding:20px}
-  .toggle button{padding:10px 14px;font-size:13px}
-  .logo{font-size:19px}
+  .toggle button{padding:9px 14px;font-size:13px}
+  .logo{font-size:18px}
   .annc{font-size:12px;padding:7px 10px}
-  h1{font-size:clamp(28px,7vw,36px)!important}
+  h1{font-size:clamp(26px,7vw,34px)!important}
 }
 </style>
 </head>
@@ -220,12 +208,12 @@ const CRYPTO_WALLETS = [
   { name:'USDC',     symbol:'USDC', color:'#2775ca', addr:'0x61bffb5ff4c4f9f730224cf2c7c0648877e8e1af', note:'ERC-20' },
 ];
 const PAYMENT_METHODS = [
-  { id:'cashapp', label:'Cash App',  icon:'💸' },
-  { id:'venmo',   label:'Venmo',     icon:'🔵' },
-  { id:'kofi',    label:'Ko-fi/PayPal', icon:'☕' },
-  { id:'crypto',  label:'Crypto',    icon:'🪙' },
-  { id:'apple',   label:'Apple Card', icon:'🍎' },
-  { id:'google',  label:'Google Play', icon:'▶️' },
+  { id:'cashapp', label:'Cash App',  icon:'' },
+  { id:'venmo',   label:'Venmo',     icon:'' },
+  { id:'kofi',    label:'Ko-fi/PayPal', icon:'' },
+  { id:'crypto',  label:'Crypto',    icon:'' },
+  { id:'apple',   label:'Apple Card', icon:'' },
+  { id:'google',  label:'Google Play', icon:'' },
 ];
 const PAYMENT_METHOD_LABELS = { cashapp:'Cash App ($jamesmoney192)', venmo:'Venmo (@Standoff2Tracker)', kofi:'Ko-fi / PayPal', crypto:'Cryptocurrency', apple:'Apple Gift Card', google:'Google Play Gift Card' };
 const DAILY_GOLD = { bronze: 5, silver: 67, gold: 200 };
@@ -363,15 +351,15 @@ function StatsBar({ avgDeliveryHrs }) {
       <div className="wrap">
         <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:14,background:'var(--bg2)',border:'1px solid var(--line)',borderRadius:10,padding:'18px 10px'}}>
           <div style={{textAlign:'center'}}>
-            <div style={{fontFamily:'Rajdhani',fontWeight:700,fontSize:'clamp(20px,4vw,30px)',color:'var(--gold)'}}>🥇 {fmt(stats.gold)}</div>
+            <div style={{fontFamily:'Archivo',fontWeight:700,fontSize:'clamp(20px,4vw,30px)',color:'var(--gold)'}}>{fmt(stats.gold)}</div>
             <div style={{fontSize:11,color:'var(--muted)',marginTop:2,textTransform:'uppercase',letterSpacing:'.06em'}}>Gold delivered</div>
           </div>
           <div style={{textAlign:'center',borderLeft:'1px solid var(--line)',borderRight:'1px solid var(--line)'}}>
-            <div style={{fontFamily:'Rajdhani',fontWeight:700,fontSize:'clamp(20px,4vw,30px)',color:'var(--gold)'}}>📦 {fmt(stats.orders)}</div>
+            <div style={{fontFamily:'Archivo',fontWeight:700,fontSize:'clamp(20px,4vw,30px)',color:'var(--gold)'}}>{fmt(stats.orders)}</div>
             <div style={{fontSize:11,color:'var(--muted)',marginTop:2,textTransform:'uppercase',letterSpacing:'.06em'}}>Orders fulfilled</div>
           </div>
           <div style={{textAlign:'center'}}>
-            <div style={{fontFamily:'Rajdhani',fontWeight:700,fontSize:'clamp(20px,4vw,30px)',color:'var(--green)'}}>⚡ {deliveryLabel}</div>
+            <div style={{fontFamily:'Archivo',fontWeight:700,fontSize:'clamp(20px,4vw,30px)',color:'var(--green)'}}>{deliveryLabel}</div>
             <div style={{fontSize:11,color:'var(--muted)',marginTop:2,textTransform:'uppercase',letterSpacing:'.06em'}}>Avg delivery time</div>
           </div>
         </div>
@@ -457,7 +445,7 @@ function Checkout({ item, user, onClose }) {
         <button className="xbtn" onClick={onClose} aria-label="Close">×</button>
         {state === 'done' ? (
           <div className="oksplash">
-            <div className="big">🥇</div>
+            <div className="big">✓</div>
             <h3>Order received</h3>
             <p className="msub" style={{marginTop:8}}>Our team just got pinged. Watch for a Discord DM from <b style={{color:'var(--gold)'}}>camel5961</b> to confirm — your gold ships right after.</p>
             <button className="btn btn-ghost btn-sm" onClick={onClose} style={{marginTop:10}}>Done</button>
@@ -780,7 +768,7 @@ function ClaimModal({ user, tier, amount, username: initialUsername, onClose, on
 
         {step === 'submitted' && (
           <div className="oksplash">
-            <div className="big">📋</div>
+            <div className="big">✓</div>
             <h3>Claim submitted!</h3>
             <p className="msub" style={{marginTop:8}}>We got your screenshot and details. Our team verifies claims and credits gold usually within a few hours — watch your dashboard for the status to update.</p>
             <button className="btn btn-ghost btn-sm" onClick={onClose} style={{marginTop:10}}>Done</button>
@@ -875,7 +863,7 @@ function Dashboard({ user, signIn, lifetimeGold, go }) {
 
       <div className="card" style={{transform:'none',marginTop:22}}>
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',marginBottom:8}}>
-          <div style={{fontWeight:700,fontFamily:'Rajdhani',fontSize:18}}>💎 Loyalty {loyaltyUnlocked && <span style={{color:'var(--green)',fontSize:13}}>· 5% OFF UNLOCKED</span>}</div>
+          <div style={{fontWeight:700,fontFamily:'Archivo',fontSize:18}}>Loyalty {loyaltyUnlocked && <span style={{color:'var(--green)',fontSize:13}}>· 5% OFF UNLOCKED</span>}</div>
           <div className="sub" style={{marginBottom:0}}>{fmt(lg)} / {fmt(LOYALTY_THRESHOLD)} G lifetime</div>
         </div>
         <div style={{background:'rgba(0,0,0,.3)',borderRadius:20,height:12,overflow:'hidden'}}>
@@ -885,7 +873,7 @@ function Dashboard({ user, signIn, lifetimeGold, go }) {
       </div>
 
       <div style={{marginTop:22}}>
-        <h3 style={{fontFamily:'Rajdhani',fontSize:20,marginBottom:12}}>Order &amp; claim history</h3>
+        <h3 style={{fontFamily:'Archivo',fontSize:20,marginBottom:12}}>Order &amp; claim history</h3>
         {(() => {
           const combined = [
             ...orders.map(o => ({ kind:'order', key:'o'+o.ts, createdAt:o.createdAt, status:o.status, slaBonus:o.slaBonus,
@@ -906,7 +894,7 @@ function Dashboard({ user, signIn, lifetimeGold, go }) {
                     <div className="sub" style={{marginBottom:0}}>{h.sub} · {h.createdAt ? new Date(h.createdAt).toLocaleDateString() : ''}</div>
                     {h.slaBonus > 0 && <div style={{fontSize:11,color:'var(--green)',marginTop:2}}>⚡ Delivery guarantee: +{fmt(h.slaBonus)} G bonus credited</div>}
                   </div>
-                  <div style={{fontWeight:700,fontSize:13,color:statusColor(h.status),textTransform:'uppercase',fontFamily:'Rajdhani',letterSpacing:'.05em'}}>
+                  <div style={{fontWeight:700,fontSize:13,color:statusColor(h.status),textTransform:'uppercase',fontFamily:'Archivo',letterSpacing:'.05em'}}>
                     {h.status === 'complete' || h.status === 'delivered' ? '✓ Delivered' : h.status === 'failed' ? '✕ Failed' : '⏳ ' + (h.status || 'pending')}
                   </div>
                 </div>
@@ -1443,8 +1431,8 @@ function FlashBanner({ flashSale, onShop }) {
     }
   }
   return (
-    <div onClick={onShop} style={{background:'repeating-linear-gradient(45deg,var(--gold) 0 18px,var(--gold-hot) 18px 36px)',color:'#141000',padding:'9px 16px',textAlign:'center',fontFamily:'Rajdhani',fontWeight:700,fontSize:15,letterSpacing:'.03em',cursor:'pointer'}}>
-      🔥 {flashSale.label || 'FLASH SALE'} — {flashSale.percent}% OFF ALL GOLD{countdown ? ' · ENDS IN ' + countdown : ''} · TAP TO SHOP
+    <div onClick={onShop} style={{background:'var(--gold)',color:'#141000',padding:'9px 16px',textAlign:'center',fontFamily:'Archivo',fontWeight:700,fontSize:15,letterSpacing:'.03em',cursor:'pointer'}}>
+      {flashSale.label || 'FLASH SALE'} — {flashSale.percent}% OFF ALL GOLD{countdown ? ' · ENDS IN ' + countdown : ''} · TAP TO SHOP
     </div>
   );
 }
@@ -1491,7 +1479,7 @@ function App() {
   const go = (id) => { setPage('home'); setTimeout(() => document.getElementById(id)?.scrollIntoView({behavior:'smooth'}), 30); };
   return (
     <div>
-      <div className="annc">🎁 Weekly skin giveaways on our main site — <a href="https://standoff2markettracker.com" target="_blank" rel="noopener"><b>standoff2markettracker.com</b></a></div>
+      <div className="annc">Weekly skin giveaways on our main site — <a href="https://standoff2markettracker.com" target="_blank" rel="noopener"><b>standoff2markettracker.com</b></a></div>
       {flashActive(flashSale) && <FlashBanner flashSale={flashSale} onShop={()=>setPage('buy')} />}
       <header><div className="wrap nav">
         <div className="logo">🥇 Cheap<span>Standoff2</span>Gold</div>
