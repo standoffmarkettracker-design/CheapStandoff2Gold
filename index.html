@@ -50,6 +50,10 @@ header{position:sticky;top:0;z-index:50;background:rgba(12,14,20,.88);backdrop-f
 .navlinks{display:flex;gap:2px;list-style:none}
 .navlinks button{background:none;border:none;color:var(--muted);font:inherit;font-size:14px;font-weight:500;padding:8px 12px;cursor:pointer;border-radius:7px}
 .navlinks button:hover,.navlinks button.active{color:var(--ink);background:rgba(255,255,255,.05)}
+.menubtn{display:none;background:none;border:1px solid var(--line);color:var(--ink);font-size:20px;line-height:1;padding:6px 12px;border-radius:7px;cursor:pointer}
+.mobilemenu{display:flex;flex-direction:column;border-top:1px solid var(--line);background:rgba(12,14,20,.97);padding:6px 20px 12px}
+.mobilemenu button{background:none;border:none;border-bottom:1px solid var(--line);color:var(--ink);font:inherit;font-size:16px;text-align:left;padding:13px 4px;cursor:pointer}
+.mobilemenu button:last-child{border-bottom:none}
 .authbox{display:flex;align-items:center;gap:10px}
 .uname{color:var(--ink);font-weight:600;font-size:14px;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .hero{padding:76px 0 56px;position:relative;overflow:hidden}
@@ -135,6 +139,7 @@ footer{border-top:1px solid var(--line);padding:36px 0;color:var(--muted);font-s
   #packs .card .sub{min-height:0}
   .sellgrid{grid-template-columns:1fr}
   .navlinks{display:none}
+  .menubtn{display:block}
   .mcta{display:block}
   body{padding-bottom:64px}
   section{padding:52px 0}
@@ -1436,6 +1441,7 @@ function FlashBanner({ flashSale, onShop }) {
 function App() {
   const [user, setUser] = useState(null);
   const [page, setPage] = useState('home');
+  const [menuOpen, setMenuOpen] = useState(false);
   const [checkout, setCheckout] = useState(null);
   const [authOpen, setAuthOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -1493,8 +1499,9 @@ function App() {
           </select>
           {user ? (<React.Fragment><span className="uname">{user.displayName||user.email}</span><button className="btn btn-ghost btn-sm" onClick={()=>auth.signOut()}>{t(lang,'signout')}</button></React.Fragment>)
                 : (<button className="btn btn-ghost btn-sm" onClick={signIn}>{t(lang,'signin')}</button>)}
+          <button className="menubtn" aria-label="Menu" onClick={()=>setMenuOpen(o=>!o)}>☰</button>
         </div>
-      </div></header>
+      </div>{menuOpen && (<div className="mobilemenu"><button onClick={()=>{setPage('buy');setMenuOpen(false);}}>{t(lang,'nav_buy')}</button><button onClick={()=>{go('packs');setMenuOpen(false);}}>{t(lang,'nav_packs')}</button><button onClick={()=>{go('subs');setMenuOpen(false);}}>{t(lang,'nav_subs')}</button><button onClick={()=>{go('sell');setMenuOpen(false);}}>{t(lang,'nav_sell')}</button><button onClick={()=>{setPage('dash');setMenuOpen(false);}}>{t(lang,'nav_dash')}</button>{isAdmin && <button onClick={()=>{setPage('admin');setMenuOpen(false);}}>{t(lang,'nav_admin')}</button>}</div>)}</header>
 
       {page === 'home' ? (
         <main>
