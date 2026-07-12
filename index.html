@@ -611,7 +611,7 @@ function Subs({ buy, lang }) {
                   <li>{fmt(moGold)} gold per month total</li>
                   <li>≈ {fmt(daily)} gold to claim each day</li>
                   <li>{fmt(Math.round(moGold/perMo))} gold per dollar</li>
-                  <li>Cancel anytime — keep claimed gold</li>
+                  <li>5% off all gold packs</li>
                   {t.best && <li>Best gold-per-dollar rate we offer</li>}
                 </ul>
                 <button className={'btn ' + (t.best ? 'btn-gold' : 'btn-ghost')} onClick={() => buy({ type:'Subscription', label:`${t.name} ${yearly?'Yearly':'Monthly'} — ${fmt(moGold)} gold/month`, price })}>
