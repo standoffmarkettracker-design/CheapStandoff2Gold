@@ -413,7 +413,7 @@ async function submitOrder(order) {
   return webhookOk;
 }
 
-function Checkout({ item, user, onClose }) {
+function Checkout({ item, user, tier, go, onClose }) {
   const [method, setMethod] = useState('cashapp');
   const [username, setUsername] = useState(user ? (user.displayName || '') : '');
   const [discord, setDiscord] = useState('');
@@ -428,22 +428,25 @@ function Checkout({ item, user, onClose }) {
 
   const copyText = (t, key) => { navigator.clipboard.writeText(t).catch(()=>{}); setCopied(key); setTimeout(()=>setCopied(''), 1500); };
   const canSubmit = () => username.trim() && discord.trim() && (isCard ? gcCode.trim().length >= 8 : true);
+  const isPack = item.type === 'Gold Pack';
+  const effPrice = (tier && isPack) ? Math.round(item.price * 90) / 100 : item.price;
 
   const submit = async () => {
     if (!canSubmit()) return;
     setState('sending');
     const methodLabel = PAYMENT_METHOD_LABELS[method];
     const order = {
-      Type: item.type, Item: item.label, Price: '$' + item.price.toFixed(2), Method: methodLabel,
+      Type: item.type, Item: item.label, Price: '$' + effPrice.toFixed(2), Method: methodLabel,
       Username: username.trim(), Discord: discord.trim(), Account: user ? (user.email || user.uid) : 'guest'
     };
+    if (isPack && tier) order.Discount = 'Subscriber -10%';
     if (isCard) order['Gift Card Code'] = '||' + gcCode.trim() + '||';
     const ok = await submitOrder(order);
     try {
       if (user) {
         db.ref('goldPurchases/' + user.uid + '/' + Date.now()).set({
           uid: user.uid, username: username.trim(), discord: discord.trim(), method, type: item.type,
-          status: 'pending', amount: null, label: item.label, price: item.price,
+          status: 'pending', amount: null, label: item.label, price: effPrice,
           gcCode: isCard ? gcCode.trim() : null, createdAt: new Date().toISOString()
         });
       }
@@ -466,7 +469,9 @@ function Checkout({ item, user, onClose }) {
           <div>
             <h3>Complete your order</h3>
             <p className="msub">Pick how you'd like to pay. You are not charged on this page.</p>
-            <div className="ordersum"><span>{item.label}</span><b>${item.price.toFixed(2)}</b></div>
+            <div className="ordersum"><span>{item.label}</span><b>${effPrice.toFixed(2)}</b></div>
+            {isPack && tier && <div className="sub" style={{color:'var(--green)',marginTop:6,marginBottom:10}}>Subscriber discount applied - 10% off (was ${item.price.toFixed(2)})</div>}
+            {isPack && !tier && <div className="sub" style={{marginTop:6,marginBottom:10}}>Subscribers pay <b style={{color:'var(--gold)'}}>${(Math.round(item.price*90)/100).toFixed(2)}</b> for this pack. <button onClick={()=>{onClose(); go && go('subs');}} style={{background:'none',border:'none',color:'var(--gold)',cursor:'pointer',padding:0,textDecoration:'underline',font:'inherit'}}>View plans →</button></div>}
 
             <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>Payment method</label>
             <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:6,marginBottom:16}}>
@@ -479,7 +484,7 @@ function Checkout({ item, user, onClose }) {
 
             {isDirect && (
               <div>
-                <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>Send ${item.price.toFixed(2)} to</label>
+                <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>Send ${effPrice.toFixed(2)} to</label>
                 <div onClick={()=>copyText(PAYMENT_HANDLES[method],'handle')} style={{background:'rgba(0,0,0,.3)',border:'1px solid var(--line)',borderRadius:8,padding:'12px 14px',display:'flex',justifyContent:'space-between',alignItems:'center',cursor:'pointer',marginBottom:14}}>
                   <span style={{fontFamily:'monospace',fontSize:16,fontWeight:600}}>{PAYMENT_HANDLES[method]}</span>
                   <span style={{fontSize:11,color:copied==='handle'?'var(--green)':'var(--muted)'}}>{copied==='handle'?'Copied!':'tap to copy'}</span>
@@ -488,12 +493,12 @@ function Checkout({ item, user, onClose }) {
             )}
 
             {isKofi && (
-              <div className="quote" style={{marginBottom:14}}>Pay ${item.price.toFixed(2)} via Ko-fi — accepts PayPal, credit card, and Apple Pay. Include your username in the Ko-fi message.<br/><a href="https://ko-fi.com/standoff263277" target="_blank" rel="noopener">Open Ko-fi page →</a></div>
+              <div className="quote" style={{marginBottom:14}}>Pay ${effPrice.toFixed(2)} via Ko-fi — accepts PayPal, credit card, and Apple Pay. Include your username in the Ko-fi message.<br/><a href="https://ko-fi.com/standoff263277" target="_blank" rel="noopener">Open Ko-fi page →</a></div>
             )}
 
             {isCrypto && (
               <div style={{marginBottom:14}}>
-                <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>Send the equivalent of <b style={{color:'var(--gold)'}}>${item.price.toFixed(2)}</b> to any wallet (tap to copy)</label>
+                <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>Send the equivalent of <b style={{color:'var(--gold)'}}>${effPrice.toFixed(2)}</b> to any wallet (tap to copy)</label>
                 <div style={{display:'flex',flexDirection:'column',gap:8}}>
                   {CRYPTO_WALLETS.map(w => (
                     <div key={w.name} onClick={()=>copyText(w.addr,w.symbol)} style={{display:'flex',alignItems:'center',gap:10,padding:'10px 12px',background:'rgba(255,255,255,.03)',border:'1px solid var(--line)',borderRadius:8,cursor:'pointer'}}>
@@ -511,7 +516,7 @@ function Checkout({ item, user, onClose }) {
 
             {isCard && (
               <div>
-                <div className="quote" style={{marginBottom:12}}>{method==='apple'?'Buy an Apple Gift Card from the App Store or any retailer.':'Buy a Google Play Gift Card from any retailer.'} Use a card worth at least <b>${item.price.toFixed(2)}</b>, reveal the code, then enter it below. <b>Do not redeem it yourself.</b></div>
+                <div className="quote" style={{marginBottom:12}}>{method==='apple'?'Buy an Apple Gift Card from the App Store or any retailer.':'Buy a Google Play Gift Card from any retailer.'} Use a card worth at least <b>${effPrice.toFixed(2)}</b>, reveal the code, then enter it below. <b>Do not redeem it yourself.</b></div>
                 <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>{method==='apple'?'Apple':'Google Play'} gift card code</label>
                 <input type="text" value={gcCode} onChange={e=>setGcCode(e.target.value.toUpperCase())} placeholder="XXXX-XXXX-XXXX" style={{fontFamily:'monospace',letterSpacing:'0.05em',marginBottom:12}} />
               </div>
@@ -534,7 +539,7 @@ function Checkout({ item, user, onClose }) {
     </div>
   );
 }
-function Packs({ buy, lang }) {
+function Packs({ buy, lang, tier, go }) {
   return (
     <section id="packs">
       <div className="wrap">
@@ -551,7 +556,8 @@ function Packs({ buy, lang }) {
               <div className="sub">{p.blurb}</div>
               <div className="goldamt goldtext">{fmt(p.gold + p.bonus)} gold</div>
               {p.bonus > 0 && <div className="permo">{fmt(p.gold)} + {fmt(p.bonus)} bonus included</div>}
-              <div className="price" style={{marginTop:10}}>${p.price}</div>
+              <div className="price" style={{marginTop:10}}>{tier ? <span>${(Math.round(p.price*90)/100).toFixed(2)} <s style={{color:'var(--muted)',fontSize:15,fontWeight:400}}>${p.price}</s></span> : <span>${p.price}</span>}</div>
+              {tier ? <div className="permo" style={{color:'var(--green)'}}>Subscriber -10% applied</div> : <div className="permo" onClick={()=>go && go('subs')} style={{cursor:'pointer',textDecoration:'underline'}}>Subscribers pay ${(Math.round(p.price*90)/100).toFixed(2)} →</div>}
               <ul className="feat">
                 <li>Delivered within 24 hours</li>
                 <li>Hand-delivered by our team</li>
@@ -1541,7 +1547,7 @@ function App() {
               <BuyGoldPanel user={user} tier={userTier} signIn={signIn} flashSale={flashSale} lifetimeGold={lifetimeGold} hasPurchased={hasPurchased} avgDeliveryHrs={avgDeliveryHrs} />
             </div>
           </section>
-          <Packs buy={buy} lang={lang} />
+          <Packs buy={buy} lang={lang} tier={userTier} go={go} />
           <Subs buy={buy} lang={lang} />
           <HowItWorks lang={lang} />
           <Sell sell={buy} lang={lang} />
@@ -1564,7 +1570,7 @@ function App() {
       </div></footer>
 
       <div className="mcta"><button className="btn btn-gold" onClick={()=>{page!=='home'&&setPage('home');go('subs')}}>Get cheap gold</button></div>
-      {checkout && <Checkout item={checkout} user={user} onClose={()=>setCheckout(null)} />}
+      {checkout && <Checkout item={checkout} user={user} tier={userTier} go={go} onClose={()=>setCheckout(null)} />}
       {authOpen && <AuthPanel onClose={()=>setAuthOpen(false)} />}
     </div>
   );
