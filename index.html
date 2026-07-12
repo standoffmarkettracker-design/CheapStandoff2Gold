@@ -465,6 +465,8 @@ function Checkout({ item, user, tier, go, onClose }) {
             <div className="big">✓</div>
             <h3>Order received</h3>
             <p className="msub" style={{marginTop:8}}>Our team just got pinged. Watch for a Discord DM from <b style={{color:'var(--gold)'}}>camel5961</b> to confirm — your gold ships right after.</p>
+            <p className="msub" style={{marginTop:12}}>Want <b style={{color:'var(--gold)'}}>100 gold</b>? Refer a friend — you both get 100 G on their first order.</p>
+            {user ? <button className="btn btn-gold btn-sm" style={{marginTop:8}} onClick={()=>copyText('https://standoffmarkettracker-design.github.io/CheapStandoff2Gold/?ref=' + user.uid, 'refdone')}>{copied === 'refdone' ? 'Copied!' : 'Copy your referral link'}</button> : <p className="msub" style={{marginTop:4,fontSize:12}}>Sign in and grab your link from the Dashboard.</p>}
             <button className="btn btn-ghost btn-sm" onClick={onClose} style={{marginTop:10}}>Done</button>
           </div>
         ) : (
