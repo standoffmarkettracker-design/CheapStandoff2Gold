@@ -229,6 +229,8 @@ const PAYMENT_METHODS = [
 ];
 const PAYMENT_METHOD_LABELS = { cashapp:'Cash App ($jamesmoney192)', venmo:'Venmo (@Standoff2Tracker)', kofi:'Ko-fi / PayPal', crypto:'Cryptocurrency', apple:'Apple Gift Card', google:'Google Play Gift Card' };
 const DAILY_GOLD = { bronze: 5, silver: 67, gold: 200 };
+const PACK_DISC = { bronze: 1, silver: 3, gold: 5 };
+const packDiscPct = t => PACK_DISC[(t || '').toLowerCase()] || 0;
 const TIER_COLOR = { bronze:'#c98f12', silver:'#c7cdd6', gold:'var(--gold)' };
 const SLA_HOURS = 24;
 const SLA_BONUS_PCT = 10;
@@ -429,7 +431,8 @@ function Checkout({ item, user, tier, go, onClose }) {
   const copyText = (t, key) => { navigator.clipboard.writeText(t).catch(()=>{}); setCopied(key); setTimeout(()=>setCopied(''), 1500); };
   const canSubmit = () => username.trim() && discord.trim() && (isCard ? gcCode.trim().length >= 8 : true);
   const isPack = item.type === 'Gold Pack';
-  const effPrice = (tier && isPack) ? Math.round(item.price * 95) / 100 : item.price;
+  const discPct = isPack ? packDiscPct(tier) : 0;
+  const effPrice = discPct ? Math.round(item.price * (100 - discPct)) / 100 : item.price;
   const refCode = (() => { try { const r = localStorage.getItem('cs2g_ref'); return (r && (!user || r !== user.uid)) ? r : null; } catch(e) { return null; } })();
 
   const submit = async () => {
@@ -440,7 +443,7 @@ function Checkout({ item, user, tier, go, onClose }) {
       Type: item.type, Item: item.label, Price: '$' + effPrice.toFixed(2), Method: methodLabel,
       Username: username.trim(), Discord: discord.trim(), Account: user ? (user.email || user.uid) : 'guest'
     };
-    if (isPack && tier) order.Discount = 'Subscriber -5%';
+    if (discPct) order.Discount = 'Subscriber -' + discPct + '%';
     if (refCode) order.Referral = refCode;
     if (isCard) order['Gift Card Code'] = '||' + gcCode.trim() + '||';
     const ok = await submitOrder(order);
@@ -474,8 +477,8 @@ function Checkout({ item, user, tier, go, onClose }) {
             <h3>Complete your order</h3>
             <p className="msub">Pick how you'd like to pay. You are not charged on this page.</p>
             <div className="ordersum"><span>{item.label}</span><b>${effPrice.toFixed(2)}</b></div>
-            {isPack && tier && <div className="sub" style={{color:'var(--green)',marginTop:6,marginBottom:10}}>Subscriber discount applied - 5% off (was ${item.price.toFixed(2)})</div>}
-            {isPack && !tier && <div className="sub" style={{marginTop:6,marginBottom:10}}>Subscribers pay <b style={{color:'var(--gold)'}}>${(Math.round(item.price*95)/100).toFixed(2)}</b> for this pack. <button onClick={()=>{onClose(); go && go('subs');}} style={{background:'none',border:'none',color:'var(--gold)',cursor:'pointer',padding:0,textDecoration:'underline',font:'inherit'}}>View plans →</button></div>}
+            {discPct > 0 && <div className="sub" style={{color:'var(--green)',marginTop:6,marginBottom:10}}>Subscriber discount applied - {discPct}% off (was ${item.price.toFixed(2)})</div>}
+            {isPack && !discPct && <div className="sub" style={{marginTop:6,marginBottom:10}}>Gold subscribers pay <b style={{color:'var(--gold)'}}>${(Math.round(item.price*95)/100).toFixed(2)}</b> for this pack. <button onClick={()=>{onClose(); go && go('subs');}} style={{background:'none',border:'none',color:'var(--gold)',cursor:'pointer',padding:0,textDecoration:'underline',font:'inherit'}}>View plans →</button></div>}
 
             <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>Payment method</label>
             <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:6,marginBottom:16}}>
@@ -560,8 +563,8 @@ function Packs({ buy, lang, tier, go }) {
               <div className="sub">{p.blurb}</div>
               <div className="goldamt goldtext">{fmt(p.gold + p.bonus)} gold</div>
               {p.bonus > 0 && <div className="permo">{fmt(p.gold)} + {fmt(p.bonus)} bonus included</div>}
-              <div className="price" style={{marginTop:10}}>{tier ? <span>${(Math.round(p.price*95)/100).toFixed(2)} <s style={{color:'var(--muted)',fontSize:15,fontWeight:400}}>${p.price}</s></span> : <span>${p.price}</span>}</div>
-              {tier ? <div className="permo" style={{color:'var(--green)'}}>Subscriber -5% applied</div> : <div className="permo" onClick={()=>go && go('subs')} style={{cursor:'pointer',textDecoration:'underline'}}>Subscribers pay ${(Math.round(p.price*95)/100).toFixed(2)} →</div>}
+              <div className="price" style={{marginTop:10}}>{packDiscPct(tier) ? <span>${(Math.round(p.price*(100-packDiscPct(tier)))/100).toFixed(2)} <s style={{color:'var(--muted)',fontSize:15,fontWeight:400}}>${p.price}</s></span> : <span>${p.price}</span>}</div>
+              {packDiscPct(tier) ? <div className="permo" style={{color:'var(--green)'}}>Subscriber -{packDiscPct(tier)}% applied</div> : <div className="permo" onClick={()=>go && go('subs')} style={{cursor:'pointer',textDecoration:'underline'}}>Gold subs pay ${(Math.round(p.price*95)/100).toFixed(2)} →</div>}
               <ul className="feat">
                 <li>Delivered within 24 hours</li>
                 <li>Hand-delivered by our team</li>
@@ -611,7 +614,7 @@ function Subs({ buy, lang }) {
                   <li>{fmt(moGold)} gold per month total</li>
                   <li>≈ {fmt(daily)} gold to claim each day</li>
                   <li>{fmt(Math.round(moGold/perMo))} gold per dollar</li>
-                  <li>5% off all gold packs</li>
+                  <li>{PACK_DISC[t.id]}% off all gold packs</li>
                   {t.best && <li>Best gold-per-dollar rate we offer</li>}
                 </ul>
                 <button className={'btn ' + (t.best ? 'btn-gold' : 'btn-ghost')} onClick={() => buy({ type:'Subscription', label:`${t.name} ${yearly?'Yearly':'Monthly'} — ${fmt(moGold)} gold/month`, price })}>
