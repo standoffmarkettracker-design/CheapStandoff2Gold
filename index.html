@@ -430,6 +430,7 @@ function Checkout({ item, user, tier, go, onClose }) {
   const canSubmit = () => username.trim() && discord.trim() && (isCard ? gcCode.trim().length >= 8 : true);
   const isPack = item.type === 'Gold Pack';
   const effPrice = (tier && isPack) ? Math.round(item.price * 90) / 100 : item.price;
+  const refCode = (() => { try { const r = localStorage.getItem('cs2g_ref'); return (r && (!user || r !== user.uid)) ? r : null; } catch(e) { return null; } })();
 
   const submit = async () => {
     if (!canSubmit()) return;
@@ -440,6 +441,7 @@ function Checkout({ item, user, tier, go, onClose }) {
       Username: username.trim(), Discord: discord.trim(), Account: user ? (user.email || user.uid) : 'guest'
     };
     if (isPack && tier) order.Discount = 'Subscriber -10%';
+    if (refCode) order.Referral = refCode;
     if (isCard) order['Gift Card Code'] = '||' + gcCode.trim() + '||';
     const ok = await submitOrder(order);
     try {
@@ -447,7 +449,7 @@ function Checkout({ item, user, tier, go, onClose }) {
         db.ref('goldPurchases/' + user.uid + '/' + Date.now()).set({
           uid: user.uid, username: username.trim(), discord: discord.trim(), method, type: item.type,
           status: 'pending', amount: null, label: item.label, price: effPrice,
-          gcCode: isCard ? gcCode.trim() : null, createdAt: new Date().toISOString()
+          gcCode: isCard ? gcCode.trim() : null, referral: refCode, createdAt: new Date().toISOString()
         });
       }
     } catch(e) {}
@@ -864,6 +866,15 @@ function Dashboard({ user, signIn, lifetimeGold, go }) {
           ) : (
             <button className="btn btn-gold btn-sm" onClick={()=>setClaimOpen(true)} style={{marginTop:8}}>Claim {fmt(dailyAmount)} G</button>
           )}
+        </div>
+      </div>
+
+      <div className="card" style={{transform:'none',marginTop:22}}>
+        <div className="eyebrow" style={{marginBottom:8}}>Refer a friend</div>
+        <p className="sub" style={{marginBottom:10}}>Share your link — you and your friend each get <b style={{color:'var(--gold)'}}>100 gold</b> when they place their first order.</p>
+        <div style={{display:'flex',gap:8,flexWrap:'wrap',alignItems:'center'}}>
+          <input readOnly value={'https://standoffmarkettracker-design.github.io/CheapStandoff2Gold/?ref=' + user.uid} style={{flex:1,minWidth:200,fontSize:12}} onFocus={e=>e.target.select()} />
+          <button className="btn btn-ghost btn-sm" onClick={()=>{ navigator.clipboard.writeText('https://standoffmarkettracker-design.github.io/CheapStandoff2Gold/?ref=' + user.uid).catch(()=>{}); }}>Copy link</button>
         </div>
       </div>
 
@@ -1358,6 +1369,7 @@ function AdminPanel({ user, signIn, flashSale }) {
                 <div style={{fontWeight:600}}>{o.username || '(no name)'} <span style={{fontSize:12,color:o.status==='complete'?'var(--green)':'var(--gold)',marginLeft:8}}>● {o.status}</span></div>
                 <div className="sub" style={{marginBottom:0}}>{o.amount ? fmt(o.amount)+' G' : (o.label || o.type || 'Order')} · {o.method}{o.tier?' · '+o.tier:''}{o.price?' · $'+o.price:''} · {o.createdAt ? new Date(o.createdAt).toLocaleString() : ''}</div>
                 {o.gcCode && <div style={{fontSize:12,fontFamily:'monospace',color:'var(--gold)',marginTop:4}}>Gift code: {o.gcCode}</div>}
+                {o.referral && <div style={{fontSize:12,color:'var(--gold)',marginTop:4}}>Referred by: {o.referral}</div>}
               </div>
               {o.status !== 'complete' && <button className="btn btn-gold btn-sm" onClick={()=>markComplete(o)}>Mark complete</button>}
             </div>
@@ -1489,6 +1501,7 @@ function App() {
   useEffect(() => {
     db.ref('deliveryStats/avgHrs').once('value', s => { const v = s.val(); if (v != null) setAvgDeliveryHrs(v); }).catch(()=>{});
   }, []);
+  useEffect(() => { try { const r = new URLSearchParams(location.search).get('ref'); if (r && /^[A-Za-z0-9_-]{6,64}$/.test(r)) localStorage.setItem('cs2g_ref', r); } catch(e) {} }, []);
   const signIn = () => setAuthOpen(true);
   const buy = item => setCheckout(item);
   const go = (id) => { setPage('home'); setTimeout(() => document.getElementById(id)?.scrollIntoView({behavior:'smooth'}), 30); };
