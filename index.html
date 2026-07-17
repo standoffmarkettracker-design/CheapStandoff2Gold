@@ -230,6 +230,7 @@ const PAYMENT_METHODS = [
 const PAYMENT_METHOD_LABELS = { cashapp:'Cash App ($jamesmoney192)', venmo:'Venmo (@Standoff2Tracker)', kofi:'Ko-fi / PayPal', crypto:'Cryptocurrency', apple:'Apple Gift Card', google:'Google Play Gift Card' };
 const DAILY_GOLD = { bronze: 25, silver: 67, gold: 217 };
 const PACK_DISC = { bronze: 1, silver: 3, gold: 5 };
+const YEARLY_BONUS = { bronze: 250, silver: 750, gold: 2000 };
 const packDiscPct = t => PACK_DISC[(t || '').toLowerCase()] || 0;
 const TIER_COLOR = { bronze:'#c98f12', silver:'#c7cdd6', gold:'var(--gold)' };
 const SLA_HOURS = 24;
@@ -610,6 +611,7 @@ function Subs({ buy, lang }) {
                 <div className="price">${price}<small>/{yearly?'yr':'mo'}</small>{yearly && <span className="was">${(t.mo*12).toFixed(2)}</span>}</div>
                 {yearly && <div className="permo">≈ ${perMo.toFixed(2)}/mo — rate locked for a year</div>}
                 <div className="goldamt goldtext">{fmt(moGold)} gold / month</div>
+                {yearly && <div style={{color:'var(--green)',fontSize:13,fontWeight:600,marginBottom:10}}>+ {fmt(YEARLY_BONUS[t.id])} bonus gold credited instantly</div>}
                 <ul className="feat">
                   <li>{fmt(moGold)} gold per month total</li>
                   <li>≈ {fmt(daily)} gold to claim each day</li>
@@ -617,7 +619,7 @@ function Subs({ buy, lang }) {
                   <li>{PACK_DISC[t.id]}% off all gold packs</li>
                   {t.best && <li>Best gold-per-dollar rate we offer</li>}
                 </ul>
-                <button className={'btn ' + (t.best ? 'btn-gold' : 'btn-ghost')} onClick={() => buy({ type:'Subscription', label:`${t.name} ${yearly?'Yearly':'Monthly'} — ${fmt(moGold)} gold/month`, price })}>
+                <button className={'btn ' + (t.best ? 'btn-gold' : 'btn-ghost')} onClick={() => buy({ type:'Subscription', label:`${t.name} ${yearly?'Yearly':'Monthly'} — ${fmt(moGold)} gold/month${yearly ? ` + ${fmt(YEARLY_BONUS[t.id])} bonus gold instantly` : ''}`, price })}>
                   Get {t.name}
                 </button>
               </div>
@@ -873,6 +875,22 @@ function Dashboard({ user, signIn, lifetimeGold, go }) {
           )}
         </div>
       </div>
+
+      {(() => {
+        const NEXT = { bronze:'silver', silver:'gold' };
+        const nextTier = tierKey && NEXT[tierKey];
+        const doneClaims = claims.filter(c => c.status === 'complete').length;
+        if (!nextTier || doneClaims < 14) return null;
+        const missed = (DAILY_GOLD[nextTier] - DAILY_GOLD[tierKey]) * doneClaims;
+        const nextName = nextTier.charAt(0).toUpperCase() + nextTier.slice(1);
+        return (
+          <div className="card" style={{transform:'none',marginTop:22,borderColor:'var(--gold)'}}>
+            <div className="eyebrow" style={{marginBottom:8}}>Upgrade &amp; earn more</div>
+            <p className="sub" style={{marginBottom:10}}>You have claimed <b>{doneClaims} days</b> on {tierKey.toUpperCase()}. The same claims on {nextName} would have earned you <b style={{color:'var(--gold)'}}>+{fmt(missed)} gold</b> extra.</p>
+            <button className="btn btn-gold btn-sm" onClick={()=>go('subs')}>See {nextName} tier →</button>
+          </div>
+        );
+      })()}
 
       <div className="card" style={{transform:'none',marginTop:22}}>
         <div className="eyebrow" style={{marginBottom:8}}>Refer a friend</div>
