@@ -10,7 +10,7 @@
 <title>Cheap Standoff 2 Gold — Daily Gold Subscriptions & Instant Packs</title>
 <meta name="description" content="Get Standoff 2 gold for a fraction of in-app prices. Daily gold subscriptions from $5/mo and instant gold packs, delivered to your account by the standoff2markettracker.com team.">
 <meta property="og:title" content="Cheap Standoff 2 Gold — Subscriptions & Instant Packs">
-<meta property="og:description" content="Up to 6,000 gold per month from $35. Instant packs delivered within 24 hours.">
+<meta property="og:description" content="Up to 6,500 gold per month from $35. Instant packs delivered within 24 hours.">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -228,7 +228,7 @@ const PAYMENT_METHODS = [
   { id:'google',  label:'Google Play', icon:'' },
 ];
 const PAYMENT_METHOD_LABELS = { cashapp:'Cash App ($jamesmoney192)', venmo:'Venmo (@Standoff2Tracker)', kofi:'Ko-fi / PayPal', crypto:'Cryptocurrency', apple:'Apple Gift Card', google:'Google Play Gift Card' };
-const DAILY_GOLD = { bronze: 25, silver: 67, gold: 200 };
+const DAILY_GOLD = { bronze: 25, silver: 67, gold: 217 };
 const PACK_DISC = { bronze: 1, silver: 3, gold: 5 };
 const packDiscPct = t => PACK_DISC[(t || '').toLowerCase()] || 0;
 const TIER_COLOR = { bronze:'#c98f12', silver:'#c7cdd6', gold:'var(--gold)' };
@@ -331,7 +331,7 @@ const PACKS = [
 const TIERS = [
   { id:'bronze', name:'Bronze', monthly:750,  mo:5,     yr:50,  tag:null },
   { id:'silver', name:'Silver', monthly:2000, mo:12.99, yr:130, tag:'MOST POPULAR' },
-  { id:'gold',   name:'Gold',   monthly:6000, mo:35,    yr:350, tag:'BEST VALUE', best:true },
+  { id:'gold',   name:'Gold',   monthly:6500, mo:35,    yr:350, tag:'BEST VALUE', best:true },
 ];
 
 const fmt = n => n.toLocaleString('en-US');
@@ -1044,7 +1044,7 @@ function AuthPanel({ onClose }) {
 }
 
 function BuyGoldPanel({ user, tier, signIn, flashSale, lifetimeGold, hasPurchased, avgDeliveryHrs }) {
-  const RATES = { none:0.0075, bronze:0.0075, silver:0.005, gold:0.0035 };
+  const RATES = { none:0.0075, bronze:0.007, silver:0.005, gold:0.0035 };
   const tierKey = (tier || 'none').toLowerCase();
   const rate = RATES[tierKey] !== undefined ? RATES[tierKey] : 0.0075;
   const HANDLES = PAYMENT_HANDLES;
@@ -1124,7 +1124,7 @@ function BuyGoldPanel({ user, tier, signIn, flashSale, lifetimeGold, hasPurchase
         </div>
       )}
       <div className="card" style={{transform:'none'}}>
-        <div className="sub" style={{marginBottom:12}}>Your rate: <b style={{color:'var(--gold)'}}>${rate}/gold</b> {tierKey!=='none' && tierKey!=='bronze' ? `(${tier} discount applied)` : '— subscribe for a better rate'}</div>
+        <div className="sub" style={{marginBottom:12}}>Your rate: <b style={{color:'var(--gold)'}}>${rate}/gold</b> {tierKey!=='none' ? `(${tier} discount applied)` : '— subscribe for a better rate'}</div>
         {avgDeliveryHrs != null && avgDeliveryHrs > 0 && (
           <div style={{fontSize:12,color:'var(--green)',marginBottom:12,marginTop:-6}}>Avg delivery time: ~{avgDeliveryHrs < 1 ? Math.round(avgDeliveryHrs*60)+' min' : avgDeliveryHrs.toFixed(1)+' hrs'}</div>
         )}
@@ -1550,12 +1550,12 @@ function App() {
             <div className="dealcard">
               <div className="tag">TOP DEAL</div>
               <div className="eyebrow" style={{marginBottom:6}}>Gold Tier</div>
-              <div className="dealnum goldtext num">6,000</div>
+              <div className="dealnum goldtext num">6,500</div>
               <div className="dealsub">gold every month for $35</div>
-              <div className="dealrow"><span>Daily claim</span><b>≈ 200 gold</b></div>
-              <div className="dealrow"><span>Gold per dollar</span><b>171</b></div>
-              <div className="dealrow"><span>vs. one-time packs</span><b>Up to 20% more gold</b></div>
-              <button className="btn btn-gold" style={{width:'100%',marginTop:18}} onClick={()=>buy({type:'Subscription',label:'Gold Monthly — 6,000 gold/month',price:35})}>Claim this deal</button>
+              <div className="dealrow"><span>Daily claim</span><b>≈ 217 gold</b></div>
+              <div className="dealrow"><span>Gold per dollar</span><b>186</b></div>
+              <div className="dealrow"><span>vs. one-time packs</span><b>Up to 30% more gold</b></div>
+              <button className="btn btn-gold" style={{width:'100%',marginTop:18}} onClick={()=>buy({type:'Subscription',label:'Gold Monthly — 6,500 gold/month',price:35})}>Claim this deal</button>
             </div>
           </div></div>
           <StatsBar avgDeliveryHrs={avgDeliveryHrs} />
