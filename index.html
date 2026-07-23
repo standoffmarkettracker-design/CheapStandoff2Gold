@@ -229,6 +229,22 @@ const PAYMENT_METHODS = [
 ];
 const PAYMENT_METHOD_LABELS = { cashapp:'Cash App ($jamesmoney192)', venmo:'Venmo (@Standoff2Tracker)', kofi:'Ko-fi / PayPal', crypto:'Cryptocurrency', apple:'Apple Gift Card', google:'Google Play Gift Card' };
 const DAILY_GOLD = { bronze: 25, silver: 67, gold: 217 };
+// ---- Subscription terms: a tier is only live until subscriptionEnds ----
+const TERM_DAYS = { monthly: 31, yearly: 366 };
+const DAY_MS = 86400000;
+// Returns the tier only while the subscription is still paid up.
+function activeTier(u) {
+  if (!u || !u.subscriptionTier) return null;
+  if (u.subscriptionEnds && Date.now() > u.subscriptionEnds) return null;
+  return String(u.subscriptionTier).toLowerCase();
+}
+function daysLeft(u) {
+  if (!u || !u.subscriptionEnds) return null;
+  return Math.ceil((u.subscriptionEnds - Date.now()) / DAY_MS);
+}
+function termEnd(term, from) {
+  return (from || Date.now()) + (TERM_DAYS[term] || TERM_DAYS.monthly) * DAY_MS;
+}
 const PACK_DISC = { bronze: 1, silver: 3, gold: 5 };
 const YEARLY_BONUS = { bronze: 250, silver: 750, gold: 2000 };
 const packDiscPct = t => PACK_DISC[(t || '').toLowerCase()] || 0;
@@ -931,7 +947,9 @@ function Dashboard({ user, signIn, lifetimeGold, go }) {
       <button className="btn btn-gold" onClick={signIn}>Sign in or create account</button>
     </div></section>
   );
-  const tierKey = data?.subscriptionTier ? data.subscriptionTier.toLowerCase() : null;
+  const tierKey = activeTier(data);
+  const subDaysLeft = daysLeft(data);
+  const subExpired = !!(data?.subscriptionTier && !tierKey);
   const dailyAmount = tierKey ? (DAILY_GOLD[tierKey] || 0) : 0;
   const today = new Date().toISOString().slice(0,10);
   const todaysClaim = claims.find(c => c.date === today);
@@ -946,11 +964,14 @@ function Dashboard({ user, signIn, lifetimeGold, go }) {
       <div className="sect-head"><div className="eyebrow">Dashboard</div><h2>Welcome back, <span className="goldtext">{(user.displayName||'player').split(' ')[0]}</span></h2></div>
       <div className="dash">
         <div className="card"><div className="sub">Gold balance</div><div className="statnum">{fmt(data?.goldBalance || 0)}</div></div>
-        <div className="card"><div className="sub">Subscription</div><div className="statnum" style={{fontSize:30}}>{tierKey ? tierKey.toUpperCase() : 'None yet'}</div>{!tierKey && <button onClick={()=>go('subs')} style={{fontSize:13,background:'none',border:'none',color:'var(--gold)',cursor:'pointer',padding:0,textDecoration:'underline'}}>Pick a tier →</button>}</div>
+        <div className="card"><div className="sub">Subscription</div><div className="statnum" style={{fontSize:30}}>{tierKey ? tierKey.toUpperCase() : subExpired ? 'EXPIRED' : 'None yet'}</div>
+          {tierKey && subDaysLeft != null && <div className="sub" style={{marginBottom:0,color:subDaysLeft <= 7 ? 'var(--gold)' : 'var(--muted)'}}>{subDaysLeft <= 0 ? 'Renews today' : subDaysLeft === 1 ? 'Renews tomorrow' : 'Renews in ' + subDaysLeft + ' days'}</div>}
+          {!tierKey && <button onClick={()=>go('subs')} style={{fontSize:13,background:'none',border:'none',color:'var(--gold)',cursor:'pointer',padding:0,textDecoration:'underline'}}>{subExpired ? 'Renew now →' : 'Pick a tier →'}</button>}
+        </div>
         <div className="card">
           <div className="sub">Daily claim</div>
           {!tierKey ? (
-            <p style={{color:'var(--muted)',fontSize:13,marginTop:8}}>Subscribe to unlock daily claims.</p>
+            <p style={{color:'var(--muted)',fontSize:13,marginTop:8}}>{subExpired ? 'Your subscription has ended — renew it to start claiming again.' : 'Subscribe to unlock daily claims.'}</p>
           ) : alreadyClaimed ? (
             <p style={{color:'var(--green)',fontSize:13,marginTop:8}}>✓ Claimed today — resets at 00:00 UTC.</p>
           ) : isPending ? (
@@ -1407,7 +1428,20 @@ function AdminPanel({ user, signIn, flashSale }) {
     }
     flash('ok','Order marked complete'); setTimeout(loadOrders, 300);
   };
-  const setTier = (uid, t) => { db.ref('users/' + uid + '/subscriptionTier').set(t); flash('ok','Tier → ' + t); setTimeout(loadUsers, 300); };
+  const setTier = (uid, t) => {
+    if (!t) { db.ref('users/' + uid).update({ subscriptionTier: null, subscriptionEnds: null, subscriptionTerm: null }); flash('ok','Tier cleared'); setTimeout(loadUsers, 300); return; }
+    const term = window.confirm('OK = yearly, Cancel = monthly') ? 'yearly' : 'monthly';
+    db.ref('users/' + uid).update({ subscriptionTier: t, subscriptionTerm: term, subscriptionEnds: termEnd(term) });
+    flash('ok', 'Tier → ' + t + ' (' + term + ')');
+    setTimeout(loadUsers, 300);
+  };
+  // Extend from whichever is later: today, or the current end date.
+  const extendSub = (u, term) => {
+    const from = Math.max(Date.now(), u.subscriptionEnds || 0);
+    db.ref('users/' + u.uid).update({ subscriptionTerm: term, subscriptionEnds: termEnd(term, from) });
+    flash('ok', 'Extended by 1 ' + (term === 'yearly' ? 'year' : 'month'));
+    setTimeout(loadUsers, 300);
+  };
   const adjustBalance = (uid, cur) => {
     const v = prompt('Set gold balance for this user:', cur || 0);
     if (v === null) return;
@@ -1455,6 +1489,12 @@ function AdminPanel({ user, signIn, flashSale }) {
   const fClaims = q ? claims.filter(c => (c.username||'').toLowerCase().includes(q) || (c.discord||'').toLowerCase().includes(q)) : claims;
   const pending = orders.filter(o => o.status === 'pending').length;
   const pendingClaims = claims.filter(c => c.status === 'pending').length;
+  // Subscriptions that have run out, or expire within a week, or never had an end date set.
+  const subsNeedingAttention = users.filter(u => {
+    if (!u.subscriptionTier) return false;
+    const d = daysLeft(u);
+    return d == null || d <= 7;
+  }).length;
 
   return (
     <section><div className="wrap">
@@ -1463,7 +1503,7 @@ function AdminPanel({ user, signIn, flashSale }) {
       <div className="toggle" style={{marginBottom:18}}>
         <button className={tab==='orders'?'on':''} onClick={()=>setTab('orders')}>Orders {pending>0?`(${pending})`:''}</button>
         <button className={tab==='claims'?'on':''} onClick={()=>setTab('claims')}>Claims {pendingClaims>0?`(${pendingClaims})`:''}</button>
-        <button className={tab==='users'?'on':''} onClick={()=>setTab('users')}>Users ({users.length})</button>
+        <button className={tab==='users'?'on':''} onClick={()=>setTab('users')}>Users ({users.length}){subsNeedingAttention>0?` · ${subsNeedingAttention} subs`:''}</button>
         <button className={tab==='flash'?'on':''} onClick={()=>setTab('flash')}>Flash Sale</button>
       </div>
       <div className="field" style={{maxWidth:400,margin:'0 auto 20px'}}>
@@ -1515,10 +1555,12 @@ function AdminPanel({ user, signIn, flashSale }) {
             <div key={u.uid} className="card" style={{transform:'none',flexDirection:'row',alignItems:'center',justifyContent:'space-between',gap:12,flexWrap:'wrap'}}>
               <div style={{flex:1,minWidth:200}}>
                 <div style={{fontWeight:600}}>{u.name || '(no name)'} <span style={{fontSize:12,color:'var(--muted)'}}>{u.email||''}</span></div>
-                <div className="sub" style={{marginBottom:0}}>{fmt(u.goldBalance||0)} · Tier: {u.subscriptionTier || 'none'} · {u.uid.slice(0,10)}…</div>
+                <div className="sub" style={{marginBottom:0}}>{fmt(u.goldBalance||0)} · Tier: {u.subscriptionTier || 'none'}{u.subscriptionTier && (() => { const d = daysLeft(u); return d == null ? <span style={{color:'var(--gold)'}}> (no end date)</span> : d <= 0 ? <span style={{color:'var(--danger)'}}> (EXPIRED)</span> : <span style={{color: d <= 7 ? 'var(--gold)' : 'var(--muted)'}}> ({d}d left)</span>; })()} · {u.uid.slice(0,10)}…</div>
               </div>
               <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
                 <button className="btn btn-ghost btn-sm" onClick={()=>adjustBalance(u.uid, u.goldBalance)}>Set gold</button>
+                {u.subscriptionTier && <button className="btn btn-ghost btn-sm" onClick={()=>extendSub(u,'monthly')}>+1 mo</button>}
+                {u.subscriptionTier && <button className="btn btn-ghost btn-sm" onClick={()=>extendSub(u,'yearly')}>+1 yr</button>}
                 <select value={u.subscriptionTier||''} onChange={e=>setTier(u.uid, e.target.value)} style={{width:'auto',padding:'6px 10px',fontSize:13}}>
                   <option value="">no tier</option>
                   <option value="bronze">bronze</option>
@@ -1598,7 +1640,7 @@ function App() {
     if (vu) {
       setAuthOpen(false);
       db.ref('admins/' + vu.uid).once('value', s => setIsAdmin(s.val() === true)).catch(()=>setIsAdmin(false));
-      db.ref('users/' + vu.uid + '/subscriptionTier').on('value', s => setUserTier(s.val() || null));
+      db.ref('users/' + vu.uid).on('value', s => setUserTier(activeTier(s.val())));
       db.ref('users/' + vu.uid + '/lifetimeGold').on('value', s => setLifetimeGold(s.val() || 0));
       db.ref('users/' + vu.uid + '/hasPurchased').on('value', s => setHasPurchased(s.val() === true));
     } else { setIsAdmin(false); setUserTier(null); setLifetimeGold(0); setHasPurchased(false); }
