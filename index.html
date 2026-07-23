@@ -461,6 +461,28 @@ async function submitFlock({ orderKey, type, label, username, discord, pattern, 
   return { ok, screenshotUrl };
 }
 
+// ---- Order progress bar, shown across every step of a purchase or claim ----
+function OrderProgress({ step, steps, accent, busy }) {
+  const color = accent || 'var(--gold)';
+  const total = steps.length;
+  const cur = Math.min(Math.max(step, 1), total);
+  return (
+    <div style={{marginBottom:18}}>
+      <div style={{display:'flex',gap:5,marginBottom:8}}>
+        {steps.map((s, i) => (
+          <div key={i} style={{flex:1,height:4,borderRadius:99,overflow:'hidden',background:'var(--line)'}}>
+            <div style={{height:'100%',borderRadius:99,background:color,width: i < cur - 1 ? '100%' : i === cur - 1 ? (busy ? '65%' : '100%') : '0%',transition:'width .35s ease',opacity: i === cur - 1 && busy ? .7 : 1}} />
+          </div>
+        ))}
+      </div>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:10,fontFamily:'Archivo',fontWeight:600,fontSize:11,letterSpacing:'.06em',textTransform:'uppercase'}}>
+        <span style={{color:'var(--ink)'}}>{steps[cur - 1]}</span>
+        <span style={{color:'var(--muted)',whiteSpace:'nowrap'}}>Step {cur} of {total}</span>
+      </div>
+    </div>
+  );
+}
+
 // ---- Step 2 of every order: tell the buyer how to receive the gold, and collect the listing ----
 function FlockStep({ listPrice, listNote, accent, heading, submitLabel, onSubmit }) {
   const [pattern, setPattern] = useState('');
@@ -529,6 +551,8 @@ function Checkout({ item, user, tier, go, onClose }) {
   const isSell = item.type === 'Sell Gold Request';
   const listPrice = !isSell && (item.gold || 0) > 0 ? +(item.gold + listOffset).toFixed(2) : null;
   const listNote = item.goldNote || null;
+  const progressSteps = isSell ? ['Your details','Request sent'] : ['Your details','Your listing','Gold on the way'];
+  const progressStep = state === 'done' ? progressSteps.length : state === 'flock' ? 2 : 1;
 
   const copyText = (t, key) => { navigator.clipboard.writeText(t).catch(()=>{}); setCopied(key); setTimeout(()=>setCopied(''), 1500); };
   const canSubmit = () => username.trim() && discord.trim() && (isCard ? gcCode.trim().length >= 8 : true);
@@ -577,6 +601,7 @@ function Checkout({ item, user, tier, go, onClose }) {
     <div className="overlay" onClick={e => e.target === e.currentTarget && onClose()}>
       <div className="modal">
         <button className="xbtn" onClick={onClose} aria-label="Close">×</button>
+        <OrderProgress step={progressStep} steps={progressSteps} busy={state === 'sending'} />
         {state === 'flock' ? (
           <FlockStep listPrice={listPrice} listNote={listNote} heading="Order received" submitLabel="Send listing details" onSubmit={sendFlock} />
         ) : state === 'done' ? (
@@ -868,7 +893,8 @@ function ClaimModal({ user, tier, amount, username: initialUsername, onClose, on
       <div className="modal">
         <button className="xbtn" onClick={onClose} aria-label="Close">×</button>
         <div className="eyebrow" style={{marginBottom:4}}>Daily Gold Claim</div>
-        <h3 style={{color, marginBottom:18}}>{fmt(amount)} G</h3>
+        <h3 style={{color, marginBottom:14}}>{fmt(amount)} G</h3>
+        {step !== 'error' && <OrderProgress step={step === 'submitted' ? 3 : step === 'form' ? 1 : 2} steps={['Your details','Your listing','Gold on the way']} accent={color} busy={step === 'submitting'} />}
 
         {step === 'form' && (
           <div>
@@ -1245,14 +1271,18 @@ function BuyGoldPanel({ user, tier, signIn, flashSale, lifetimeGold, hasPurchase
     setStep('done');
   };
 
+  const progressSteps = ['Your details','Your listing','Gold on the way'];
+
   if (step === 'flock') return (
     <div className="card" style={{maxWidth:520,margin:'0 auto',transform:'none'}}>
+      <OrderProgress step={2} steps={progressSteps} />
       <FlockStep listPrice={listPrice} heading="Order submitted" submitLabel="Send listing details" onSubmit={sendFlock} />
     </div>
   );
 
   if (step === 'done') return (
     <div className="card" style={{maxWidth:520,margin:'0 auto',textAlign:'center',transform:'none'}}>
+      <OrderProgress step={3} steps={progressSteps} />
             <h3 style={{marginTop:8}}>Order submitted!</h3>
       <p className="msub" style={{marginTop:8}}>We got your order and your G22 "Flock" details. Your order should be filled within <b style={{color:'var(--gold)'}}>3 hours</b> — larger orders can take longer.</p>
       <button className="btn btn-ghost btn-sm" style={{marginTop:12}} onClick={()=>{setStep('form');setGcCode('');setOrderKey(null);setOrderTs(null);}}>Place another order</button>
@@ -1269,6 +1299,7 @@ function BuyGoldPanel({ user, tier, signIn, flashSale, lifetimeGold, hasPurchase
         </div>
       )}
       <div className="card" style={{transform:'none'}}>
+        <OrderProgress step={1} steps={progressSteps} busy={step === 'submitting'} />
         <div className="sub" style={{marginBottom:12}}>Your rate: <b style={{color:'var(--gold)'}}>${rate}/gold</b> {tierKey!=='none' ? `(${tier} discount applied)` : '— subscribe for a better rate'}</div>
         {avgDeliveryHrs != null && avgDeliveryHrs > 0 && (
           <div style={{fontSize:12,color:'var(--green)',marginBottom:12,marginTop:-6}}>Avg delivery time: ~{avgDeliveryHrs < 1 ? Math.round(avgDeliveryHrs*60)+' min' : avgDeliveryHrs.toFixed(1)+' hrs'}</div>
