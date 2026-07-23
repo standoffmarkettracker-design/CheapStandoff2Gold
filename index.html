@@ -233,8 +233,6 @@ const PACK_DISC = { bronze: 1, silver: 3, gold: 5 };
 const YEARLY_BONUS = { bronze: 250, silver: 750, gold: 2000 };
 const packDiscPct = t => PACK_DISC[(t || '').toLowerCase()] || 0;
 const TIER_COLOR = { bronze:'#c98f12', silver:'#c7cdd6', gold:'var(--gold)' };
-const SLA_HOURS = 24;
-const SLA_BONUS_PCT = 10;
 
 // ---- Multi-language support ----
 const LANGS = [
@@ -248,10 +246,10 @@ const LANGS = [
 const I18N = {
   en: { nav_buy:'Buy Gold', nav_packs:'Packs', nav_subs:'Subscriptions', nav_sell:'Sell Gold', nav_dash:'Dashboard', nav_admin:'Admin', signin:'Sign in', signout:'Sign out',
     hero_eyebrow:'Standoff 2 Gold Shop', hero_title1:'Stack gold for a', hero_title2:'fraction', hero_title3:'of in-app prices.',
-    hero_lead:'Daily gold subscriptions from $5/mo and instant packs delivered in under 24 hours — run by the team behind standoff2markettracker.com.',
+    hero_lead:'Daily gold subscriptions from $5/mo and instant packs delivered within 3 hours — run by the team behind standoff2markettracker.com.',
     hero_cta1:'Buy gold now', hero_cta2:'See subscriptions',
-    trust1:'Human delivery, no bots', trust2:'24hr delivery or 10% bonus', trust3:'Discord support',
-    packs_eyebrow:'Instant Gold Packs', packs_h2a:'Need gold', packs_h2b:'right now?', packs_p:'One-time packs, delivered to your account within 24 hours of payment. No subscription needed.',
+    trust1:'Human delivery, no bots', trust2:'Filled within 3 hours', trust3:'Discord support',
+    packs_eyebrow:'Instant Gold Packs', packs_h2a:'Need gold', packs_h2b:'right now?', packs_p:'One-time packs, delivered to your account within 3 hours (larger orders can take longer). No subscription needed.',
     subs_eyebrow:'Gold Subscriptions', subs_h2a:'Claim gold', subs_h2b:'every single day', subs_p:'Log in, hit claim, stack gold. Subscriptions deliver the best gold-per-dollar rate we offer.',
     how_eyebrow:'How it works', how_h2a:'From checkout to gold in', how_h2b:'3 steps',
     sell_eyebrow:'Sell your gold', sell_h2a:'Sitting on spare gold?', sell_h2b:'Cash it out.',
@@ -260,10 +258,10 @@ const I18N = {
   },
   ru: { nav_buy:'Купить золото', nav_packs:'Наборы', nav_subs:'Подписки', nav_sell:'Продать золото', nav_dash:'Кабинет', nav_admin:'Админ', signin:'Войти', signout:'Выйти',
     hero_eyebrow:'Магазин золота Standoff 2', hero_title1:'Копите золото за', hero_title2:'малую часть', hero_title3:'цены в игре.',
-    hero_lead:'Ежедневные подписки на золото от $5/мес и мгновенные наборы с доставкой менее чем за 24 часа — от команды standoff2markettracker.com.',
+    hero_lead:'Ежедневные подписки на золото от $5/мес и мгновенные наборы с доставкой в течение 3 часов — от команды standoff2markettracker.com.',
     hero_cta1:'Купить золото', hero_cta2:'Посмотреть подписки',
-    trust1:'Доставка людьми, без ботов', trust2:'Доставка за 24ч или бонус 10%', trust3:'Поддержка в Discord',
-    packs_eyebrow:'Мгновенные наборы золота', packs_h2a:'Нужно золото', packs_h2b:'прямо сейчас?', packs_p:'Разовые наборы, доставка на аккаунт в течение 24 часов после оплаты. Подписка не нужна.',
+    trust1:'Доставка людьми, без ботов', trust2:'Заказы выполняются за 3 часа', trust3:'Поддержка в Discord',
+    packs_eyebrow:'Мгновенные наборы золота', packs_h2a:'Нужно золото', packs_h2b:'прямо сейчас?', packs_p:'Разовые наборы, доставка на аккаунт в течение 3 часов (крупные заказы могут занять дольше). Подписка не нужна.',
     subs_eyebrow:'Подписки на золото', subs_h2a:'Получайте золото', subs_h2b:'каждый день', subs_p:'Войдите, нажмите «получить», копите золото. Подписки дают лучшую цену золота за доллар.',
     how_eyebrow:'Как это работает', how_h2a:'От заказа до золота за', how_h2b:'3 шага',
     sell_eyebrow:'Продайте своё золото', sell_h2a:'Есть лишнее золото?', sell_h2b:'Обменяйте на деньги.',
@@ -272,10 +270,10 @@ const I18N = {
   },
   pt: { nav_buy:'Comprar Ouro', nav_packs:'Pacotes', nav_subs:'Assinaturas', nav_sell:'Vender Ouro', nav_dash:'Painel', nav_admin:'Admin', signin:'Entrar', signout:'Sair',
     hero_eyebrow:'Loja de Ouro Standoff 2', hero_title1:'Acumule ouro por', hero_title2:'uma fração', hero_title3:'do preço do jogo.',
-    hero_lead:'Assinaturas diárias de ouro a partir de $5/mês e pacotes instantâneos entregues em menos de 24 horas — pela equipe do standoff2markettracker.com.',
+    hero_lead:'Assinaturas diárias de ouro a partir de $5/mês e pacotes instantâneos entregues em até 3 horas — pela equipe do standoff2markettracker.com.',
     hero_cta1:'Comprar ouro agora', hero_cta2:'Ver assinaturas',
-    trust1:'Entrega humana, sem bots', trust2:'Entrega em 24h ou bônus de 10%', trust3:'Suporte no Discord',
-    packs_eyebrow:'Pacotes Instantâneos de Ouro', packs_h2a:'Precisa de ouro', packs_h2b:'agora mesmo?', packs_p:'Pacotes avulsos, entregues em até 24 horas após o pagamento. Sem necessidade de assinatura.',
+    trust1:'Entrega humana, sem bots', trust2:'Pedidos atendidos em 3 horas', trust3:'Suporte no Discord',
+    packs_eyebrow:'Pacotes Instantâneos de Ouro', packs_h2a:'Precisa de ouro', packs_h2b:'agora mesmo?', packs_p:'Pacotes avulsos, entregues em até 3 horas após o pagamento (pedidos maiores podem demorar mais). Sem necessidade de assinatura.',
     subs_eyebrow:'Assinaturas de Ouro', subs_h2a:'Resgate ouro', subs_h2b:'todos os dias', subs_p:'Entre, clique em resgatar, acumule ouro. Assinaturas oferecem a melhor relação ouro por dólar.',
     how_eyebrow:'Como funciona', how_h2a:'Do pedido ao ouro em', how_h2b:'3 passos',
     sell_eyebrow:'Venda seu ouro', sell_h2a:'Tem ouro sobrando?', sell_h2b:'Transforme em dinheiro.',
@@ -284,10 +282,10 @@ const I18N = {
   },
   id: { nav_buy:'Beli Gold', nav_packs:'Paket', nav_subs:'Langganan', nav_sell:'Jual Gold', nav_dash:'Dasbor', nav_admin:'Admin', signin:'Masuk', signout:'Keluar',
     hero_eyebrow:'Toko Gold Standoff 2', hero_title1:'Kumpulkan gold dengan', hero_title2:'sebagian kecil', hero_title3:'dari harga di dalam game.',
-    hero_lead:'Langganan gold harian mulai $5/bln dan paket instan yang dikirim dalam waktu kurang dari 24 jam — dikelola tim standoff2markettracker.com.',
+    hero_lead:'Langganan gold harian mulai $5/bln dan paket instan yang dikirim dalam waktu 3 jam — dikelola tim standoff2markettracker.com.',
     hero_cta1:'Beli gold sekarang', hero_cta2:'Lihat langganan',
-    trust1:'Pengiriman manual, bukan bot', trust2:'Kirim 24 jam atau bonus 10%', trust3:'Dukungan via Discord',
-    packs_eyebrow:'Paket Gold Instan', packs_h2a:'Butuh gold', packs_h2b:'sekarang juga?', packs_p:'Paket sekali beli, dikirim ke akunmu dalam 24 jam setelah pembayaran. Tanpa perlu langganan.',
+    trust1:'Pengiriman manual, bukan bot', trust2:'Pesanan dipenuhi dalam 3 jam', trust3:'Dukungan via Discord',
+    packs_eyebrow:'Paket Gold Instan', packs_h2a:'Butuh gold', packs_h2b:'sekarang juga?', packs_p:'Paket sekali beli, dikirim ke akunmu dalam 3 jam setelah pembayaran (pesanan besar bisa lebih lama). Tanpa perlu langganan.',
     subs_eyebrow:'Langganan Gold', subs_h2a:'Klaim gold', subs_h2b:'setiap hari', subs_p:'Masuk, klik klaim, kumpulkan gold. Langganan memberi rasio gold per dolar terbaik.',
     how_eyebrow:'Cara kerja', how_h2a:'Dari checkout sampai gold dalam', how_h2b:'3 langkah',
     sell_eyebrow:'Jual gold kamu', sell_h2a:'Ada gold berlebih?', sell_h2b:'Uangkan sekarang.',
@@ -296,10 +294,10 @@ const I18N = {
   },
   tr: { nav_buy:'Altın Al', nav_packs:'Paketler', nav_subs:'Abonelikler', nav_sell:'Altın Sat', nav_dash:'Panel', nav_admin:'Yönetici', signin:'Giriş yap', signout:'Çıkış yap',
     hero_eyebrow:'Standoff 2 Altın Mağazası', hero_title1:'Oyun içi fiyatın', hero_title2:'bir kısmına', hero_title3:'altın biriktir.',
-    hero_lead:'Aylık $5\'ten başlayan günlük altın abonelikleri ve 24 saatten kısa sürede teslim edilen anlık paketler — standoff2markettracker.com ekibi tarafından işletiliyor.',
+    hero_lead:'Aylık $5\'ten başlayan günlük altın abonelikleri ve 3 saat içinde teslim edilen anlık paketler — standoff2markettracker.com ekibi tarafından işletiliyor.',
     hero_cta1:'Şimdi altın al', hero_cta2:'Abonelikleri gör',
-    trust1:'İnsan tarafından teslimat, bot yok', trust2:'24 saatte teslimat ya da %10 bonus', trust3:'Discord desteği',
-    packs_eyebrow:'Anlık Altın Paketleri', packs_h2a:'Hemen altına', packs_h2b:'ihtiyacın mı var?', packs_p:'Tek seferlik paketler, ödemeden sonra 24 saat içinde hesabına teslim edilir. Abonelik gerekmez.',
+    trust1:'İnsan tarafından teslimat, bot yok', trust2:'Siparişler 3 saatte tamamlanır', trust3:'Discord desteği',
+    packs_eyebrow:'Anlık Altın Paketleri', packs_h2a:'Hemen altına', packs_h2b:'ihtiyacın mı var?', packs_p:'Tek seferlik paketler, ödemeden sonra 3 saat içinde hesabına teslim edilir (büyük siparişler daha uzun sürebilir). Abonelik gerekmez.',
     subs_eyebrow:'Altın Abonelikleri', subs_h2a:'Her gün altın', subs_h2b:'talep et', subs_p:'Giriş yap, talep et butonuna bas, altın biriktir. Abonelikler en iyi dolar başına altın oranını sunar.',
     how_eyebrow:'Nasıl çalışır', how_h2a:'Ödemeden altına', how_h2b:'3 adımda',
     sell_eyebrow:'Altınını sat', sell_h2a:'Elinde fazla altın mı var?', sell_h2b:'Nakde çevir.',
@@ -308,10 +306,10 @@ const I18N = {
   },
   ar: { nav_buy:'شراء الذهب', nav_packs:'الباقات', nav_subs:'الاشتراكات', nav_sell:'بيع الذهب', nav_dash:'لوحة التحكم', nav_admin:'الإدارة', signin:'تسجيل الدخول', signout:'تسجيل الخروج',
     hero_eyebrow:'متجر ذهب Standoff 2', hero_title1:'اجمع الذهب مقابل', hero_title2:'جزء صغير', hero_title3:'من سعر اللعبة.',
-    hero_lead:'اشتراكات ذهب يومية تبدأ من 5 دولارات شهريًا وباقات فورية تُسلَّم خلال أقل من 24 ساعة — يديرها فريق standoff2markettracker.com.',
+    hero_lead:'اشتراكات ذهب يومية تبدأ من 5 دولارات شهريًا وباقات فورية تُسلَّم خلال 3 ساعات — يديرها فريق standoff2markettracker.com.',
     hero_cta1:'اشترِ الذهب الآن', hero_cta2:'عرض الاشتراكات',
-    trust1:'تسليم بشري، بدون بوتات', trust2:'تسليم خلال 24 ساعة أو مكافأة 10%', trust3:'دعم عبر Discord',
-    packs_eyebrow:'باقات ذهب فورية', packs_h2a:'تحتاج ذهبًا', packs_h2b:'الآن؟', packs_p:'باقات لمرة واحدة، تُسلَّم لحسابك خلال 24 ساعة من الدفع. لا حاجة للاشتراك.',
+    trust1:'تسليم بشري، بدون بوتات', trust2:'تُنفَّذ الطلبات خلال 3 ساعات', trust3:'دعم عبر Discord',
+    packs_eyebrow:'باقات ذهب فورية', packs_h2a:'تحتاج ذهبًا', packs_h2b:'الآن؟', packs_p:'باقات لمرة واحدة، تُسلَّم لحسابك خلال 3 ساعات من الدفع (الطلبات الكبيرة قد تستغرق وقتًا أطول). لا حاجة للاشتراك.',
     subs_eyebrow:'اشتراكات الذهب', subs_h2a:'اطلب ذهبك', subs_h2b:'كل يوم', subs_p:'سجّل الدخول، اضغط طلب، واجمع الذهب. الاشتراكات تمنحك أفضل سعر للذهب مقابل الدولار.',
     how_eyebrow:'كيف يعمل', how_h2a:'من الدفع إلى الذهب خلال', how_h2b:'3 خطوات',
     sell_eyebrow:'بِع ذهبك', sell_h2a:'لديك ذهب فائض؟', sell_h2b:'حوّله إلى نقود.',
@@ -336,6 +334,8 @@ const TIERS = [
 ];
 
 const fmt = n => n.toLocaleString('en-US');
+const fmtG = n => n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const randListOffset = () => +(0.23 + Math.random() * 0.69).toFixed(2);
 
 // ---- Live stats bar (simulated growth until real order volume takes over) ----
 // NOTE: These numbers are a realistic-looking simulated trend seeded from a launch date,
@@ -402,18 +402,61 @@ function computeDiscounts(baseCost, amt, opts) {
   return { finalCost: cost, baseCost, lines, totalPct };
 }
 
-async function submitOrder(order) {
+async function submitOrder(order, screenshot) {
   const lines = Object.entries(order).map(([k,v]) => `**${k}:** ${v}`).join('\n');
   let webhookOk = false;
+  let screenshotUrl = null;
+  const payload = { embeds:[{ title:`🛒 New ${order.Type} — CheapStandoff2Gold`, description: lines, color: 16763964, timestamp: new Date().toISOString() }] };
   try {
-    const res = await fetch(WEBHOOK, {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ embeds:[{ title:`🛒 New ${order.Type} — CheapStandoff2Gold`, description: lines, color: 16763964, timestamp: new Date().toISOString() }] })
-    });
+    let res;
+    if (screenshot) {
+      const ext = (screenshot.name.match(/\.[a-zA-Z0-9]+$/) || ['.png'])[0];
+      const fd = new FormData();
+      fd.append('payload_json', JSON.stringify(payload));
+      fd.append('files[0]', screenshot, 'listing-screenshot' + ext);
+      res = await fetch(WEBHOOK + '?wait=true', { method:'POST', body: fd });
+      try { const msg = await res.json(); screenshotUrl = msg?.attachments?.[0]?.url || null; } catch(e) {}
+    } else {
+      res = await fetch(WEBHOOK, {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(payload)
+      });
+    }
     webhookOk = res.ok;
   } catch(e) { console.warn('webhook failed', e); }
-  try { await db.ref('goldOrders').push({ ...order, createdAt: Date.now(), status:'pending' }); } catch(e) { console.warn('db write skipped', e); }
+  try { await db.ref('goldOrders').push({ ...order, screenshotUrl: screenshotUrl || null, createdAt: Date.now(), status:'pending' }); } catch(e) { console.warn('db write skipped', e); }
   return webhookOk;
+}
+
+// ---- G22 "Flock" delivery section (shared by Checkout, BuyGoldPanel, ClaimModal) ----
+function G22DeliverySection({ pattern, setPattern, screenshot, screenshotPreview, handleFile, fileInputRef, accent, listPrice, listNote }) {
+  const color = accent || 'var(--gold)';
+  return (
+    <div>
+      <div className="quote" style={{marginBottom:12}}><b>How you receive your gold:</b> in Standoff 2, buy a <b>G22 "Flock"</b> from the marketplace{listPrice ? ' and list it for sale at exactly the amount below' : ''}. Then enter its pattern number below and upload a screenshot of your listing so our team can find it and fill your order.</div>
+      {listPrice > 0 && (
+        <div style={{background:'var(--gold-dim)',border:'1px solid rgba(242,179,44,.35)',borderRadius:8,padding:'10px 14px',marginBottom:12}}>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:10}}>
+            <span style={{fontSize:13,color:'var(--muted)',fontWeight:600}}>List your G22 "Flock" for exactly</span>
+            <b style={{fontFamily:'JetBrains Mono',fontSize:18,color:'var(--gold)',whiteSpace:'nowrap'}}>{fmtG(listPrice)} G</b>
+          </div>
+          {listNote && <div style={{fontSize:11,color:'var(--muted)',marginTop:6}}>This is {listNote} — claim the rest from your dashboard every day.</div>}
+        </div>
+      )}
+      <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>G22 "Flock" pattern number <span style={{color:'var(--danger)'}}>*</span></label>
+      <input value={pattern} onChange={e=>setPattern(e.target.value.replace(/[^0-9]/g,''))} inputMode="numeric" placeholder="e.g. 743" style={{fontFamily:'monospace',marginBottom:12}} />
+      <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>Screenshot of the listing <span style={{color:'var(--danger)'}}>*</span></label>
+      <div onClick={()=>fileInputRef.current && fileInputRef.current.click()} style={{border:'1px dashed '+(screenshot?color+'99':'var(--line)'),borderRadius:8,padding:screenshotPreview?'8px':'22px 14px',textAlign:'center',cursor:'pointer',background:'rgba(0,0,0,.2)',marginBottom:6}}>
+        {screenshotPreview ? (
+          <img src={screenshotPreview} alt="preview" style={{maxWidth:'100%',maxHeight:130,objectFit:'contain',borderRadius:6,display:'block',margin:'0 auto'}} />
+        ) : (
+          <div><div style={{color:'var(--muted)',fontSize:13}}>Tap to upload a screenshot</div><div style={{color:'var(--muted)',fontSize:11,marginTop:4,opacity:.7}}>Must show your G22 "Flock" listing with the pattern number visible</div></div>
+        )}
+      </div>
+      {screenshot && <div style={{fontSize:11,color:'var(--green)',marginBottom:10,textAlign:'center'}}>✓ {screenshot.name}</div>}
+      <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFile} style={{display:'none'}} />
+    </div>
+  );
 }
 
 function Checkout({ item, user, tier, go, onClose }) {
@@ -423,14 +466,31 @@ function Checkout({ item, user, tier, go, onClose }) {
   const [gcCode, setGcCode] = useState('');
   const [copied, setCopied] = useState('');
   const [state, setState] = useState('form');
+  const [pattern, setPattern] = useState('');
+  const [screenshot, setScreenshot] = useState(null);
+  const [screenshotPreview, setScreenshotPreview] = useState(null);
+  const [listOffset] = useState(randListOffset);
+  const fileInputRef = useRef(null);
 
   const isCard = method === 'apple' || method === 'google';
   const isKofi = method === 'kofi';
   const isCrypto = method === 'crypto';
   const isDirect = method === 'cashapp' || method === 'venmo';
+  const isSell = item.type === 'Sell Gold Request';
+  const listPrice = !isSell && (item.gold || 0) > 0 ? +(item.gold + listOffset).toFixed(2) : null;
+  const listNote = item.goldNote || null;
+
+  const handleFile = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setScreenshot(file);
+    const reader = new FileReader();
+    reader.onload = ev => setScreenshotPreview(ev.target.result);
+    reader.readAsDataURL(file);
+  };
 
   const copyText = (t, key) => { navigator.clipboard.writeText(t).catch(()=>{}); setCopied(key); setTimeout(()=>setCopied(''), 1500); };
-  const canSubmit = () => username.trim() && discord.trim() && (isCard ? gcCode.trim().length >= 8 : true);
+  const canSubmit = () => username.trim() && discord.trim() && (isCard ? gcCode.trim().length >= 8 : true) && (isSell || (pattern.trim() && screenshot));
   const isPack = item.type === 'Gold Pack';
   const discPct = isPack ? packDiscPct(tier) : 0;
   const effPrice = discPct ? Math.round(item.price * (100 - discPct)) / 100 : item.price;
@@ -447,12 +507,16 @@ function Checkout({ item, user, tier, go, onClose }) {
     if (discPct) order.Discount = 'Subscriber -' + discPct + '%';
     if (refCode) order.Referral = refCode;
     if (isCard) order['Gift Card Code'] = '||' + gcCode.trim() + '||';
-    const ok = await submitOrder(order);
+    if (!isSell) order['G22 Flock Pattern'] = pattern.trim();
+    if (listPrice) order['Listed For'] = fmtG(listPrice) + ' G';
+    const ok = await submitOrder(order, isSell ? null : screenshot);
     try {
       if (user) {
         db.ref('goldPurchases/' + user.uid + '/' + Date.now()).set({
           uid: user.uid, username: username.trim(), discord: discord.trim(), method, type: item.type,
           status: 'pending', amount: null, label: item.label, price: effPrice,
+          flockPattern: isSell ? null : pattern.trim(),
+          listPrice: listPrice || null,
           gcCode: isCard ? gcCode.trim() : null, referral: refCode, createdAt: new Date().toISOString()
         });
       }
@@ -468,7 +532,7 @@ function Checkout({ item, user, tier, go, onClose }) {
           <div className="oksplash">
             <div className="big">✓</div>
             <h3>Order received</h3>
-            <p className="msub" style={{marginTop:8}}>Our team just got pinged. Watch for a Discord DM from <b style={{color:'var(--gold)'}}>camel5961</b> to confirm — your gold ships right after.</p>
+            <p className="msub" style={{marginTop:8}}>Our team just got pinged with your G22 "Flock" details. Your order should be filled within <b style={{color:'var(--gold)'}}>3 hours</b> — larger orders can take longer.</p>
             <p className="msub" style={{marginTop:12}}>Want <b style={{color:'var(--gold)'}}>100 gold</b>? Refer a friend — you both get 100 G on their first order.</p>
             {user ? <button className="btn btn-gold btn-sm" style={{marginTop:8}} onClick={()=>copyText('https://standoffmarkettracker-design.github.io/CheapStandoff2Gold/?ref=' + user.uid, 'refdone')}>{copied === 'refdone' ? 'Copied!' : 'Copy your referral link'}</button> : <p className="msub" style={{marginTop:4,fontSize:12}}>Sign in and grab your link from the Dashboard.</p>}
             <button className="btn btn-ghost btn-sm" onClick={onClose} style={{marginTop:10}}>Done</button>
@@ -530,7 +594,9 @@ function Checkout({ item, user, tier, go, onClose }) {
               </div>
             )}
 
-            <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>Your in-game username</label>
+            {!isSell && <G22DeliverySection pattern={pattern} setPattern={setPattern} screenshot={screenshot} screenshotPreview={screenshotPreview} handleFile={handleFile} fileInputRef={fileInputRef} listPrice={listPrice} listNote={listNote} />}
+
+            <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6,marginTop:8}}>Your in-game username</label>
             <input value={username} onChange={e=>setUsername(e.target.value)} placeholder="e.g. CamelS2" style={{marginBottom:14}} />
 
             <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>Your Discord username</label>
@@ -540,7 +606,7 @@ function Checkout({ item, user, tier, go, onClose }) {
               {state==='sending' ? 'Sending…' : 'Place order'}
             </button>
             {state==='error' && <div className="alert err">Order could not be sent. DM <b>camel5961</b> on Discord and we will sort you out directly.</div>}
-            <p className="msub" style={{marginTop:14, marginBottom:0}}>Placing an order pings our team instantly. We confirm your payment and deliver shortly after.</p>
+            <p className="msub" style={{marginTop:14, marginBottom:0}}>{isSell ? 'Placing a request pings our team instantly. We confirm the transfer and pay out shortly after.' : 'Placing an order pings our team instantly. We confirm your payment and fill your order within 3 hours — larger orders can take longer.'}</p>
           </div>
         )}
       </div>
@@ -571,7 +637,7 @@ function Packs({ buy, lang, tier, go }) {
                 <li>Hand-delivered by our team</li>
                 <li>{Math.round((p.gold+p.bonus)/p.price)} gold per dollar</li>
               </ul>
-              <button className="btn btn-gold" onClick={() => buy({ type:'Gold Pack', label:`${p.name} — ${fmt(p.gold+p.bonus)} gold`, price:p.price })}>Buy {p.name}</button>
+              <button className="btn btn-gold" onClick={() => buy({ type:'Gold Pack', label:`${p.name} — ${fmt(p.gold+p.bonus)} gold`, price:p.price, gold:p.gold+p.bonus })}>Buy {p.name}</button>
             </div>
           ))}
         </div>
@@ -619,7 +685,7 @@ function Subs({ buy, lang }) {
                   <li>{PACK_DISC[t.id]}% off all gold packs</li>
                   {t.best && <li>Best gold-per-dollar rate we offer</li>}
                 </ul>
-                <button className={'btn ' + (t.best ? 'btn-gold' : 'btn-ghost')} onClick={() => buy({ type:'Subscription', label:`${t.name} ${yearly?'Yearly':'Monthly'} — ${fmt(moGold)} gold/month${yearly ? ` + ${fmt(YEARLY_BONUS[t.id])} bonus gold instantly` : ''}`, price })}>
+                <button className={'btn ' + (t.best ? 'btn-gold' : 'btn-ghost')} onClick={() => buy({ type:'Subscription', label:`${t.name} ${yearly?'Yearly':'Monthly'} — ${fmt(moGold)} gold/month${yearly ? ` + ${fmt(YEARLY_BONUS[t.id])} bonus gold instantly` : ''}`, price, gold: daily + (yearly ? YEARLY_BONUS[t.id] : 0), goldNote: yearly ? 'first day of gold + your yearly bonus' : 'your first day of gold' })}>
                   Get {t.name}
                 </button>
               </div>
@@ -643,7 +709,7 @@ function HowItWorks({ lang }) {
         <div className="steps">
           <div className="step"><h3>Pick your gold</h3><p>Choose an instant pack or a daily subscription and drop your Standoff 2 ID at checkout.</p></div>
           <div className="step"><h3>Pay over Discord</h3><p>Our team DMs you to take payment securely — the same crew that runs standoff2markettracker.com.</p></div>
-          <div className="step"><h3>Gold hits your account</h3><p>Packs land within 24 hours. Subscribers claim their gold from the dashboard every day.</p></div>
+          <div className="step"><h3>Gold hits your account</h3><p>Buy a G22 "Flock" from the in-game marketplace, list it for the exact amount shown at checkout, and submit its pattern number plus a screenshot of the listing — orders are filled within 3 hours (larger orders can take longer). Subscribers claim their gold from the dashboard every day.</p></div>
         </div>
       </div>
     </section>
@@ -682,9 +748,9 @@ function Sell({ sell, lang }) {
 
 function FAQ({ lang }) {
   const QA = [
-    ['How fast do I get my gold?', 'Instant packs are delivered within 24 hours of payment, usually much faster. Subscription gold is claimable from your dashboard every day.'],
-    ['What if my order is late?', `We guarantee delivery within ${SLA_HOURS} hours. If we miss that window, we automatically credit ${SLA_BONUS_PCT}% bonus gold to your account on top of your order — no need to ask.`],
-    ['How is the gold delivered?', 'Our team delivers it directly to your Standoff 2 account — the same manual, human-verified process we use on standoff2markettracker.com.'],
+    ['How fast do I get my gold?', 'Orders and daily claims are filled within 3 hours of submitting your G22 "Flock" details — larger orders can take longer. Subscription gold is claimable from your dashboard every day.'],
+    ['What if my order is late?', 'Most orders are filled within 3 hours; larger orders can take longer. If yours seems stuck, DM camel5961 on Discord and we will chase it down.'],
+    ['How is the gold delivered?', 'Through the Standoff 2 marketplace. You buy a G22 "Flock", list it for the exact amount we show at checkout (your gold amount plus a small unique marker), and send us its pattern number and a screenshot of the listing — our team buys out your listing to fill your order, within 3 hours for most orders, longer for larger ones.'],
     ['How do I pay?', 'Pick your payment method right at checkout — Cash App, Venmo, Ko-fi/PayPal, crypto, or an Apple/Google gift card. We never charge a card on this website; you send payment directly to the method you choose, then our team confirms it and delivers your gold.'],
     ['Can I cancel my subscription?', 'Anytime. You keep every bit of gold you already claimed, no questions asked.'],
     ['Is this legit?', 'We are the team behind standoff2markettracker.com — the Standoff 2 price tracker with live skin prices, giveaways, and an active Discord community. Come say hi before you spend a cent.'],
@@ -703,11 +769,14 @@ function ClaimModal({ user, tier, amount, username: initialUsername, onClose, on
   const [step, setStep] = useState('form');
   const [username, setUsername] = useState(initialUsername || '');
   const [discord, setDiscord] = useState('');
+  const [pattern, setPattern] = useState('');
   const [screenshot, setScreenshot] = useState(null);
   const [screenshotPreview, setScreenshotPreview] = useState(null);
+  const [listOffset] = useState(randListOffset);
   const [errMsg, setErrMsg] = useState('');
   const fileInputRef = useRef(null);
   const color = TIER_COLOR[tier] || 'var(--gold)';
+  const listPrice = +(amount + listOffset).toFixed(2);
 
   const handleFile = (e) => {
     const file = e.target.files[0];
@@ -718,7 +787,7 @@ function ClaimModal({ user, tier, amount, username: initialUsername, onClose, on
     reader.readAsDataURL(file);
   };
 
-  const canSubmit = username.trim() && discord.trim() && screenshot;
+  const canSubmit = username.trim() && discord.trim() && pattern.trim() && screenshot;
 
   const submit = async () => {
     if (!canSubmit) return;
@@ -732,8 +801,10 @@ function ClaimModal({ user, tier, amount, username: initialUsername, onClose, on
           { name: 'Discord', value: discord.trim(), inline: true },
           { name: 'Tier', value: tier, inline: true },
           { name: 'Amount', value: fmt(amount) + ' G', inline: true },
+          { name: 'G22 Flock Pattern', value: pattern.trim(), inline: true },
+          { name: 'Listed For', value: fmtG(listPrice) + ' G', inline: true },
         ],
-        description: 'Screenshot attached below. Verify the profile, then mark complete in admin.',
+        description: 'Listing screenshot attached below. Find the G22 "Flock" by pattern number, fill the claim, then mark complete in admin.',
         timestamp: new Date().toISOString()
       }] };
       const ext = (screenshot.name.match(/\.[a-zA-Z0-9]+$/) || ['.png'])[0];
@@ -746,6 +817,7 @@ function ClaimModal({ user, tier, amount, username: initialUsername, onClose, on
       await db.ref('dailyClaims/' + user.uid + '/' + today).set({
         uid: user.uid, displayName: user.displayName || '', email: user.email || '',
         discord: discord.trim(), username: username.trim(), tier, amount,
+        flockPattern: pattern.trim(), listPrice,
         screenshotUrl, status: 'pending', createdAt: new Date().toISOString(), claimDate: today
       });
       setStep('submitted');
@@ -765,17 +837,23 @@ function ClaimModal({ user, tier, amount, username: initialUsername, onClose, on
 
         {step === 'form' && (
           <div>
-            <p className="msub">Confirm your details and upload a screenshot of your Standoff 2 profile (username visible) so we can verify it's really you before crediting your gold.</p>
+            <p className="msub">To receive today's gold: in Standoff 2, buy a <b>G22 "Flock"</b> from the marketplace and list it for sale at exactly the amount below, then enter its pattern number and upload a screenshot of your listing.</p>
+            <div style={{background:'var(--gold-dim)',border:'1px solid rgba(242,179,44,.35)',borderRadius:8,padding:'10px 14px',display:'flex',justifyContent:'space-between',alignItems:'center',gap:10,marginBottom:12}}>
+              <span style={{fontSize:13,color:'var(--muted)',fontWeight:600}}>List your G22 "Flock" for exactly</span>
+              <b style={{fontFamily:'JetBrains Mono',fontSize:18,color:'var(--gold)',whiteSpace:'nowrap'}}>{fmtG(listPrice)} G</b>
+            </div>
             <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>Your in-game username</label>
             <input value={username} onChange={e=>setUsername(e.target.value)} placeholder="e.g. CamelS2" style={{marginBottom:12}} />
             <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>Your Discord username</label>
             <input value={discord} onChange={e=>setDiscord(e.target.value)} placeholder="e.g. camel5961" style={{marginBottom:12}} />
-            <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>Profile screenshot (username visible) <span style={{color:'var(--danger)'}}>*</span></label>
+            <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>G22 "Flock" pattern number <span style={{color:'var(--danger)'}}>*</span></label>
+            <input value={pattern} onChange={e=>setPattern(e.target.value.replace(/[^0-9]/g,''))} inputMode="numeric" placeholder="e.g. 743" style={{fontFamily:'monospace',marginBottom:12}} />
+            <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>Screenshot of the listing <span style={{color:'var(--danger)'}}>*</span></label>
             <div onClick={()=>fileInputRef.current && fileInputRef.current.click()} style={{border:'1px dashed '+(screenshot?color+'99':'var(--line)'),borderRadius:8,padding:screenshotPreview?'8px':'22px 14px',textAlign:'center',cursor:'pointer',background:'rgba(0,0,0,.2)',marginBottom:6}}>
               {screenshotPreview ? (
                 <img src={screenshotPreview} alt="preview" style={{maxWidth:'100%',maxHeight:130,objectFit:'contain',borderRadius:6,display:'block',margin:'0 auto'}} />
               ) : (
-                <div><div style={{color:'var(--muted)',fontSize:13}}>Tap to upload a screenshot</div><div style={{color:'var(--muted)',fontSize:11,marginTop:4,opacity:.7}}>Must show your Standoff 2 username clearly</div></div>
+                <div><div style={{color:'var(--muted)',fontSize:13}}>Tap to upload a screenshot</div><div style={{color:'var(--muted)',fontSize:11,marginTop:4,opacity:.7}}>Must show your G22 "Flock" listing with the pattern number visible</div></div>
               )}
             </div>
             {screenshot && <div style={{fontSize:11,color:'var(--green)',marginBottom:10,textAlign:'center'}}>✓ {screenshot.name}</div>}
@@ -797,7 +875,7 @@ function ClaimModal({ user, tier, amount, username: initialUsername, onClose, on
           <div className="oksplash">
             <div className="big">✓</div>
             <h3>Claim submitted!</h3>
-            <p className="msub" style={{marginTop:8}}>We got your screenshot and details. Our team verifies claims and credits gold usually within a few hours — watch your dashboard for the status to update.</p>
+            <p className="msub" style={{marginTop:8}}>We got your G22 "Flock" details. Your claim should be filled within <b style={{color:'var(--gold)'}}>3 hours</b> — larger orders can take longer. Watch your dashboard for the status to update.</p>
             <button className="btn btn-ghost btn-sm" onClick={onClose} style={{marginTop:10}}>Done</button>
           </div>
         )}
@@ -904,7 +982,7 @@ function Dashboard({ user, signIn, lifetimeGold, go }) {
       {tierKey && (
         <div className="card" style={{transform:'none',marginTop:22}}>
           <div className="eyebrow" style={{marginBottom:12}}>How daily claims work</div>
-          {[['Click Claim','Opens the claim form for your tier\'s daily amount.'],['Upload proof','Add your in-game username, Discord, and a screenshot of your Standoff 2 profile with your username visible.'],['We verify','Our team checks your screenshot matches your account — usually within a few hours.'],['Gold arrives','Once verified we credit your gold and mark the claim complete on your dashboard.']].map((step,i) => (
+          {[['Click Claim','Opens the claim form for your tier\'s daily amount.'],['Buy a G22 "Flock"','Pick one up from the in-game marketplace.'],['Submit the details','List it for the exact amount shown in the claim form, then enter its pattern number and upload a screenshot of the listing.'],['Gold arrives','Your claim is filled within 3 hours — larger orders can take longer. The claim is marked complete on your dashboard.']].map((step,i) => (
             <div key={i} style={{display:'flex',gap:12,marginBottom:i<3?12:0,alignItems:'flex-start'}}>
               <div style={{width:20,height:20,borderRadius:5,background:'rgba(255,255,255,.04)',border:'1px solid var(--line)',display:'flex',alignItems:'center',justifyContent:'center',color:'var(--muted)',fontSize:11,fontWeight:700,flexShrink:0,marginTop:2}}>{i+1}</div>
               <div><div style={{fontWeight:600,fontSize:13,marginBottom:2}}>{step[0]}</div><div style={{color:'var(--muted)',fontSize:12,lineHeight:1.5}}>{step[1]}</div></div>
@@ -928,10 +1006,10 @@ function Dashboard({ user, signIn, lifetimeGold, go }) {
         <h3 style={{fontFamily:'Archivo',fontSize:20,marginBottom:12}}>Order &amp; claim history</h3>
         {(() => {
           const combined = [
-            ...orders.map(o => ({ kind:'order', key:'o'+o.ts, createdAt:o.createdAt, status:o.status, slaBonus:o.slaBonus,
+            ...orders.map(o => ({ kind:'order', key:'o'+o.ts, createdAt:o.createdAt, status:o.status,
               title: o.amount ? (fmt(o.amount)+' gold'+(o.discountPct>0?` (${o.discountPct}% off)`:'')) : (o.label || o.type || 'Order'),
               sub: [o.method, o.tier, o.price?('$'+o.price):null].filter(Boolean).join(' · ') })),
-            ...claims.map(c => ({ kind:'claim', key:'c'+c.date, createdAt:c.createdAt, status:c.status, slaBonus:c.slaBonus,
+            ...claims.map(c => ({ kind:'claim', key:'c'+c.date, createdAt:c.createdAt, status:c.status,
               title: fmt(c.amount||0)+' gold claim',
               sub: [c.tier+' tier', c.date].filter(Boolean).join(' · ') }))
           ];
@@ -944,7 +1022,6 @@ function Dashboard({ user, signIn, lifetimeGold, go }) {
                   <div>
                     <div style={{fontWeight:600}}>{h.title}</div>
                     <div className="sub" style={{marginBottom:0}}>{h.sub} · {h.createdAt ? new Date(h.createdAt).toLocaleDateString() : ''}</div>
-                    {h.slaBonus > 0 && <div style={{fontSize:11,color:'var(--green)',marginTop:2}}>Delivery guarantee: +{fmt(h.slaBonus)} G bonus credited</div>}
                   </div>
                   <div style={{fontWeight:700,fontSize:13,color:statusColor(h.status),textTransform:'uppercase',fontFamily:'Archivo',letterSpacing:'.05em'}}>
                     {h.status === 'complete' || h.status === 'delivered' ? '✓ Delivered' : h.status === 'failed' ? '✕ Failed' : (h.status || 'pending')}
@@ -1079,12 +1156,27 @@ function BuyGoldPanel({ user, tier, signIn, flashSale, lifetimeGold, hasPurchase
   const [discord, setDiscord] = useState('');
   const [copied, setCopied] = useState('');
   const [step, setStep] = useState('form');
+  const [pattern, setPattern] = useState('');
+  const [screenshot, setScreenshot] = useState(null);
+  const [screenshotPreview, setScreenshotPreview] = useState(null);
+  const [listOffset] = useState(randListOffset);
+  const fileInputRef = useRef(null);
+
+  const handleFile = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setScreenshot(file);
+    const reader = new FileReader();
+    reader.onload = ev => setScreenshotPreview(ev.target.result);
+    reader.readAsDataURL(file);
+  };
 
   const isCard = method === 'apple' || method === 'google';
   const isDirect = method === 'cashapp' || method === 'venmo';
   const isKofi = method === 'kofi';
   const isCrypto = method === 'crypto';
   const goldForCalc = isCard ? Math.round(gcDenom / rate) : amt;
+  const listPrice = goldForCalc > 0 ? +(goldForCalc + listOffset).toFixed(2) : null;
   const baseCost = goldForCalc * rate;
   const loyaltyUnlocked = (lifetimeGold || 0) >= LOYALTY_THRESHOLD;
   const isFirst = user && !hasPurchased;
@@ -1093,7 +1185,7 @@ function BuyGoldPanel({ user, tier, signIn, flashSale, lifetimeGold, hasPurchase
   const gcGold = Math.round(gcDenom / rate);
 
   const copyText = (t, key) => { navigator.clipboard.writeText(t).catch(()=>{}); setCopied(key); setTimeout(()=>setCopied(''), 1500); };
-  const canSubmit = () => username.trim() && discord.trim() && (isCard ? gcCode.trim().length >= 8 : amt >= 100);
+  const canSubmit = () => username.trim() && discord.trim() && (isCard ? gcCode.trim().length >= 8 : amt >= 100) && pattern.trim() && screenshot;
 
   const submit = async () => {
     if (!canSubmit()) return;
@@ -1109,12 +1201,15 @@ function BuyGoldPanel({ user, tier, signIn, flashSale, lifetimeGold, hasPurchase
     };
     if (disc.lines.length) order['Discounts'] = disc.lines.map(l => l.label + ' -' + l.pct + '%').join(', ');
     if (isCard) order['Gift Card Code'] = '||' + gcCode.trim() + '||';
-    const ok = await submitOrder(order);
+    order['G22 Flock Pattern'] = pattern.trim();
+    if (listPrice) order['Listed For'] = fmtG(listPrice) + ' G';
+    const ok = await submitOrder(order, screenshot);
     try {
       if (user) {
         db.ref('goldPurchases/' + user.uid + '/' + Date.now()).set({
           uid: user.uid, username: username.trim(), discord: discord.trim(), tier: tier || 'None', method,
           status: 'pending', amount: goldAmt, price: parseFloat(cost), discountPct: disc.totalPct,
+          flockPattern: pattern.trim(), listPrice: listPrice || null,
           gcCode: isCard ? gcCode.trim() : null, createdAt: new Date().toISOString()
         });
         db.ref('users/' + user.uid + '/hasPurchased').set(true);
@@ -1127,7 +1222,7 @@ function BuyGoldPanel({ user, tier, signIn, flashSale, lifetimeGold, hasPurchase
   if (step === 'done') return (
     <div className="card" style={{maxWidth:520,margin:'0 auto',textAlign:'center',transform:'none'}}>
             <h3 style={{marginTop:8}}>Order submitted!</h3>
-      <p className="msub" style={{marginTop:8}}>We got your order. Watch for a Discord DM from <b style={{color:'var(--gold)'}}>camel5961</b> with delivery instructions — usually within a few hours.</p>
+      <p className="msub" style={{marginTop:8}}>We got your order and your G22 "Flock" details. Your order should be filled within <b style={{color:'var(--gold)'}}>3 hours</b> — larger orders can take longer.</p>
       <button className="btn btn-ghost btn-sm" style={{marginTop:12}} onClick={()=>{setStep('form');setGcCode('');}}>Place another order</button>
     </div>
   );
@@ -1228,7 +1323,9 @@ function BuyGoldPanel({ user, tier, signIn, flashSale, lifetimeGold, hasPurchase
           </div>
         )}
 
-        <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>Your in-game username</label>
+        <G22DeliverySection pattern={pattern} setPattern={setPattern} screenshot={screenshot} screenshotPreview={screenshotPreview} handleFile={handleFile} fileInputRef={fileInputRef} listPrice={listPrice} />
+
+        <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6,marginTop:8}}>Your in-game username</label>
         <input type="text" value={username} onChange={e=>setUsername(e.target.value)} placeholder="e.g. CamelS2" style={{marginBottom:8}} />
         <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>Your Discord username</label>
         <input type="text" value={discord} onChange={e=>setDiscord(e.target.value)} placeholder="e.g. camel5961" style={{marginBottom:8}} />
@@ -1298,15 +1395,6 @@ function AdminPanel({ user, signIn, flashSale }) {
         const avgHrs = ((cur.avgHrs || hrs) * (count - 1) + hrs) / count;
         return { avgHrs: Math.round(avgHrs * 10) / 10, count };
       });
-      if (hrs > SLA_HOURS && o.amount) {
-        const bonus = Math.round(o.amount * (SLA_BONUS_PCT / 100));
-        db.ref('goldPurchases/' + o.uid + '/' + o.ts + '/slaBreached').set(true);
-        db.ref('goldPurchases/' + o.uid + '/' + o.ts + '/slaBonus').set(bonus);
-        db.ref('users/' + o.uid + '/goldBalance').transaction(v => (v || 0) + bonus);
-        flash('ok', `Order marked complete — SLA missed, ${fmt(bonus)} G bonus auto-credited`);
-        setTimeout(loadOrders, 300);
-        return;
-      }
     }
     flash('ok','Order marked complete'); setTimeout(loadOrders, 300);
   };
@@ -1325,21 +1413,11 @@ function AdminPanel({ user, signIn, flashSale }) {
   };
   const stopFlash = () => { db.ref('flashSale').set({ active: false }); flash('ok','Flash sale stopped'); };
   const markClaimComplete = (c) => {
-    const completedAt = Date.now();
     db.ref('dailyClaims/' + c.uid + '/' + c.date).update({ status: 'complete', completedAt: new Date().toISOString() });
-    let bonus = 0;
     if (c.tier && DAILY_GOLD[c.tier] != null) {
-      if (c.createdAt) {
-        const hrs = (completedAt - new Date(c.createdAt).getTime()) / 3600000;
-        if (hrs > SLA_HOURS) {
-          bonus = Math.round((c.amount || 0) * (SLA_BONUS_PCT / 100));
-          db.ref('dailyClaims/' + c.uid + '/' + c.date + '/slaBreached').set(true);
-          db.ref('dailyClaims/' + c.uid + '/' + c.date + '/slaBonus').set(bonus);
-        }
-      }
-      db.ref('users/' + c.uid + '/goldBalance').transaction(v => (v || 0) + (c.amount || 0) + bonus);
+      db.ref('users/' + c.uid + '/goldBalance').transaction(v => (v || 0) + (c.amount || 0));
     }
-    flash('ok', bonus > 0 ? `Claim marked complete — SLA missed, ${fmt(bonus)} G bonus auto-credited` : 'Claim marked complete');
+    flash('ok', 'Claim marked complete');
     setTimeout(loadClaims, 300);
   };
   const markClaimFailed = (c) => {
