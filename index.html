@@ -105,7 +105,7 @@ section{padding:72px 0}
 .sellgrid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
 .field{margin-bottom:16px}
 .field label{display:block;font-size:13px;color:var(--muted);font-weight:600;margin-bottom:6px}
-input,select,textarea{width:100%;padding:12px 14px;background:var(--bg);border:1px solid var(--line);color:var(--ink);font:inherit;font-size:15px;border-radius:9px;transition:border-color .15s,box-shadow .15s}
+input,select,textarea{width:100%;padding:12px 14px;background:var(--bg);border:1px solid var(--line);color:var(--ink);font:inherit;font-size:16px;border-radius:9px;transition:border-color .15s,box-shadow .15s}
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(242,179,44,.13)}
 .quote{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:16px;font-size:15px;margin-top:6px}
 .quote b{color:var(--green);font-family:'JetBrains Mono',monospace;font-size:19px}
@@ -114,8 +114,8 @@ summary{cursor:pointer;padding:17px 20px;font-weight:600;font-size:15px;list-sty
 summary::after{content:"+";font-family:'Archivo';font-size:20px;color:var(--muted)}
 details[open] summary::after{content:"–"}
 details p{padding:0 20px 18px;color:var(--muted);font-size:14px}
-.overlay{position:fixed;inset:0;background:rgba(6,8,12,.78);backdrop-filter:blur(6px);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
-.modal{background:var(--bg2);border:1px solid var(--line);border-radius:16px;max-width:460px;width:100%;padding:30px;position:relative;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.45)}
+.overlay{position:fixed;inset:0;background:rgba(6,8,12,.78);backdrop-filter:blur(6px);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;padding-top:max(20px,env(safe-area-inset-top));padding-bottom:max(20px,env(safe-area-inset-bottom))}
+.modal{background:var(--bg2);border:1px solid var(--line);border-radius:16px;max-width:460px;width:100%;padding:30px;position:relative;max-height:90vh;max-height:90dvh;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;box-shadow:0 24px 64px rgba(0,0,0,.45)}
 .modal h3{font-size:22px;font-weight:700;margin-bottom:4px}
 .modal .msub{color:var(--muted);font-size:13px;margin-bottom:18px}
 .xbtn{position:absolute;top:12px;right:14px;background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer}
@@ -270,6 +270,13 @@ const I18N = {
     how_eyebrow:'How it works', how_h2a:'From checkout to gold in', how_h2b:'3 steps',
     sell_eyebrow:'Sell your gold', sell_h2a:'Sitting on spare gold?', sell_h2b:'Cash it out.',
     faq_eyebrow:'FAQ', faq_h2:'Questions, answered',
+    prog_details:'Your details', prog_listing:'Your listing', prog_gold:'Gold on the way', prog_sent:'Request sent', prog_step:'Step', prog_of:'of',
+    flock_lead:'Last step — how you receive your gold:', flock_body_priced:'in Standoff 2, buy a G22 "Flock" from the marketplace and list it for sale at exactly the amount below. Then enter its pattern number and upload a screenshot of your listing so our team can find it and fill your order.', flock_body_plain:'in Standoff 2, buy a G22 "Flock" from the marketplace. Then enter its pattern number and upload a screenshot of your listing so our team can find it and fill your order.',
+    flock_list_label:'List your G22 "Flock" for exactly', flock_note_first:'This is your first day of gold — claim the rest from your dashboard every day.', flock_note_first_yr:'This is your first day of gold plus your yearly bonus — claim the rest from your dashboard every day.',
+    flock_pattern:'G22 "Flock" pattern number', flock_shot:'Screenshot of the listing', flock_tap:'Tap to upload a screenshot', flock_tap_hint:'Must show your G22 "Flock" listing with the pattern number visible',
+    flock_send:'Send listing details', flock_sending:'Sending…', flock_head_received:'Order received', flock_head_submitted:'Order submitted', flock_claim_send:'Submit claim',
+    err_img_only:'Please choose an image file.', err_img_big:'That image is too large — please use one under 8 MB.', err_send:'Could not send your listing. Check your connection and try again.',
+    done_p:'Our team has your G22 "Flock" details. Your order should be filled within 3 hours — larger orders can take longer.', claim_done_h:'Claim submitted!',
     footer_support:'Support', footer_by:'by the', footer_team:'team',
   },
   ru: { nav_buy:'Купить золото', nav_packs:'Наборы', nav_subs:'Подписки', nav_sell:'Продать золото', nav_dash:'Кабинет', nav_admin:'Админ', signin:'Войти', signout:'Выйти',
@@ -282,6 +289,13 @@ const I18N = {
     how_eyebrow:'Как это работает', how_h2a:'От заказа до золота за', how_h2b:'3 шага',
     sell_eyebrow:'Продайте своё золото', sell_h2a:'Есть лишнее золото?', sell_h2b:'Обменяйте на деньги.',
     faq_eyebrow:'Вопросы', faq_h2:'Частые вопросы',
+    prog_details:'Ваши данные', prog_listing:'Ваш лот', prog_gold:'Золото в пути', prog_sent:'Заявка отправлена', prog_step:'Шаг', prog_of:'из',
+    flock_lead:'Последний шаг — как вы получите золото:', flock_body_priced:'в Standoff 2 купите G22 «Flock» на рынке и выставите его на продажу ровно за сумму ниже. Затем введите номер паттерна и загрузите скриншот лота, чтобы наша команда нашла его и выполнила заказ.', flock_body_plain:'в Standoff 2 купите G22 «Flock» на рынке. Затем введите номер паттерна и загрузите скриншот лота, чтобы наша команда нашла его и выполнила заказ.',
+    flock_list_label:'Выставьте G22 «Flock» ровно за', flock_note_first:'Это золото за первый день — остальное забирайте в кабинете каждый день.', flock_note_first_yr:'Это золото за первый день плюс годовой бонус — остальное забирайте в кабинете каждый день.',
+    flock_pattern:'Номер паттерна G22 «Flock»', flock_shot:'Скриншот лота', flock_tap:'Нажмите, чтобы загрузить скриншот', flock_tap_hint:'На нём должен быть виден ваш лот G22 «Flock» с номером паттерна',
+    flock_send:'Отправить данные лота', flock_sending:'Отправка…', flock_head_received:'Заказ принят', flock_head_submitted:'Заказ отправлен', flock_claim_send:'Отправить заявку',
+    err_img_only:'Выберите, пожалуйста, файл изображения.', err_img_big:'Изображение слишком большое — используйте файл до 8 МБ.', err_send:'Не удалось отправить данные лота. Проверьте соединение и попробуйте снова.',
+    done_p:'Наша команда получила данные вашего G22 «Flock». Заказ будет выполнен в течение 3 часов — крупные заказы могут занять больше времени.', claim_done_h:'Заявка отправлена!',
     footer_support:'Поддержка', footer_by:'от команды', footer_team:'',
   },
   pt: { nav_buy:'Comprar Ouro', nav_packs:'Pacotes', nav_subs:'Assinaturas', nav_sell:'Vender Ouro', nav_dash:'Painel', nav_admin:'Admin', signin:'Entrar', signout:'Sair',
@@ -294,6 +308,13 @@ const I18N = {
     how_eyebrow:'Como funciona', how_h2a:'Do pedido ao ouro em', how_h2b:'3 passos',
     sell_eyebrow:'Venda seu ouro', sell_h2a:'Tem ouro sobrando?', sell_h2b:'Transforme em dinheiro.',
     faq_eyebrow:'Perguntas frequentes', faq_h2:'Perguntas respondidas',
+    prog_details:'Seus dados', prog_listing:'Seu anúncio', prog_gold:'Ouro a caminho', prog_sent:'Pedido enviado', prog_step:'Etapa', prog_of:'de',
+    flock_lead:'Última etapa — como você recebe seu ouro:', flock_body_priced:'no Standoff 2, compre uma G22 "Flock" no mercado e anuncie-a à venda exatamente pelo valor abaixo. Depois informe o número do padrão e envie uma captura de tela do anúncio para nossa equipe encontrá-lo e concluir seu pedido.', flock_body_plain:'no Standoff 2, compre uma G22 "Flock" no mercado. Depois informe o número do padrão e envie uma captura de tela do anúncio para nossa equipe encontrá-lo e concluir seu pedido.',
+    flock_list_label:'Anuncie sua G22 "Flock" exatamente por', flock_note_first:'Este é o ouro do seu primeiro dia — resgate o restante no painel todos os dias.', flock_note_first_yr:'Este é o ouro do seu primeiro dia mais o bônus anual — resgate o restante no painel todos os dias.',
+    flock_pattern:'Número do padrão da G22 "Flock"', flock_shot:'Captura de tela do anúncio', flock_tap:'Toque para enviar uma captura de tela', flock_tap_hint:'Deve mostrar seu anúncio da G22 "Flock" com o número do padrão visível',
+    flock_send:'Enviar dados do anúncio', flock_sending:'Enviando…', flock_head_received:'Pedido recebido', flock_head_submitted:'Pedido enviado', flock_claim_send:'Enviar resgate',
+    err_img_only:'Escolha um arquivo de imagem.', err_img_big:'Essa imagem é muito grande — use uma com menos de 8 MB.', err_send:'Não foi possível enviar seu anúncio. Verifique sua conexão e tente novamente.',
+    done_p:'Nossa equipe recebeu os dados da sua G22 "Flock". Seu pedido deve ser concluído em até 3 horas — pedidos maiores podem demorar mais.', claim_done_h:'Resgate enviado!',
     footer_support:'Suporte', footer_by:'pela equipe', footer_team:'',
   },
   id: { nav_buy:'Beli Gold', nav_packs:'Paket', nav_subs:'Langganan', nav_sell:'Jual Gold', nav_dash:'Dasbor', nav_admin:'Admin', signin:'Masuk', signout:'Keluar',
@@ -306,6 +327,13 @@ const I18N = {
     how_eyebrow:'Cara kerja', how_h2a:'Dari checkout sampai gold dalam', how_h2b:'3 langkah',
     sell_eyebrow:'Jual gold kamu', sell_h2a:'Ada gold berlebih?', sell_h2b:'Uangkan sekarang.',
     faq_eyebrow:'FAQ', faq_h2:'Pertanyaan umum',
+    prog_details:'Data kamu', prog_listing:'Listing kamu', prog_gold:'Gold segera dikirim', prog_sent:'Permintaan terkirim', prog_step:'Langkah', prog_of:'dari',
+    flock_lead:'Langkah terakhir — cara kamu menerima gold:', flock_body_priced:'di Standoff 2, beli G22 "Flock" dari marketplace lalu jual dengan harga persis seperti di bawah ini. Kemudian masukkan nomor pattern-nya dan unggah tangkapan layar listing kamu agar tim kami bisa menemukannya dan memenuhi pesananmu.', flock_body_plain:'di Standoff 2, beli G22 "Flock" dari marketplace. Kemudian masukkan nomor pattern-nya dan unggah tangkapan layar listing kamu agar tim kami bisa menemukannya dan memenuhi pesananmu.',
+    flock_list_label:'Jual G22 "Flock" kamu tepat seharga', flock_note_first:'Ini gold hari pertamamu — klaim sisanya dari dasbor setiap hari.', flock_note_first_yr:'Ini gold hari pertamamu plus bonus tahunan — klaim sisanya dari dasbor setiap hari.',
+    flock_pattern:'Nomor pattern G22 "Flock"', flock_shot:'Tangkapan layar listing', flock_tap:'Ketuk untuk mengunggah tangkapan layar', flock_tap_hint:'Harus memperlihatkan listing G22 "Flock" kamu dengan nomor pattern yang terlihat',
+    flock_send:'Kirim data listing', flock_sending:'Mengirim…', flock_head_received:'Pesanan diterima', flock_head_submitted:'Pesanan terkirim', flock_claim_send:'Kirim klaim',
+    err_img_only:'Pilih file gambar.', err_img_big:'Gambar terlalu besar — gunakan yang di bawah 8 MB.', err_send:'Gagal mengirim listing kamu. Periksa koneksi lalu coba lagi.',
+    done_p:'Tim kami sudah menerima data G22 "Flock" kamu. Pesananmu akan dipenuhi dalam 3 jam — pesanan besar bisa lebih lama.', claim_done_h:'Klaim terkirim!',
     footer_support:'Dukungan', footer_by:'oleh tim', footer_team:'',
   },
   tr: { nav_buy:'Altın Al', nav_packs:'Paketler', nav_subs:'Abonelikler', nav_sell:'Altın Sat', nav_dash:'Panel', nav_admin:'Yönetici', signin:'Giriş yap', signout:'Çıkış yap',
@@ -318,6 +346,13 @@ const I18N = {
     how_eyebrow:'Nasıl çalışır', how_h2a:'Ödemeden altına', how_h2b:'3 adımda',
     sell_eyebrow:'Altınını sat', sell_h2a:'Elinde fazla altın mı var?', sell_h2b:'Nakde çevir.',
     faq_eyebrow:'SSS', faq_h2:'Sorular yanıtlandı',
+    prog_details:'Bilgilerin', prog_listing:'İlanın', prog_gold:'Altın yolda', prog_sent:'Talep gönderildi', prog_step:'Adım', prog_of:'/',
+    flock_lead:'Son adım — altını nasıl alacaksın:', flock_body_priced:'Standoff 2\'de pazardan bir G22 "Flock" satın al ve tam olarak aşağıdaki tutara satışa çıkar. Ardından desen numarasını gir ve ilanının ekran görüntüsünü yükle ki ekibimiz ilanı bulup siparişini tamamlayabilsin.', flock_body_plain:'Standoff 2\'de pazardan bir G22 "Flock" satın al. Ardından desen numarasını gir ve ilanının ekran görüntüsünü yükle ki ekibimiz ilanı bulup siparişini tamamlayabilsin.',
+    flock_list_label:'G22 "Flock" ilanını tam olarak şu tutara aç', flock_note_first:'Bu ilk günün altını — kalanını her gün panelden talep et.', flock_note_first_yr:'Bu ilk günün altını artı yıllık bonusun — kalanını her gün panelden talep et.',
+    flock_pattern:'G22 "Flock" desen numarası', flock_shot:'İlanın ekran görüntüsü', flock_tap:'Ekran görüntüsü yüklemek için dokun', flock_tap_hint:'G22 "Flock" ilanını ve desen numarasını net göstermeli',
+    flock_send:'İlan bilgilerini gönder', flock_sending:'Gönderiliyor…', flock_head_received:'Sipariş alındı', flock_head_submitted:'Sipariş gönderildi', flock_claim_send:'Talebi gönder',
+    err_img_only:'Lütfen bir görsel dosyası seç.', err_img_big:'Bu görsel çok büyük — 8 MB altında bir dosya kullan.', err_send:'İlan bilgilerin gönderilemedi. Bağlantını kontrol edip tekrar dene.',
+    done_p:'Ekibimiz G22 "Flock" bilgilerini aldı. Siparişin 3 saat içinde tamamlanacak — büyük siparişler daha uzun sürebilir.', claim_done_h:'Talep gönderildi!',
     footer_support:'Destek', footer_by:'ekibi tarafından', footer_team:'',
   },
   ar: { nav_buy:'شراء الذهب', nav_packs:'الباقات', nav_subs:'الاشتراكات', nav_sell:'بيع الذهب', nav_dash:'لوحة التحكم', nav_admin:'الإدارة', signin:'تسجيل الدخول', signout:'تسجيل الخروج',
@@ -330,6 +365,13 @@ const I18N = {
     how_eyebrow:'كيف يعمل', how_h2a:'من الدفع إلى الذهب خلال', how_h2b:'3 خطوات',
     sell_eyebrow:'بِع ذهبك', sell_h2a:'لديك ذهب فائض؟', sell_h2b:'حوّله إلى نقود.',
     faq_eyebrow:'الأسئلة الشائعة', faq_h2:'إجابات على أسئلتك',
+    prog_details:'بياناتك', prog_listing:'عرضك', prog_gold:'الذهب في الطريق', prog_sent:'تم إرسال الطلب', prog_step:'الخطوة', prog_of:'من',
+    flock_lead:'الخطوة الأخيرة — كيف تستلم ذهبك:', flock_body_priced:'في Standoff 2، اشترِ G22 "Flock" من السوق واعرضها للبيع بالمبلغ المذكور أدناه بالضبط. ثم أدخل رقم النمط وارفع لقطة شاشة لعرضك ليتمكن فريقنا من العثور عليه وتنفيذ طلبك.', flock_body_plain:'في Standoff 2، اشترِ G22 "Flock" من السوق. ثم أدخل رقم النمط وارفع لقطة شاشة لعرضك ليتمكن فريقنا من العثور عليه وتنفيذ طلبك.',
+    flock_list_label:'اعرض G22 "Flock" بمبلغ قدره بالضبط', flock_note_first:'هذا ذهب يومك الأول — احصل على الباقي من لوحتك كل يوم.', flock_note_first_yr:'هذا ذهب يومك الأول إضافة إلى مكافأتك السنوية — احصل على الباقي من لوحتك كل يوم.',
+    flock_pattern:'رقم نمط G22 "Flock"', flock_shot:'لقطة شاشة للعرض', flock_tap:'اضغط لرفع لقطة شاشة', flock_tap_hint:'يجب أن تُظهر عرض G22 "Flock" مع رقم النمط بوضوح',
+    flock_send:'إرسال بيانات العرض', flock_sending:'جارٍ الإرسال…', flock_head_received:'تم استلام الطلب', flock_head_submitted:'تم إرسال الطلب', flock_claim_send:'إرسال المطالبة',
+    err_img_only:'يرجى اختيار ملف صورة.', err_img_big:'الصورة كبيرة جدًا — استخدم ملفًا أقل من 8 ميغابايت.', err_send:'تعذّر إرسال بيانات عرضك. تحقق من اتصالك وحاول مرة أخرى.',
+    done_p:'استلم فريقنا بيانات G22 "Flock" الخاصة بك. سيتم تنفيذ طلبك خلال 3 ساعات — قد تستغرق الطلبات الكبيرة وقتًا أطول.', claim_done_h:'تم إرسال المطالبة!',
     footer_support:'الدعم', footer_by:'بواسطة فريق', footer_team:'',
   },
 };
@@ -462,8 +504,9 @@ async function submitFlock({ orderKey, type, label, username, discord, pattern, 
 }
 
 // ---- Order progress bar, shown across every step of a purchase or claim ----
-function OrderProgress({ step, steps, accent, busy }) {
+function OrderProgress({ step, steps, accent, busy, lang }) {
   const color = accent || 'var(--gold)';
+  const L = k => t(lang || 'en', k);
   const total = steps.length;
   const cur = Math.min(Math.max(step, 1), total);
   return (
@@ -476,64 +519,102 @@ function OrderProgress({ step, steps, accent, busy }) {
         ))}
       </div>
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:10,fontFamily:'Archivo',fontWeight:600,fontSize:11,letterSpacing:'.06em',textTransform:'uppercase'}}>
-        <span style={{color:'var(--ink)'}}>{steps[cur - 1]}</span>
-        <span style={{color:'var(--muted)',whiteSpace:'nowrap'}}>Step {cur} of {total}</span>
+        <span style={{color:'var(--ink)'}}>{L(steps[cur - 1])}</span>
+        <span style={{color:'var(--muted)',whiteSpace:'nowrap'}}>{L('prog_step')} {cur} {L('prog_of')} {total}</span>
       </div>
     </div>
   );
 }
 
 // ---- Step 2 of every order: tell the buyer how to receive the gold, and collect the listing ----
-function FlockStep({ listPrice, listNote, accent, heading, submitLabel, onSubmit }) {
+function FlockStep({ listPrice, listNote, accent, heading, submitLabel, onSubmit, lang }) {
   const [pattern, setPattern] = useState('');
   const [screenshot, setScreenshot] = useState(null);
   const [preview, setPreview] = useState(null);
   const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState('');
   const fileInputRef = useRef(null);
   const color = accent || 'var(--gold)';
+  const L = k => t(lang || 'en', k);
 
-  const handleFile = (e) => {
+  // Phone screenshots regularly exceed Discord's 8MB cap, so downscale before upload.
+  const shrink = (file) => new Promise((resolve) => {
+    if (!/^image\//.test(file.type)) { resolve({ error: 'err_img_only' }); return; }
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      const max = 1600;
+      const scale = Math.min(1, max / Math.max(img.width, img.height));
+      if (scale === 1 && file.size <= 4 * 1024 * 1024) { URL.revokeObjectURL(url); resolve({ file }); return; }
+      const c = document.createElement('canvas');
+      c.width = Math.round(img.width * scale); c.height = Math.round(img.height * scale);
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      c.toBlob(blob => {
+        URL.revokeObjectURL(url);
+        if (!blob) { resolve({ file }); return; }
+        if (blob.size > 8 * 1024 * 1024) { resolve({ error: 'err_img_big' }); return; }
+        resolve({ file: new File([blob], 'listing.jpg', { type: 'image/jpeg' }) });
+      }, 'image/jpeg', 0.82);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); resolve({ error: 'err_img_only' }); };
+    img.src = url;
+  });
+
+  const handleFile = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    setScreenshot(file);
+    setErr('');
+    const out = await shrink(file);
+    if (out.error) { setErr(L(out.error)); setScreenshot(null); setPreview(null); return; }
+    setScreenshot(out.file);
     const reader = new FileReader();
     reader.onload = ev => setPreview(ev.target.result);
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(out.file);
   };
+
+  const openPicker = () => fileInputRef.current && fileInputRef.current.click();
   const can = pattern.trim() && screenshot && !busy;
-  const go = async () => { if (!can) return; setBusy(true); await onSubmit(pattern.trim(), screenshot); setBusy(false); };
+  const go = async () => {
+    if (!can) return;
+    setBusy(true); setErr('');
+    const ok = await onSubmit(pattern.trim(), screenshot);
+    setBusy(false);
+    if (ok === false) setErr(L('err_send'));
+  };
 
   return (
     <div>
       {heading && <h3 style={{marginBottom:6}}>{heading}</h3>}
-      <div className="quote" style={{marginBottom:12}}><b>Last step — how you receive your gold:</b> in Standoff 2, buy a <b>G22 "Flock"</b> from the marketplace{listPrice ? ' and list it for sale at exactly the amount below' : ''}. Then enter its pattern number and upload a screenshot of your listing so our team can find it and fill your order.</div>
+      <div className="quote" style={{marginBottom:12}}><b>{L('flock_lead')}</b> {listPrice ? L('flock_body_priced') : L('flock_body_plain')}</div>
       {listPrice > 0 && (
         <div style={{background:'var(--gold-dim)',border:'1px solid rgba(242,179,44,.35)',borderRadius:8,padding:'10px 14px',marginBottom:12}}>
-          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:10}}>
-            <span style={{fontSize:13,color:'var(--muted)',fontWeight:600}}>List your G22 "Flock" for exactly</span>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:10,flexWrap:'wrap'}}>
+            <span style={{fontSize:13,color:'var(--muted)',fontWeight:600}}>{L('flock_list_label')}</span>
             <b style={{fontFamily:'JetBrains Mono',fontSize:18,color:'var(--gold)',whiteSpace:'nowrap'}}>{fmtG(listPrice)} G</b>
           </div>
-          {listNote && <div style={{fontSize:11,color:'var(--muted)',marginTop:6}}>This is {listNote} — claim the rest from your dashboard every day.</div>}
+          {listNote && <div style={{fontSize:11,color:'var(--muted)',marginTop:6}}>{L(listNote)}</div>}
         </div>
       )}
-      <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>G22 "Flock" pattern number <span style={{color:'var(--danger)'}}>*</span></label>
-      <input value={pattern} onChange={e=>setPattern(e.target.value.replace(/[^0-9]/g,''))} inputMode="numeric" placeholder="e.g. 743" style={{fontFamily:'monospace',marginBottom:12}} />
-      <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>Screenshot of the listing <span style={{color:'var(--danger)'}}>*</span></label>
-      <div onClick={()=>fileInputRef.current && fileInputRef.current.click()} style={{border:'1px dashed '+(screenshot?color+'99':'var(--line)'),borderRadius:8,padding:preview?'8px':'22px 14px',textAlign:'center',cursor:'pointer',background:'rgba(0,0,0,.2)',marginBottom:6}}>
+      <label htmlFor="flock-pattern" style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>{L('flock_pattern')} <span style={{color:'var(--danger)'}}>*</span></label>
+      <input id="flock-pattern" value={pattern} onChange={e=>setPattern(e.target.value.replace(/[^0-9]/g,''))} inputMode="numeric" pattern="[0-9]*" autoComplete="off" placeholder="743" style={{fontFamily:'monospace',marginBottom:12}} />
+      <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>{L('flock_shot')} <span style={{color:'var(--danger)'}}>*</span></label>
+      <div role="button" tabIndex={0} onClick={openPicker} onKeyDown={e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openPicker(); } }} style={{border:'1px dashed '+(screenshot?color+'99':'var(--line)'),borderRadius:8,padding:preview?'8px':'26px 14px',minHeight:preview?0:64,textAlign:'center',cursor:'pointer',background:'rgba(0,0,0,.2)',marginBottom:6}}>
         {preview ? (
-          <img src={preview} alt="preview" style={{maxWidth:'100%',maxHeight:130,objectFit:'contain',borderRadius:6,display:'block',margin:'0 auto'}} />
+          <img src={preview} alt="" style={{maxWidth:'100%',maxHeight:130,objectFit:'contain',borderRadius:6,display:'block',margin:'0 auto'}} />
         ) : (
-          <div><div style={{color:'var(--muted)',fontSize:13}}>Tap to upload a screenshot</div><div style={{color:'var(--muted)',fontSize:11,marginTop:4,opacity:.7}}>Must show your G22 "Flock" listing with the pattern number visible</div></div>
+          <div><div style={{color:'var(--muted)',fontSize:14}}>{L('flock_tap')}</div><div style={{color:'var(--muted)',fontSize:11,marginTop:4,opacity:.7}}>{L('flock_tap_hint')}</div></div>
         )}
       </div>
-      {screenshot && <div style={{fontSize:11,color:'var(--green)',marginBottom:10,textAlign:'center'}}>\u2713 {screenshot.name}</div>}
+      {screenshot && !err && <div style={{fontSize:11,color:'var(--green)',marginBottom:10,textAlign:'center'}}>\u2713</div>}
       <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFile} style={{display:'none'}} />
-      <button className="btn btn-gold" style={{width:'100%',marginTop:8}} disabled={!can} onClick={go}>{busy ? 'Sending\u2026' : (submitLabel || 'Send listing details')}</button>
+      {err && <div className="alert err" style={{marginBottom:10}}>{err}</div>}
+      <button className="btn btn-gold" style={{width:'100%',marginTop:8}} disabled={!can} onClick={go}>{busy ? L('flock_sending') : (submitLabel || L('flock_send'))}</button>
     </div>
   );
 }
 
-function Checkout({ item, user, tier, go, onClose }) {
+function Checkout({ item, user, tier, go, onClose, lang }) {
+  const L = k => t(lang || 'en', k);
   const [method, setMethod] = useState('cashapp');
   const [username, setUsername] = useState(user ? (user.displayName || '') : '');
   const [discord, setDiscord] = useState('');
@@ -551,7 +632,7 @@ function Checkout({ item, user, tier, go, onClose }) {
   const isSell = item.type === 'Sell Gold Request';
   const listPrice = !isSell && (item.gold || 0) > 0 ? +(item.gold + listOffset).toFixed(2) : null;
   const listNote = item.goldNote || null;
-  const progressSteps = isSell ? ['Your details','Request sent'] : ['Your details','Your listing','Gold on the way'];
+  const progressSteps = isSell ? ['prog_details','prog_sent'] : ['prog_details','prog_listing','prog_gold'];
   const progressStep = state === 'done' ? progressSteps.length : state === 'flock' ? 2 : 1;
 
   const copyText = (t, key) => { navigator.clipboard.writeText(t).catch(()=>{}); setCopied(key); setTimeout(()=>setCopied(''), 1500); };
@@ -590,25 +671,27 @@ function Checkout({ item, user, tier, go, onClose }) {
   };
 
   const sendFlock = async (pattern, screenshot) => {
-    await submitFlock({ orderKey, type: item.type, label: item.label, username: username.trim(), discord: discord.trim(), pattern, listPrice, screenshot });
+    const res = await submitFlock({ orderKey, type: item.type, label: item.label, username: username.trim(), discord: discord.trim(), pattern, listPrice, screenshot });
+    if (!res.ok) return false;
     try {
       if (user && orderTs) db.ref('goldPurchases/' + user.uid + '/' + orderTs).update({ flockPattern: pattern, status: 'pending' });
     } catch(e) {}
     setState('done');
+    return true;
   };
 
   return (
     <div className="overlay" onClick={e => e.target === e.currentTarget && onClose()}>
       <div className="modal">
         <button className="xbtn" onClick={onClose} aria-label="Close">×</button>
-        <OrderProgress step={progressStep} steps={progressSteps} busy={state === 'sending'} />
+        <OrderProgress step={progressStep} steps={progressSteps} busy={state === 'sending'} lang={lang} />
         {state === 'flock' ? (
-          <FlockStep listPrice={listPrice} listNote={listNote} heading="Order received" submitLabel="Send listing details" onSubmit={sendFlock} />
+          <FlockStep listPrice={listPrice} listNote={listNote} heading={L('flock_head_received')} submitLabel={L('flock_send')} onSubmit={sendFlock} lang={lang} />
         ) : state === 'done' ? (
           <div className="oksplash">
             <div className="big">✓</div>
             <h3>Order received</h3>
-            <p className="msub" style={{marginTop:8}}>Our team just got pinged with your G22 "Flock" details. Your order should be filled within <b style={{color:'var(--gold)'}}>3 hours</b> — larger orders can take longer.</p>
+            <p className="msub" style={{marginTop:8}}>{L('done_p')}</p>
             <p className="msub" style={{marginTop:12}}>Want <b style={{color:'var(--gold)'}}>100 gold</b>? Refer a friend — you both get 100 G on their first order.</p>
             {user ? <button className="btn btn-gold btn-sm" style={{marginTop:8}} onClick={()=>copyText('https://standoffmarkettracker-design.github.io/CheapStandoff2Gold/?ref=' + user.uid, 'refdone')}>{copied === 'refdone' ? 'Copied!' : 'Copy your referral link'}</button> : <p className="msub" style={{marginTop:4,fontSize:12}}>Sign in and grab your link from the Dashboard.</p>}
             <button className="btn btn-ghost btn-sm" onClick={onClose} style={{marginTop:10}}>Done</button>
@@ -762,7 +845,7 @@ function Subs({ buy, lang }) {
                   <li>{PACK_DISC[t.id]}% off all gold packs</li>
                   {t.best && <li>Best gold-per-dollar rate we offer</li>}
                 </ul>
-                <button className={'btn ' + (t.best ? 'btn-gold' : 'btn-ghost')} onClick={() => buy({ type:'Subscription', label:`${t.name} ${yearly?'Yearly':'Monthly'} — ${fmt(moGold)} gold/month${yearly ? ` + ${fmt(YEARLY_BONUS[t.id])} bonus gold instantly` : ''}`, price, gold: daily + (yearly ? YEARLY_BONUS[t.id] : 0), goldNote: yearly ? 'first day of gold + your yearly bonus' : 'your first day of gold' })}>
+                <button className={'btn ' + (t.best ? 'btn-gold' : 'btn-ghost')} onClick={() => buy({ type:'Subscription', label:`${t.name} ${yearly?'Yearly':'Monthly'} — ${fmt(moGold)} gold/month${yearly ? ` + ${fmt(YEARLY_BONUS[t.id])} bonus gold instantly` : ''}`, price, gold: daily + (yearly ? YEARLY_BONUS[t.id] : 0), goldNote: yearly ? 'flock_note_first_yr' : 'flock_note_first' })}>
                   Get {t.name}
                 </button>
               </div>
@@ -842,7 +925,8 @@ function FAQ({ lang }) {
   );
 }
 
-function ClaimModal({ user, tier, amount, username: initialUsername, onClose, onClaimed }) {
+function ClaimModal({ user, tier, amount, username: initialUsername, onClose, onClaimed, lang }) {
+  const L = k => t(lang || 'en', k);
   const [step, setStep] = useState('form');
   const [username, setUsername] = useState(initialUsername || '');
   const [discord, setDiscord] = useState('');
@@ -885,6 +969,7 @@ function ClaimModal({ user, tier, amount, username: initialUsername, onClose, on
       });
       setStep('submitted');
       onClaimed();
+      return true;
     } catch (e) {
       setErrMsg(e.message || 'Something went wrong');
       setStep('error');
@@ -897,7 +982,7 @@ function ClaimModal({ user, tier, amount, username: initialUsername, onClose, on
         <button className="xbtn" onClick={onClose} aria-label="Close">×</button>
         <div className="eyebrow" style={{marginBottom:4}}>Daily Gold Claim</div>
         <h3 style={{color, marginBottom:14}}>{fmt(amount)} G</h3>
-        {step !== 'error' && <OrderProgress step={step === 'submitted' ? 3 : step === 'form' ? 1 : 2} steps={['Your details','Your listing','Gold on the way']} accent={color} busy={step === 'submitting'} />}
+        {step !== 'error' && <OrderProgress step={step === 'submitted' ? 3 : step === 'form' ? 1 : 2} steps={['prog_details','prog_listing','prog_gold']} accent={color} busy={step === 'submitting'} lang={lang} />}
 
         {step === 'form' && (
           <div>
@@ -913,7 +998,7 @@ function ClaimModal({ user, tier, amount, username: initialUsername, onClose, on
         )}
 
         {step === 'flock' && (
-          <FlockStep listPrice={listPrice} accent={color} submitLabel="Submit claim →" onSubmit={submit} />
+          <FlockStep listPrice={listPrice} accent={color} submitLabel={L('flock_claim_send')} onSubmit={submit} lang={lang} />
         )}
 
         {step === 'submitting' && (
@@ -926,7 +1011,7 @@ function ClaimModal({ user, tier, amount, username: initialUsername, onClose, on
         {step === 'submitted' && (
           <div className="oksplash">
             <div className="big">✓</div>
-            <h3>Claim submitted!</h3>
+            <h3>{L('claim_done_h')}</h3>
             <p className="msub" style={{marginTop:8}}>We got your G22 "Flock" details. Your claim should be filled within <b style={{color:'var(--gold)'}}>3 hours</b> — larger orders can take longer. Watch your dashboard for the status to update.</p>
             <button className="btn btn-ghost btn-sm" onClick={onClose} style={{marginTop:10}}>Done</button>
           </div>
@@ -943,7 +1028,7 @@ function ClaimModal({ user, tier, amount, username: initialUsername, onClose, on
   );
 }
 
-function Dashboard({ user, signIn, lifetimeGold, go }) {
+function Dashboard({ user, signIn, lifetimeGold, go, lang }) {
   const [data, setData] = useState(null);
   const [orders, setOrders] = useState([]);
   const [claims, setClaims] = useState([]);
@@ -1089,7 +1174,7 @@ function Dashboard({ user, signIn, lifetimeGold, go }) {
           );
         })()}
       </div>
-      {claimOpen && <ClaimModal user={user} tier={tierKey} amount={dailyAmount} username={data?.standoffUsername || user.displayName} onClose={()=>setClaimOpen(false)} onClaimed={()=>setClaimOpen(false)} />}
+      {claimOpen && <ClaimModal user={user} tier={tierKey} amount={dailyAmount} username={data?.standoffUsername || user.displayName} onClose={()=>setClaimOpen(false)} onClaimed={()=>setClaimOpen(false)} lang={lang} />}
     </div></section>
   );
 }
@@ -1195,7 +1280,8 @@ function AuthPanel({ onClose }) {
   );
 }
 
-function BuyGoldPanel({ user, tier, signIn, flashSale, lifetimeGold, hasPurchased, avgDeliveryHrs }) {
+function BuyGoldPanel({ user, tier, signIn, flashSale, lifetimeGold, hasPurchased, avgDeliveryHrs, lang }) {
+  const L = k => t(lang || 'en', k);
   const RATES = { none:0.0086, bronze:0.008, silver:0.0058, gold:0.004 };
   const tierKey = (tier || 'none').toLowerCase();
   const rate = RATES[tierKey] !== undefined ? RATES[tierKey] : 0.0075;
@@ -1267,27 +1353,29 @@ function BuyGoldPanel({ user, tier, signIn, flashSale, lifetimeGold, hasPurchase
   };
 
   const sendFlock = async (pattern, screenshot) => {
-    await submitFlock({ orderKey, type: 'Custom Gold', label: fmt(goldForCalc) + ' G', username: username.trim(), discord: discord.trim(), pattern, listPrice, screenshot });
+    const res = await submitFlock({ orderKey, type: 'Custom Gold', label: fmt(goldForCalc) + ' G', username: username.trim(), discord: discord.trim(), pattern, listPrice, screenshot });
+    if (!res.ok) return false;
     try {
       if (user && orderTs) db.ref('goldPurchases/' + user.uid + '/' + orderTs).update({ flockPattern: pattern, status: 'pending' });
     } catch(e) {}
     setStep('done');
+    return true;
   };
 
-  const progressSteps = ['Your details','Your listing','Gold on the way'];
+  const progressSteps = ['prog_details','prog_listing','prog_gold'];
 
   if (step === 'flock') return (
     <div className="card" style={{maxWidth:520,margin:'0 auto',transform:'none'}}>
-      <OrderProgress step={2} steps={progressSteps} />
-      <FlockStep listPrice={listPrice} heading="Order submitted" submitLabel="Send listing details" onSubmit={sendFlock} />
+      <OrderProgress step={2} steps={progressSteps} lang={lang} />
+      <FlockStep listPrice={listPrice} heading={L('flock_head_submitted')} submitLabel={L('flock_send')} onSubmit={sendFlock} lang={lang} />
     </div>
   );
 
   if (step === 'done') return (
     <div className="card" style={{maxWidth:520,margin:'0 auto',textAlign:'center',transform:'none'}}>
-      <OrderProgress step={3} steps={progressSteps} />
+      <OrderProgress step={3} steps={progressSteps} lang={lang} />
             <h3 style={{marginTop:8}}>Order submitted!</h3>
-      <p className="msub" style={{marginTop:8}}>We got your order and your G22 "Flock" details. Your order should be filled within <b style={{color:'var(--gold)'}}>3 hours</b> — larger orders can take longer.</p>
+      <p className="msub" style={{marginTop:8}}>{L('done_p')}</p>
       <button className="btn btn-ghost btn-sm" style={{marginTop:12}} onClick={()=>{setStep('form');setGcCode('');setOrderKey(null);setOrderTs(null);}}>Place another order</button>
     </div>
   );
@@ -1302,7 +1390,7 @@ function BuyGoldPanel({ user, tier, signIn, flashSale, lifetimeGold, hasPurchase
         </div>
       )}
       <div className="card" style={{transform:'none'}}>
-        <OrderProgress step={1} steps={progressSteps} busy={step === 'submitting'} />
+        <OrderProgress step={1} steps={progressSteps} busy={step === 'submitting'} lang={lang} />
         <div className="sub" style={{marginBottom:12}}>Your rate: <b style={{color:'var(--gold)'}}>${rate}/gold</b> {tierKey!=='none' ? `(${tier} discount applied)` : '— subscribe for a better rate'}</div>
         {avgDeliveryHrs != null && avgDeliveryHrs > 0 && (
           <div style={{fontSize:12,color:'var(--green)',marginBottom:12,marginTop:-6}}>Avg delivery time: ~{avgDeliveryHrs < 1 ? Math.round(avgDeliveryHrs*60)+' min' : avgDeliveryHrs.toFixed(1)+' hrs'}</div>
@@ -1743,7 +1831,7 @@ function App() {
           <section id="buy-custom" style={{paddingTop:0}}>
             <div className="wrap">
               <div className="sect-head"><div className="eyebrow">Buy Any Amount</div><h2>Need a <span className="goldtext">specific amount?</span></h2><p>Type the exact gold you want and pay your way — cards, PayPal, crypto, or gift cards.</p></div>
-              <BuyGoldPanel user={user} tier={userTier} signIn={signIn} flashSale={flashSale} lifetimeGold={lifetimeGold} hasPurchased={hasPurchased} avgDeliveryHrs={avgDeliveryHrs} />
+              <BuyGoldPanel user={user} tier={userTier} signIn={signIn} flashSale={flashSale} lifetimeGold={lifetimeGold} hasPurchased={hasPurchased} avgDeliveryHrs={avgDeliveryHrs} lang={lang} />
             </div>
           </section>
           <Packs buy={buy} lang={lang} tier={userTier} go={go} />
@@ -1755,12 +1843,12 @@ function App() {
       ) : page === 'buy' ? (
         <section><div className="wrap">
           <div className="sect-head"><div className="eyebrow">Buy Gold</div><h2>Buy <span className="goldtext">any amount</span> of gold</h2><p>Type the exact amount you want and choose how to pay.</p></div>
-          <BuyGoldPanel user={user} tier={userTier} signIn={signIn} flashSale={flashSale} lifetimeGold={lifetimeGold} hasPurchased={hasPurchased} avgDeliveryHrs={avgDeliveryHrs} />
+          <BuyGoldPanel user={user} tier={userTier} signIn={signIn} flashSale={flashSale} lifetimeGold={lifetimeGold} hasPurchased={hasPurchased} avgDeliveryHrs={avgDeliveryHrs} lang={lang} />
         </div></section>
       ) : page === 'admin' ? (
         <AdminPanel user={user} signIn={signIn} flashSale={flashSale} />
       ) : (
-        <Dashboard user={user} signIn={signIn} lifetimeGold={lifetimeGold} go={go} />
+        <Dashboard user={user} signIn={signIn} lifetimeGold={lifetimeGold} go={go} lang={lang} />
       )}
 
       <footer><div className="wrap fgrid">
@@ -1769,7 +1857,7 @@ function App() {
       </div></footer>
 
       <div className="mcta"><button className="btn btn-gold" onClick={()=>{page!=='home'&&setPage('home');go('subs')}}>Get cheap gold</button></div>
-      {checkout && <Checkout item={checkout} user={user} tier={userTier} go={go} onClose={()=>setCheckout(null)} />}
+      {checkout && <Checkout item={checkout} user={user} tier={userTier} go={go} onClose={()=>setCheckout(null)} lang={lang} />}
       {authOpen && <AuthPanel onClose={()=>setAuthOpen(false)} />}
     </div>
   );
