@@ -7,10 +7,10 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="mobile-web-app-capable" content="yes">
-<title>Cheap Standoff 2 Gold — Daily Gold Subscriptions & Instant Packs</title>
-<meta name="description" content="Get Standoff 2 gold for a fraction of in-app prices. Daily gold subscriptions from $4.99/mo and instant gold packs, delivered to your account by the standoff2markettracker.com team.">
-<meta property="og:title" content="Cheap Standoff 2 Gold — Subscriptions & Instant Packs">
-<meta property="og:description" content="Up to 6,500 gold per month from $35. Instant packs delivered within 24 hours.">
+<title>Cheap Standoff 2 Gold — Points for Gold, Daily Drops & Free Rewards</title>
+<meta name="description" content="Buy Standoff 2 points for a fraction of in-app gold prices, get a daily drop from $4.99/mo, or earn points free. Swap them 1:1 for gold, delivered by the standoff2markettracker.com team.">
+<meta property="og:title" content="Cheap Standoff 2 Gold — Points for Gold">
+<meta property="og:description" content="Buy points, get daily drops or earn them free, then swap them 1:1 for gold. Exchanges filled within 3 hours.">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -49,7 +49,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(244,246,245,.88);backdro
 .logo{font-weight:800;font-size:19px;letter-spacing:-.045em;color:var(--ink);display:flex;align-items:center;gap:8px;white-space:nowrap}
 .logo span{color:var(--gold)}
 .navlinks{display:flex;gap:2px;list-style:none}
-.navlinks button{background:none;border:none;color:var(--muted);font:inherit;font-size:15px;font-weight:600;padding:8px 13px;cursor:pointer;border-radius:100px}
+.navlinks button{background:none;border:none;color:var(--muted);font:inherit;font-size:15px;font-weight:600;padding:8px 13px;cursor:pointer;border-radius:100px;white-space:nowrap}
 .navlinks button:hover,.navlinks button.active{color:var(--ink);background:rgba(20,23,26,.05)}
 .menubtn{display:none;background:#fff;border:1px solid var(--line);color:var(--ink);font-size:19px;line-height:1;padding:7px 13px;border-radius:100px;cursor:pointer}
 .mobilemenu{display:flex;flex-direction:column;border-top:1px solid var(--line2);background:var(--bg2);padding:6px 20px 12px}
@@ -166,6 +166,58 @@ footer{border-top:1px solid var(--line2);padding:30px 0 40px;color:var(--low);fo
   .authbox select{padding:6px 5px!important;font-size:11px!important}
   .menubtn{padding:6px 9px;font-size:18px}
 }
+/* ---- Points system ---- */
+.ptag{display:inline-block;font-size:12px;font-weight:700;padding:3px 10px;border-radius:100px;white-space:nowrap;background:#ECEFF1;color:var(--muted)}
+.ptag.buy{background:var(--gold-dim);color:var(--gold-hot)}
+.ptag.earn{background:var(--green-dim);color:var(--green)}
+.ptag.bonus,.ptag.contest{background:#EEECFA;color:#5B4BC4}
+.ptag.sub{background:#E9F0FB;color:#2F5FB3}
+.ptag.pend{background:#FDF0E7;color:#C2621C}
+.ptag.bad{background:#FBEBE9;color:var(--danger)}
+.lrows{border:1px solid var(--line);border-radius:18px;background:var(--bg2);overflow:hidden}
+.lrows .lhead{padding:15px 18px;border-bottom:1px solid var(--line2);display:flex;justify-content:space-between;align-items:center;gap:10px}
+.lrow{display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--line2)}
+.lrow:last-child{border-bottom:none}
+.lrow .lmain{flex:1;min-width:0}
+.lrow .ltitle{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lrow .lmeta{font-size:13px;color:var(--low)}
+.lamt{font-weight:800;letter-spacing:-.02em;white-space:nowrap;text-align:right}
+.lamt.plus{color:var(--green)}.lamt.pend{color:#C2621C}
+.streak{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:14px 0}
+.sday{border-radius:12px;background:var(--bg);border:1px solid var(--line2);padding:8px 0 7px;text-align:center;font-size:12px;color:var(--low);font-weight:600}
+.sday b{display:block;font-size:14px;color:var(--muted);font-weight:800}
+.sday.done{background:var(--green-dim);border-color:transparent;color:var(--green)}
+.sday.done b{color:var(--green)}
+.sday.today{border:1.5px solid var(--ink);color:var(--ink)}
+.sday.today b{color:var(--ink)}
+.sday.seven b{color:var(--gold)}
+.seg{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
+.seg button{background:var(--bg2);border:1px solid var(--line);color:var(--muted);font:inherit;font-weight:700;font-size:14px;padding:9px 16px;border-radius:100px;cursor:pointer}
+.seg button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.seg button .b{font-size:12px;margin-left:6px;color:var(--green)}
+.seg button.on .b{color:#9BE3BF}
+.card.hot{border-color:var(--green);box-shadow:0 0 0 1px var(--green)}
+.card.mine{border-color:#2F5FB3;box-shadow:0 0 0 1px #2F5FB3}
+.bonusline{font-size:13.5px;font-weight:700;color:var(--green);min-height:22px}
+.bonusline.off{color:var(--low);font-weight:600}
+.subtabs{display:flex;gap:4px;overflow-x:auto;margin:0 0 22px;scrollbar-width:none}
+.subtabs::-webkit-scrollbar{display:none}
+.subtabs button{flex:none;background:none;border:none;color:var(--muted);font:inherit;font-size:15px;font-weight:600;padding:8px 14px;border-radius:100px;cursor:pointer;white-space:nowrap}
+.subtabs button.on{color:#fff;background:var(--ink)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 4px}
+.chip{background:var(--bg);border:1px solid var(--line);border-radius:100px;padding:6px 13px;font:inherit;font-weight:700;font-size:13.5px;cursor:pointer;color:var(--muted)}
+.ptask{display:flex;align-items:center;gap:14px;padding:14px 18px;border-bottom:1px solid var(--line2)}
+.ptask:last-child{border-bottom:none}
+.ptask .lmain{flex:1;min-width:0}
+.ptask .pp{font-weight:800;color:var(--green);white-space:nowrap}
+.bigpts{font-size:52px;font-weight:800;letter-spacing:-.05em;line-height:1}
+.ptunit{font-size:18px;color:var(--low);font-weight:600;margin-left:6px}
+.prule{font-size:13.5px;color:var(--muted);background:var(--bg3);border:1px dashed var(--line);border-radius:12px;padding:10px 13px}
+.pgrid2{display:grid;grid-template-columns:1.25fr 1fr;gap:14px}
+.pstack{display:flex;flex-direction:column;gap:14px}
+.spark{width:100%;height:64px;display:block}
+@media(max-width:900px){.pgrid2{grid-template-columns:1fr}}
+@media(max-width:480px){.bigpts{font-size:44px}.streak{gap:4px}.ptask{flex-wrap:wrap}}
 </style>
 </head>
 <body>
@@ -376,6 +428,1108 @@ const I18N = {
   },
 };
 function t(lang, key) { return (I18N[lang] && I18N[lang][key]) || I18N.en[key] || key; }
+// ---- Points system translations (merged over I18N; later keys override) ----
+const I18N_PTS = {
+"en": {
+"cu_eyebrow": "Buy any amount",
+"cu_h2a": "Need a",
+"cu_h2b": "specific amount?",
+"cu_p": "Type the points you want. Bigger orders earn bulk bonus points.",
+"pts_unit": "points",
+"pts_short": "pts",
+"pay_with": "Pay with",
+"your_bonuses": "Your bonuses right now:",
+"nav_dash": "Wallet",
+"hero_cta1": "Buy points",
+"hero_lead": "Buy points for a fraction of in-app gold prices, get a daily drop with a subscription, or earn them free. Then swap them 1:1 for gold. Run by the team behind standoff2markettracker.com.",
+"how_e": "How points work",
+"how_h": "Buy, earn, exchange",
+"how1_h": "Get points",
+"how1_p": "Buy a bundle, subscribe for a daily drop, or earn points free by checking in, doing tasks and winning contests.",
+"how2_h": "Save them up",
+"how2_p": "Points sit in your wallet until you need them. 1 point is always 1 gold.",
+"how3_h": "Exchange for gold",
+"how3_p": "List a G22 \"Flock\" for the amount we show you and our team buys it out, usually within 3 hours.",
+"b_eyebrow": "Point bundles",
+"b_h2a": "Same prices,",
+"b_h2b": "now in points",
+"b_p": "Every bundle matches our old gold packs. Pay with crypto for +{n}% points.",
+"b_bonus_inc": "{a} + {b} bonus",
+"b_crypto_hint": "+{n} if you pay in crypto",
+"b_per": "pts per $1",
+"b_buy": "Buy {name}",
+"pb_crypto": "Paying in crypto",
+"pb_sub": "{tier} subscriber",
+"pb_first": "First purchase",
+"pb_loyal": "Loyalty",
+"pb_bulk1": "Bulk 10,000+",
+"pb_bulk2": "Bulk 25,000+",
+"pb_flash": "Flash bonus",
+"cu_label": "How many points?",
+"cu_pay": "You pay {p} for {n} points",
+"cu_rate": "Your rate: ${r} per point. 10,000+ points adds +5%, 25,000+ adds +10%.",
+"cu_buy": "Buy points",
+"ps_h2a": "Points every day,",
+"ps_h2b": "automatically",
+"ps_p": "Your plan drops points into your wallet at 00:00 UTC each day. No daily claim and no daily listing. Exchange them whenever you are ready.",
+"ps_monthly": "Monthly",
+"ps_yearly": "Yearly",
+"ps_save": "save up to {n}%",
+"s_daily": "points a day",
+"s_month": "{n} points a month, paid daily",
+"s_yrbonus": "+{n} bonus points the day you join",
+"s_crypto": "+{n} points up front for paying in crypto",
+"s_pack": "+{n}% bonus points on every bundle",
+"s_rate": "Custom points at ${r} each",
+"s_get": "Get {name}",
+"s_extend": "Extend {name}",
+"s_yours": "YOUR PLAN",
+"co_title": "Complete your order",
+"co_sub": "You are not charged on this page. Send the payment, then place the order.",
+"co_points": "Points",
+"co_daily": "Daily points",
+"co_daily_v": "{n} a day for {d} days",
+"co_yr": "Yearly bonus",
+"co_get": "You get",
+"co_today": "Points today",
+"co_pay": "You pay",
+"co_crypto_tip": "Pay with crypto and get +{n} more points.",
+"co_send_to": "Send",
+"co_copy": "tap to copy",
+"co_gc": "Buy a gift card worth at least {p}, reveal the code and enter it below. Do not redeem it yourself.",
+"co_user": "Your in-game username",
+"co_discord": "Your Discord username",
+"co_place": "Place order",
+"co_sending": "Sending…",
+"co_err": "The order could not be sent. DM camel5961 on Discord and we will sort it out.",
+"co_done_h": "Order received",
+"co_done_p": "Your points land in your wallet as soon as we confirm the payment, usually within a few hours.",
+"co_wallet": "Go to wallet",
+"co_close": "Done",
+"co_signin": "Sign in to buy points",
+"co_signin_p": "Points live in your account, so you need a free account first.",
+"co_once": "Recruit is for first orders only.",
+"co_prog_pay": "Payment check",
+"co_prog_pts": "Points in wallet",
+"earn_teaser_h": "Earn points free",
+"earn_teaser_p": "Daily check-ins, quick tasks, a weekly Price Call on the Market Tracker and a weekly draw. No purchase needed.",
+"earn_cta": "Earn free points",
+"tab_wallet": "Wallet",
+"tab_earn": "Earn free",
+"tab_contests": "Contests",
+"tab_exchange": "Exchange",
+"w_title": "Your points",
+"w_lead": "Buy points, subscribe for a daily drop, or earn them free. Swap them for gold whenever you like. 1 point = 1 gold.",
+"w_balance": "Balance",
+"w_worth": "Worth {n} gold when you exchange",
+"w_paid": "paid for",
+"w_free": "earned free",
+"w_tickets": "draw tickets",
+"w_exchange": "Exchange for gold",
+"w_buy": "Buy points",
+"w_signin_h": "Sign in to see your points",
+"w_signin_p": "Your wallet, daily check-ins, contests and exchanges all live in your account.",
+"sub_none": "Get points dropped into your wallet every day, from 25 to 217 a day.",
+"sub_see": "See plans",
+"sub_daily": "points every day",
+"sub_auto": "Paid into your wallet automatically at 00:00 UTC. No claim and no listing. Save them up and exchange when you like.",
+"sub_left": "{n} days left",
+"sub_renew": "Renew",
+"sub_plan": "{tier} plan",
+"sub_legacy": "Your plan is still on the old daily claim. We are moving every plan to daily points; until then, claim as before.",
+"sub_legacy_btn": "Claim {n} gold today",
+"sub_legacy_done": "Today's claim is in.",
+"ci_title": "Daily check-in",
+"ci_btn": "Check in · +{n} points",
+"ci_done": "Checked in today. Come back tomorrow.",
+"ci_streak": "{n}-day streak",
+"ci_note": "Day 7 pays a {n}-point streak bonus. Miss a day and the streak restarts.",
+"ci_day": "Day",
+"ord_pending": "Waiting on payment",
+"ord_pending_p": "Points land once we confirm it.",
+"ord_wait": "Checking payment",
+"ord_rejected": "Payment not found",
+"hist_title": "History",
+"hist_empty": "Nothing here yet. Check in to earn your first points.",
+"k_buy": "Bought",
+"k_bonus": "Bonus",
+"k_sub": "Plan",
+"k_earn": "Earned",
+"k_contest": "Contest",
+"k_ex": "Exchanged",
+"k_adjust": "Adjustment",
+"h_checkin": "Daily check-in · day {n}",
+"h_video": "Watched this week's video",
+"h_subdays": "{tier} daily points · {n} days",
+"h_ex": "{n} gold exchange",
+"xs_awaiting_listing": "waiting for your listing",
+"xs_listed": "listing sent",
+"xs_filled": "gold delivered",
+"earn_tasks": "Tasks",
+"earn_ticket": "Each task adds 1 draw ticket",
+"earn_none": "New tasks are on the way. Check in daily in the meantime.",
+"earn_rules": "One account per player. Alt accounts lose their points. Social tasks are spot-checked.",
+"task_discord": "Join the Discord",
+"task_youtube": "Subscribe on YouTube",
+"task_tiktok": "Follow on TikTok",
+"task_video": "Watch this week's video",
+"task_once": "One-time",
+"task_weekly": "Resets every Monday",
+"task_go": "Do it",
+"task_done": "Done",
+"c_lead": "Contests are free to enter. Buying points never adds entries.",
+"pc_title": "Price Call",
+"pc_h": "Call Sunday's price, win {n} points",
+"pc_p": "Guess where the skin of the week closes on the Market Tracker at 20:00 UTC Sunday. Closest call wins. One guess per player.",
+"pc_skin": "Skin of the week",
+"pc_now": "Now",
+"pc_guess": "Your call, in gold",
+"pc_lock": "Lock it in",
+"pc_yours": "Your call: {n} G. Results go up after it closes.",
+"pc_none": "This week's Price Call opens soon. Check back later.",
+"pc_closed": "Entries are closed for this week.",
+"pc_won": "{h} called {g} G, closed at {a} G",
+"dr_title": "Weekly draw",
+"dr_h": "{w} winners × {n} points",
+"dr_tickets": "tickets this week",
+"dr_p": "1 ticket per daily check-in and 1 per finished task. Tickets reset Monday.",
+"dr_last": "Last week",
+"left": "{d}d {h}h left",
+"ex_prog_amt": "Amount",
+"ex_amount": "Points to exchange",
+"ex_all": "All",
+"ex_get": "You get {n} gold",
+"ex_min": "The minimum is {n} points.",
+"ex_have": "You have {n} points.",
+"ex_locked": "Free points unlock for exchange after your first purchase.",
+"ex_continue": "Continue",
+"ex_list_h": "Exchange {n} points",
+"ex_done_h": "{n} gold on the way",
+"ex_done_p": "We took {n} points from your wallet. Our team buys out your listing, usually within 3 hours.",
+"ex_more": "Exchange more",
+"ex_open": "Waiting for your listing",
+"ex_finish": "Finish listing",
+"ex_cancel": "Cancel",
+"ex_rule": "The minimum exchange is {n} points. Points stay in your wallet until you exchange, so you can save up for one bigger listing.",
+"err_generic": "That didn't go through. Check your connection and try again."
+},
+"ru": {
+"cu_eyebrow": "Любая сумма",
+"cu_h2a": "Нужно",
+"cu_h2b": "точное количество?",
+"cu_p": "Укажите нужное число очков. Крупные заказы получают оптовый бонус.",
+"pts_unit": "очков",
+"pts_short": "оч.",
+"pay_with": "Способ оплаты",
+"your_bonuses": "Ваши бонусы сейчас:",
+"nav_dash": "Кошелёк",
+"hero_cta1": "Купить очки",
+"hero_lead": "Покупайте очки дешевле золота в игре, получайте их каждый день по подписке или зарабатывайте бесплатно. Затем меняйте 1:1 на золото. От команды standoff2markettracker.com.",
+"how_e": "Как работают очки",
+"how_h": "Покупайте, зарабатывайте, обменивайте",
+"how1_h": "Получите очки",
+"how1_p": "Купите набор, оформите подписку с ежедневным начислением или зарабатывайте бесплатно: отметки, задания и конкурсы.",
+"how2_h": "Копите",
+"how2_p": "Очки лежат в кошельке, пока не понадобятся. 1 очко всегда равно 1 золоту.",
+"how3_h": "Обменяйте на золото",
+"how3_p": "Выставьте G22 «Flock» за указанную сумму, и наша команда выкупит лот, обычно в течение 3 часов.",
+"b_eyebrow": "Наборы очков",
+"b_h2a": "Те же цены,",
+"b_h2b": "теперь в очках",
+"b_p": "Каждый набор совпадает с нашими прежними наборами золота. Оплата криптой даёт +{n}% очков.",
+"b_bonus_inc": "{a} + {b} бонус",
+"b_crypto_hint": "+{n} при оплате криптой",
+"b_per": "оч. за $1",
+"b_buy": "Купить {name}",
+"pb_crypto": "Оплата криптой",
+"pb_sub": "Подписка {tier}",
+"pb_first": "Первая покупка",
+"pb_loyal": "Лояльность",
+"pb_bulk1": "Опт 10 000+",
+"pb_bulk2": "Опт 25 000+",
+"pb_flash": "Флеш-бонус",
+"cu_label": "Сколько очков?",
+"cu_pay": "Вы платите {p} за {n} очков",
+"cu_rate": "Ваша цена: ${r} за очко. От 10 000 очков +5%, от 25 000 +10%.",
+"cu_buy": "Купить очки",
+"ps_h2a": "Очки каждый день,",
+"ps_h2b": "автоматически",
+"ps_p": "Подписка начисляет очки в кошелёк каждый день в 00:00 UTC. Без ежедневных заявок и лотов. Обменивайте, когда захотите.",
+"ps_monthly": "Месяц",
+"ps_yearly": "Год",
+"ps_save": "экономия до {n}%",
+"s_daily": "очков в день",
+"s_month": "{n} очков в месяц, начисляются ежедневно",
+"s_yrbonus": "+{n} бонусных очков в день оформления",
+"s_crypto": "+{n} очков сразу за оплату криптой",
+"s_pack": "+{n}% бонусных очков на каждый набор",
+"s_rate": "Свои суммы по ${r} за очко",
+"s_get": "Оформить {name}",
+"s_extend": "Продлить {name}",
+"s_yours": "ВАШ ПЛАН",
+"co_title": "Оформление заказа",
+"co_sub": "На этой странице деньги не списываются. Отправьте оплату, затем оформите заказ.",
+"co_points": "Очки",
+"co_daily": "Ежедневно",
+"co_daily_v": "{n} в день, {d} дней",
+"co_yr": "Годовой бонус",
+"co_get": "Вы получите",
+"co_today": "Очки сегодня",
+"co_pay": "К оплате",
+"co_crypto_tip": "Оплатите криптой и получите ещё +{n} очков.",
+"co_send_to": "Отправьте",
+"co_copy": "нажмите, чтобы скопировать",
+"co_gc": "Купите подарочную карту минимум на {p}, откройте код и введите его ниже. Не активируйте её сами.",
+"co_user": "Ваш игровой ник",
+"co_discord": "Ваш ник в Discord",
+"co_place": "Оформить заказ",
+"co_sending": "Отправка…",
+"co_err": "Не удалось отправить заказ. Напишите camel5961 в Discord, и мы всё решим.",
+"co_done_h": "Заказ принят",
+"co_done_p": "Очки поступят в кошелёк, как только мы подтвердим оплату, обычно в течение нескольких часов.",
+"co_wallet": "В кошелёк",
+"co_close": "Готово",
+"co_signin": "Войдите, чтобы купить очки",
+"co_signin_p": "Очки хранятся в аккаунте, поэтому нужен бесплатный аккаунт.",
+"co_once": "Набор Recruit только для первого заказа.",
+"co_prog_pay": "Проверка оплаты",
+"co_prog_pts": "Очки в кошельке",
+"earn_teaser_h": "Зарабатывайте очки бесплатно",
+"earn_teaser_p": "Ежедневные отметки, простые задания, еженедельный Price Call на Market Tracker и розыгрыш. Покупка не нужна.",
+"earn_cta": "Заработать очки",
+"tab_wallet": "Кошелёк",
+"tab_earn": "Бесплатно",
+"tab_contests": "Конкурсы",
+"tab_exchange": "Обмен",
+"w_title": "Ваши очки",
+"w_lead": "Покупайте очки, получайте их по подписке или зарабатывайте бесплатно. Меняйте на золото, когда захотите. 1 очко = 1 золото.",
+"w_balance": "Баланс",
+"w_worth": "Это {n} золота при обмене",
+"w_paid": "оплачено",
+"w_free": "заработано",
+"w_tickets": "билетов",
+"w_exchange": "Обменять на золото",
+"w_buy": "Купить очки",
+"w_signin_h": "Войдите, чтобы увидеть очки",
+"w_signin_p": "Кошелёк, отметки, конкурсы и обмены привязаны к аккаунту.",
+"sub_none": "Очки каждый день в кошелёк: от 25 до 217 в день.",
+"sub_see": "Смотреть планы",
+"sub_daily": "очков каждый день",
+"sub_auto": "Начисляются автоматически в 00:00 UTC. Без заявок и лотов. Копите и обменивайте, когда удобно.",
+"sub_left": "осталось {n} дн.",
+"sub_renew": "Продлить",
+"sub_plan": "План {tier}",
+"sub_legacy": "Ваш план пока работает по старой схеме с ежедневной заявкой. Мы переводим все планы на очки; до этого забирайте золото как раньше.",
+"sub_legacy_btn": "Забрать {n} золота сегодня",
+"sub_legacy_done": "Заявка на сегодня отправлена.",
+"ci_title": "Ежедневная отметка",
+"ci_btn": "Отметиться · +{n} очков",
+"ci_done": "Сегодня вы уже отметились. Возвращайтесь завтра.",
+"ci_streak": "серия {n} дн.",
+"ci_note": "На 7-й день бонус {n} очков. Пропуск дня обнуляет серию.",
+"ci_day": "День",
+"ord_pending": "Ожидает оплаты",
+"ord_pending_p": "Очки поступят после подтверждения.",
+"ord_wait": "Проверяем оплату",
+"ord_rejected": "Оплата не найдена",
+"hist_title": "История",
+"hist_empty": "Пока пусто. Отметьтесь, чтобы получить первые очки.",
+"k_buy": "Покупка",
+"k_bonus": "Бонус",
+"k_sub": "План",
+"k_earn": "Заработано",
+"k_contest": "Конкурс",
+"k_ex": "Обмен",
+"k_adjust": "Корректировка",
+"h_checkin": "Отметка · день {n}",
+"h_video": "Видео недели просмотрено",
+"h_subdays": "{tier}: ежедневные очки · {n} дн.",
+"h_ex": "Обмен на {n} золота",
+"xs_awaiting_listing": "ждём ваш лот",
+"xs_listed": "лот отправлен",
+"xs_filled": "золото доставлено",
+"earn_tasks": "Задания",
+"earn_ticket": "Каждое задание даёт 1 билет",
+"earn_none": "Новые задания скоро появятся. А пока отмечайтесь каждый день.",
+"earn_rules": "Один аккаунт на игрока. Твинки теряют очки. Соцзадания выборочно проверяются.",
+"task_discord": "Вступить в Discord",
+"task_youtube": "Подписаться на YouTube",
+"task_tiktok": "Подписаться в TikTok",
+"task_video": "Посмотреть видео недели",
+"task_once": "Один раз",
+"task_weekly": "Обновляется по понедельникам",
+"task_go": "Выполнить",
+"task_done": "Готово",
+"c_lead": "Участие бесплатное. Покупка очков не даёт дополнительных шансов.",
+"pc_title": "Price Call",
+"pc_h": "Угадайте цену в воскресенье и выиграйте {n} очков",
+"pc_p": "Угадайте цену скина недели на Market Tracker в воскресенье в 20:00 UTC. Побеждает ближайший прогноз. Одна попытка на игрока.",
+"pc_skin": "Скин недели",
+"pc_now": "Сейчас",
+"pc_guess": "Ваш прогноз, в золоте",
+"pc_lock": "Зафиксировать",
+"pc_yours": "Ваш прогноз: {n} G. Итоги после закрытия.",
+"pc_none": "Price Call этой недели скоро откроется.",
+"pc_closed": "Приём прогнозов на этой неделе закрыт.",
+"pc_won": "{h}: прогноз {g} G, итог {a} G",
+"dr_title": "Еженедельный розыгрыш",
+"dr_h": "{w} победителя × {n} очков",
+"dr_tickets": "билетов на этой неделе",
+"dr_p": "1 билет за каждую отметку и каждое задание. Обнуляются по понедельникам.",
+"dr_last": "Прошлая неделя",
+"left": "осталось {d} д {h} ч",
+"ex_prog_amt": "Сумма",
+"ex_amount": "Сколько очков обменять",
+"ex_all": "Все",
+"ex_get": "Вы получите {n} золота",
+"ex_min": "Минимум {n} очков.",
+"ex_have": "У вас {n} очков.",
+"ex_locked": "Бесплатные очки можно обменять после первой покупки.",
+"ex_continue": "Продолжить",
+"ex_list_h": "Обмен {n} очков",
+"ex_done_h": "{n} золота уже в пути",
+"ex_done_p": "Мы списали {n} очков. Команда выкупит ваш лот, обычно в течение 3 часов.",
+"ex_more": "Обменять ещё",
+"ex_open": "Ждём ваш лот",
+"ex_finish": "Выставить лот",
+"ex_cancel": "Отменить",
+"ex_rule": "Минимальный обмен {n} очков. Очки хранятся в кошельке, так что можно накопить на один крупный лот.",
+"err_generic": "Не получилось. Проверьте соединение и попробуйте снова."
+},
+"pt": {
+"cu_eyebrow": "Qualquer quantia",
+"cu_h2a": "Precisa de uma",
+"cu_h2b": "quantia exata?",
+"cu_p": "Digite os pontos que quer. Pedidos maiores ganham bônus de volume.",
+"pts_unit": "pontos",
+"pts_short": "pts",
+"pay_with": "Pagar com",
+"your_bonuses": "Seus bônus agora:",
+"nav_dash": "Carteira",
+"hero_cta1": "Comprar pontos",
+"hero_lead": "Compre pontos por uma fração do preço do ouro no jogo, receba todo dia com uma assinatura ou ganhe de graça. Depois troque 1:1 por ouro. Feito pela equipe do standoff2markettracker.com.",
+"how_e": "Como funcionam os pontos",
+"how_h": "Compre, ganhe, troque",
+"how1_h": "Consiga pontos",
+"how1_p": "Compre um pacote, assine para receber todo dia ou ganhe pontos grátis com check-ins, tarefas e concursos.",
+"how2_h": "Junte",
+"how2_p": "Os pontos ficam na carteira até você precisar. 1 ponto é sempre 1 de ouro.",
+"how3_h": "Troque por ouro",
+"how3_p": "Anuncie uma G22 \"Flock\" pelo valor que mostramos e nossa equipe compra, geralmente em até 3 horas.",
+"b_eyebrow": "Pacotes de pontos",
+"b_h2a": "Mesmos preços,",
+"b_h2b": "agora em pontos",
+"b_p": "Cada pacote corresponde aos nossos antigos pacotes de ouro. Pague com cripto e ganhe +{n}% de pontos.",
+"b_bonus_inc": "{a} + {b} de bônus",
+"b_crypto_hint": "+{n} pagando com cripto",
+"b_per": "pts por $1",
+"b_buy": "Comprar {name}",
+"pb_crypto": "Pagamento em cripto",
+"pb_sub": "Assinante {tier}",
+"pb_first": "Primeira compra",
+"pb_loyal": "Fidelidade",
+"pb_bulk1": "Volume 10.000+",
+"pb_bulk2": "Volume 25.000+",
+"pb_flash": "Bônus relâmpago",
+"cu_label": "Quantos pontos?",
+"cu_pay": "Você paga {p} por {n} pontos",
+"cu_rate": "Seu preço: ${r} por ponto. 10.000+ pontos dá +5%, 25.000+ dá +10%.",
+"cu_buy": "Comprar pontos",
+"ps_h2a": "Pontos todo dia,",
+"ps_h2b": "automaticamente",
+"ps_p": "Seu plano deposita pontos na carteira todo dia às 00:00 UTC. Sem resgate diário e sem anúncio diário. Troque quando quiser.",
+"ps_monthly": "Mensal",
+"ps_yearly": "Anual",
+"ps_save": "economize até {n}%",
+"s_daily": "pontos por dia",
+"s_month": "{n} pontos por mês, pagos diariamente",
+"s_yrbonus": "+{n} pontos de bônus no dia da assinatura",
+"s_crypto": "+{n} pontos na hora por pagar com cripto",
+"s_pack": "+{n}% de pontos em todo pacote",
+"s_rate": "Pontos avulsos a ${r} cada",
+"s_get": "Assinar {name}",
+"s_extend": "Estender {name}",
+"s_yours": "SEU PLANO",
+"co_title": "Finalize seu pedido",
+"co_sub": "Nada é cobrado nesta página. Envie o pagamento e depois confirme o pedido.",
+"co_points": "Pontos",
+"co_daily": "Pontos diários",
+"co_daily_v": "{n} por dia durante {d} dias",
+"co_yr": "Bônus anual",
+"co_get": "Você recebe",
+"co_today": "Pontos hoje",
+"co_pay": "Você paga",
+"co_crypto_tip": "Pague com cripto e ganhe +{n} pontos.",
+"co_send_to": "Envie",
+"co_copy": "toque para copiar",
+"co_gc": "Compre um cartão-presente de pelo menos {p}, revele o código e digite abaixo. Não resgate o cartão.",
+"co_user": "Seu nome no jogo",
+"co_discord": "Seu usuário do Discord",
+"co_place": "Fazer pedido",
+"co_sending": "Enviando…",
+"co_err": "Não foi possível enviar o pedido. Fale com camel5961 no Discord e resolvemos.",
+"co_done_h": "Pedido recebido",
+"co_done_p": "Seus pontos chegam à carteira assim que confirmarmos o pagamento, geralmente em poucas horas.",
+"co_wallet": "Ir para a carteira",
+"co_close": "Pronto",
+"co_signin": "Entre para comprar pontos",
+"co_signin_p": "Os pontos ficam na sua conta, então você precisa de uma conta grátis.",
+"co_once": "O Recruit é só para o primeiro pedido.",
+"co_prog_pay": "Conferência",
+"co_prog_pts": "Pontos na carteira",
+"earn_teaser_h": "Ganhe pontos grátis",
+"earn_teaser_p": "Check-ins diários, tarefas rápidas, um Price Call semanal no Market Tracker e um sorteio semanal. Sem compra.",
+"earn_cta": "Ganhar pontos grátis",
+"tab_wallet": "Carteira",
+"tab_earn": "Ganhe grátis",
+"tab_contests": "Concursos",
+"tab_exchange": "Trocar",
+"w_title": "Seus pontos",
+"w_lead": "Compre pontos, assine para receber todo dia ou ganhe de graça. Troque por ouro quando quiser. 1 ponto = 1 de ouro.",
+"w_balance": "Saldo",
+"w_worth": "Vale {n} de ouro na troca",
+"w_paid": "pagos",
+"w_free": "ganhos grátis",
+"w_tickets": "bilhetes",
+"w_exchange": "Trocar por ouro",
+"w_buy": "Comprar pontos",
+"w_signin_h": "Entre para ver seus pontos",
+"w_signin_p": "Carteira, check-ins, concursos e trocas ficam na sua conta.",
+"sub_none": "Receba pontos na carteira todo dia, de 25 a 217 por dia.",
+"sub_see": "Ver planos",
+"sub_daily": "pontos todo dia",
+"sub_auto": "Depositados automaticamente às 00:00 UTC. Sem resgate e sem anúncio. Junte e troque quando quiser.",
+"sub_left": "faltam {n} dias",
+"sub_renew": "Renovar",
+"sub_plan": "Plano {tier}",
+"sub_legacy": "Seu plano ainda usa o resgate diário antigo. Estamos passando todos os planos para pontos diários; até lá, resgate como antes.",
+"sub_legacy_btn": "Resgatar {n} de ouro hoje",
+"sub_legacy_done": "O resgate de hoje já foi enviado.",
+"ci_title": "Check-in diário",
+"ci_btn": "Fazer check-in · +{n} pontos",
+"ci_done": "Check-in feito hoje. Volte amanhã.",
+"ci_streak": "sequência de {n} dias",
+"ci_note": "O 7º dia paga {n} pontos de bônus. Se perder um dia, a sequência recomeça.",
+"ci_day": "Dia",
+"ord_pending": "Aguardando pagamento",
+"ord_pending_p": "Os pontos chegam após a confirmação.",
+"ord_wait": "Conferindo pagamento",
+"ord_rejected": "Pagamento não encontrado",
+"hist_title": "Histórico",
+"hist_empty": "Nada por aqui ainda. Faça check-in para ganhar seus primeiros pontos.",
+"k_buy": "Compra",
+"k_bonus": "Bônus",
+"k_sub": "Plano",
+"k_earn": "Ganho",
+"k_contest": "Concurso",
+"k_ex": "Troca",
+"k_adjust": "Ajuste",
+"h_checkin": "Check-in diário · dia {n}",
+"h_video": "Vídeo da semana assistido",
+"h_subdays": "{tier}: pontos diários · {n} dias",
+"h_ex": "Troca de {n} de ouro",
+"xs_awaiting_listing": "aguardando seu anúncio",
+"xs_listed": "anúncio enviado",
+"xs_filled": "ouro entregue",
+"earn_tasks": "Tarefas",
+"earn_ticket": "Cada tarefa dá 1 bilhete",
+"earn_none": "Novas tarefas em breve. Enquanto isso, faça check-in todo dia.",
+"earn_rules": "Uma conta por jogador. Contas secundárias perdem os pontos. Tarefas sociais são conferidas por amostragem.",
+"task_discord": "Entrar no Discord",
+"task_youtube": "Inscrever-se no YouTube",
+"task_tiktok": "Seguir no TikTok",
+"task_video": "Assistir ao vídeo da semana",
+"task_once": "Uma vez",
+"task_weekly": "Renova toda segunda",
+"task_go": "Fazer",
+"task_done": "Feito",
+"c_lead": "Os concursos são grátis. Comprar pontos nunca dá entradas extras.",
+"pc_title": "Price Call",
+"pc_h": "Acerte o preço de domingo e ganhe {n} pontos",
+"pc_p": "Diga onde a skin da semana fecha no Market Tracker no domingo às 20:00 UTC. O palpite mais próximo vence. Um palpite por jogador.",
+"pc_skin": "Skin da semana",
+"pc_now": "Agora",
+"pc_guess": "Seu palpite, em ouro",
+"pc_lock": "Confirmar",
+"pc_yours": "Seu palpite: {n} G. Resultado após o fechamento.",
+"pc_none": "O Price Call desta semana abre em breve.",
+"pc_closed": "Os palpites desta semana estão encerrados.",
+"pc_won": "{h} disse {g} G, fechou em {a} G",
+"dr_title": "Sorteio semanal",
+"dr_h": "{w} vencedores × {n} pontos",
+"dr_tickets": "bilhetes nesta semana",
+"dr_p": "1 bilhete por check-in e 1 por tarefa concluída. Zera toda segunda.",
+"dr_last": "Semana passada",
+"left": "faltam {d}d {h}h",
+"ex_prog_amt": "Quantia",
+"ex_amount": "Pontos para trocar",
+"ex_all": "Todos",
+"ex_get": "Você recebe {n} de ouro",
+"ex_min": "O mínimo é {n} pontos.",
+"ex_have": "Você tem {n} pontos.",
+"ex_locked": "Pontos grátis podem ser trocados após sua primeira compra.",
+"ex_continue": "Continuar",
+"ex_list_h": "Trocar {n} pontos",
+"ex_done_h": "{n} de ouro a caminho",
+"ex_done_p": "Tiramos {n} pontos da sua carteira. Nossa equipe compra seu anúncio, geralmente em até 3 horas.",
+"ex_more": "Trocar mais",
+"ex_open": "Aguardando seu anúncio",
+"ex_finish": "Concluir anúncio",
+"ex_cancel": "Cancelar",
+"ex_rule": "A troca mínima é de {n} pontos. Os pontos ficam na carteira até a troca, então dá para juntar para um anúncio maior.",
+"err_generic": "Não deu certo. Verifique sua conexão e tente de novo."
+},
+"id": {
+"cu_eyebrow": "Jumlah bebas",
+"cu_h2a": "Butuh jumlah",
+"cu_h2b": "tertentu?",
+"cu_p": "Ketik jumlah poin yang kamu mau. Pesanan besar dapat bonus borongan.",
+"pts_unit": "poin",
+"pts_short": "poin",
+"pay_with": "Bayar dengan",
+"your_bonuses": "Bonus kamu sekarang:",
+"nav_dash": "Dompet",
+"hero_cta1": "Beli poin",
+"hero_lead": "Beli poin jauh lebih murah dari gold di game, dapatkan setiap hari lewat langganan, atau kumpulkan gratis. Lalu tukar 1:1 jadi gold. Dikelola tim standoff2markettracker.com.",
+"how_e": "Cara kerja poin",
+"how_h": "Beli, kumpulkan, tukar",
+"how1_h": "Dapatkan poin",
+"how1_p": "Beli bundel, berlangganan untuk poin harian, atau dapatkan gratis lewat check-in, tugas, dan kontes.",
+"how2_h": "Kumpulkan",
+"how2_p": "Poin tersimpan di dompet sampai kamu butuh. 1 poin selalu sama dengan 1 gold.",
+"how3_h": "Tukar jadi gold",
+"how3_p": "Jual G22 \"Flock\" seharga yang kami tunjukkan, lalu tim kami membelinya, biasanya dalam 3 jam.",
+"b_eyebrow": "Bundel poin",
+"b_h2a": "Harga sama,",
+"b_h2b": "sekarang dalam poin",
+"b_p": "Setiap bundel sama dengan paket gold kami sebelumnya. Bayar pakai kripto untuk +{n}% poin.",
+"b_bonus_inc": "{a} + {b} bonus",
+"b_crypto_hint": "+{n} jika bayar pakai kripto",
+"b_per": "poin per $1",
+"b_buy": "Beli {name}",
+"pb_crypto": "Bayar pakai kripto",
+"pb_sub": "Pelanggan {tier}",
+"pb_first": "Pembelian pertama",
+"pb_loyal": "Loyalitas",
+"pb_bulk1": "Borongan 10.000+",
+"pb_bulk2": "Borongan 25.000+",
+"pb_flash": "Bonus kilat",
+"cu_label": "Berapa poin?",
+"cu_pay": "Kamu bayar {p} untuk {n} poin",
+"cu_rate": "Harga kamu: ${r} per poin. 10.000+ poin dapat +5%, 25.000+ dapat +10%.",
+"cu_buy": "Beli poin",
+"ps_h2a": "Poin setiap hari,",
+"ps_h2b": "otomatis",
+"ps_p": "Langgananmu mengirim poin ke dompet setiap hari pukul 00:00 UTC. Tanpa klaim harian dan tanpa listing harian. Tukar kapan saja.",
+"ps_monthly": "Bulanan",
+"ps_yearly": "Tahunan",
+"ps_save": "hemat hingga {n}%",
+"s_daily": "poin per hari",
+"s_month": "{n} poin per bulan, dibayar harian",
+"s_yrbonus": "+{n} poin bonus di hari pertama",
+"s_crypto": "+{n} poin langsung karena bayar pakai kripto",
+"s_pack": "+{n}% poin bonus di setiap bundel",
+"s_rate": "Poin satuan ${r} per poin",
+"s_get": "Ambil {name}",
+"s_extend": "Perpanjang {name}",
+"s_yours": "PAKETMU",
+"co_title": "Selesaikan pesanan",
+"co_sub": "Tidak ada tagihan di halaman ini. Kirim pembayaran, lalu buat pesanan.",
+"co_points": "Poin",
+"co_daily": "Poin harian",
+"co_daily_v": "{n} per hari selama {d} hari",
+"co_yr": "Bonus tahunan",
+"co_get": "Kamu dapat",
+"co_today": "Poin hari ini",
+"co_pay": "Kamu bayar",
+"co_crypto_tip": "Bayar pakai kripto dan dapat +{n} poin lagi.",
+"co_send_to": "Kirim",
+"co_copy": "ketuk untuk salin",
+"co_gc": "Beli kartu hadiah minimal {p}, buka kodenya, lalu masukkan di bawah. Jangan ditukarkan sendiri.",
+"co_user": "Nama in-game kamu",
+"co_discord": "Username Discord kamu",
+"co_place": "Buat pesanan",
+"co_sending": "Mengirim…",
+"co_err": "Pesanan gagal dikirim. DM camel5961 di Discord dan kami bantu.",
+"co_done_h": "Pesanan diterima",
+"co_done_p": "Poinmu masuk ke dompet setelah pembayaran kami konfirmasi, biasanya dalam beberapa jam.",
+"co_wallet": "Ke dompet",
+"co_close": "Selesai",
+"co_signin": "Masuk untuk beli poin",
+"co_signin_p": "Poin tersimpan di akunmu, jadi kamu perlu akun gratis dulu.",
+"co_once": "Recruit hanya untuk pesanan pertama.",
+"co_prog_pay": "Cek pembayaran",
+"co_prog_pts": "Poin di dompet",
+"earn_teaser_h": "Dapatkan poin gratis",
+"earn_teaser_p": "Check-in harian, tugas singkat, Price Call mingguan di Market Tracker, dan undian mingguan. Tanpa pembelian.",
+"earn_cta": "Dapatkan poin gratis",
+"tab_wallet": "Dompet",
+"tab_earn": "Gratis",
+"tab_contests": "Kontes",
+"tab_exchange": "Tukar",
+"w_title": "Poin kamu",
+"w_lead": "Beli poin, berlangganan untuk poin harian, atau dapatkan gratis. Tukar jadi gold kapan saja. 1 poin = 1 gold.",
+"w_balance": "Saldo",
+"w_worth": "Bernilai {n} gold saat ditukar",
+"w_paid": "dibeli",
+"w_free": "didapat gratis",
+"w_tickets": "tiket undian",
+"w_exchange": "Tukar jadi gold",
+"w_buy": "Beli poin",
+"w_signin_h": "Masuk untuk melihat poinmu",
+"w_signin_p": "Dompet, check-in, kontes, dan penukaran tersimpan di akunmu.",
+"sub_none": "Dapatkan poin di dompet setiap hari, 25 sampai 217 per hari.",
+"sub_see": "Lihat paket",
+"sub_daily": "poin setiap hari",
+"sub_auto": "Masuk otomatis pukul 00:00 UTC. Tanpa klaim dan tanpa listing. Kumpulkan dan tukar kapan saja.",
+"sub_left": "sisa {n} hari",
+"sub_renew": "Perpanjang",
+"sub_plan": "Paket {tier}",
+"sub_legacy": "Paketmu masih memakai klaim harian lama. Kami sedang memindahkan semua paket ke poin harian; sementara itu, klaim seperti biasa.",
+"sub_legacy_btn": "Klaim {n} gold hari ini",
+"sub_legacy_done": "Klaim hari ini sudah masuk.",
+"ci_title": "Check-in harian",
+"ci_btn": "Check-in · +{n} poin",
+"ci_done": "Sudah check-in hari ini. Kembali besok.",
+"ci_streak": "beruntun {n} hari",
+"ci_note": "Hari ke-7 dapat bonus {n} poin. Lewat sehari, hitungan mulai lagi.",
+"ci_day": "Hari",
+"ord_pending": "Menunggu pembayaran",
+"ord_pending_p": "Poin masuk setelah dikonfirmasi.",
+"ord_wait": "Mengecek pembayaran",
+"ord_rejected": "Pembayaran tidak ditemukan",
+"hist_title": "Riwayat",
+"hist_empty": "Belum ada apa-apa. Check-in untuk dapat poin pertamamu.",
+"k_buy": "Beli",
+"k_bonus": "Bonus",
+"k_sub": "Paket",
+"k_earn": "Didapat",
+"k_contest": "Kontes",
+"k_ex": "Ditukar",
+"k_adjust": "Penyesuaian",
+"h_checkin": "Check-in harian · hari {n}",
+"h_video": "Menonton video minggu ini",
+"h_subdays": "Poin harian {tier} · {n} hari",
+"h_ex": "Penukaran {n} gold",
+"xs_awaiting_listing": "menunggu listing kamu",
+"xs_listed": "listing terkirim",
+"xs_filled": "gold terkirim",
+"earn_tasks": "Tugas",
+"earn_ticket": "Setiap tugas memberi 1 tiket",
+"earn_none": "Tugas baru segera hadir. Sementara itu, check-in setiap hari.",
+"earn_rules": "Satu akun per pemain. Akun ganda kehilangan poinnya. Tugas sosial dicek secara acak.",
+"task_discord": "Gabung Discord",
+"task_youtube": "Subscribe di YouTube",
+"task_tiktok": "Follow di TikTok",
+"task_video": "Tonton video minggu ini",
+"task_once": "Sekali",
+"task_weekly": "Reset setiap Senin",
+"task_go": "Kerjakan",
+"task_done": "Selesai",
+"c_lead": "Kontes gratis diikuti. Membeli poin tidak menambah peluang.",
+"pc_title": "Price Call",
+"pc_h": "Tebak harga hari Minggu, menangkan {n} poin",
+"pc_p": "Tebak harga penutupan skin minggu ini di Market Tracker hari Minggu pukul 20:00 UTC. Tebakan terdekat menang. Satu tebakan per pemain.",
+"pc_skin": "Skin minggu ini",
+"pc_now": "Sekarang",
+"pc_guess": "Tebakanmu, dalam gold",
+"pc_lock": "Kunci",
+"pc_yours": "Tebakanmu: {n} G. Hasil diumumkan setelah ditutup.",
+"pc_none": "Price Call minggu ini segera dibuka.",
+"pc_closed": "Tebakan minggu ini sudah ditutup.",
+"pc_won": "{h} menebak {g} G, tutup di {a} G",
+"dr_title": "Undian mingguan",
+"dr_h": "{w} pemenang × {n} poin",
+"dr_tickets": "tiket minggu ini",
+"dr_p": "1 tiket per check-in dan 1 per tugas selesai. Reset setiap Senin.",
+"dr_last": "Minggu lalu",
+"left": "sisa {d}h {h}j",
+"ex_prog_amt": "Jumlah",
+"ex_amount": "Poin yang ditukar",
+"ex_all": "Semua",
+"ex_get": "Kamu dapat {n} gold",
+"ex_min": "Minimal {n} poin.",
+"ex_have": "Kamu punya {n} poin.",
+"ex_locked": "Poin gratis bisa ditukar setelah pembelian pertamamu.",
+"ex_continue": "Lanjut",
+"ex_list_h": "Tukar {n} poin",
+"ex_done_h": "{n} gold sedang dikirim",
+"ex_done_p": "Kami mengambil {n} poin dari dompetmu. Tim kami membeli listing-mu, biasanya dalam 3 jam.",
+"ex_more": "Tukar lagi",
+"ex_open": "Menunggu listing kamu",
+"ex_finish": "Selesaikan listing",
+"ex_cancel": "Batal",
+"ex_rule": "Penukaran minimal {n} poin. Poin tetap di dompet sampai ditukar, jadi kamu bisa menabung untuk satu listing besar.",
+"err_generic": "Gagal. Periksa koneksimu lalu coba lagi."
+},
+"tr": {
+"cu_eyebrow": "İstediğin miktar",
+"cu_h2a": "Belirli bir",
+"cu_h2b": "miktar mı lazım?",
+"cu_p": "İstediğin puanı yaz. Büyük siparişler toplu bonus puan kazanır.",
+"pts_unit": "puan",
+"pts_short": "puan",
+"pay_with": "Ödeme yöntemi",
+"your_bonuses": "Şu anki bonusların:",
+"nav_dash": "Cüzdan",
+"hero_cta1": "Puan al",
+"hero_lead": "Oyun içi altın fiyatının çok altında puan al, abonelikle her gün puan kazan ya da ücretsiz topla. Sonra 1:1 altına çevir. standoff2markettracker.com ekibi tarafından işletiliyor.",
+"how_e": "Puanlar nasıl çalışır",
+"how_h": "Al, kazan, çevir",
+"how1_h": "Puan edin",
+"how1_p": "Paket al, günlük puan için abone ol ya da giriş, görev ve yarışmalarla ücretsiz kazan.",
+"how2_h": "Biriktir",
+"how2_p": "Puanlar ihtiyaç duyana kadar cüzdanında durur. 1 puan her zaman 1 altındır.",
+"how3_h": "Altına çevir",
+"how3_p": "Gösterdiğimiz tutara bir G22 \"Flock\" ilanı aç, ekibimiz genellikle 3 saat içinde satın alsın.",
+"b_eyebrow": "Puan paketleri",
+"b_h2a": "Aynı fiyatlar,",
+"b_h2b": "artık puan olarak",
+"b_p": "Her paket eski altın paketlerimizle aynı. Kripto ile ödersen +%{n} puan.",
+"b_bonus_inc": "{a} + {b} bonus",
+"b_crypto_hint": "Kripto ile ödersen +{n}",
+"b_per": "puan / $1",
+"b_buy": "{name} al",
+"pb_crypto": "Kripto ödeme",
+"pb_sub": "{tier} abonesi",
+"pb_first": "İlk alışveriş",
+"pb_loyal": "Sadakat",
+"pb_bulk1": "Toplu 10.000+",
+"pb_bulk2": "Toplu 25.000+",
+"pb_flash": "Flaş bonus",
+"cu_label": "Kaç puan?",
+"cu_pay": "{n} puan için {p} ödersin",
+"cu_rate": "Fiyatın: puan başına ${r}. 10.000+ puanda +%5, 25.000+ puanda +%10.",
+"cu_buy": "Puan al",
+"ps_h2a": "Her gün puan,",
+"ps_h2b": "otomatik",
+"ps_p": "Planın her gün 00:00 UTC'de cüzdanına puan yatırır. Günlük talep ve günlük ilan yok. İstediğin zaman çevir.",
+"ps_monthly": "Aylık",
+"ps_yearly": "Yıllık",
+"ps_save": "%{n}'e kadar tasarruf",
+"s_daily": "puan / gün",
+"s_month": "Ayda {n} puan, günlük ödenir",
+"s_yrbonus": "Katıldığın gün +{n} bonus puan",
+"s_crypto": "Kripto ödemeye peşin +{n} puan",
+"s_pack": "Her pakette +%{n} bonus puan",
+"s_rate": "Özel miktar puan başına ${r}",
+"s_get": "{name} al",
+"s_extend": "{name} uzat",
+"s_yours": "PLANIN",
+"co_title": "Siparişi tamamla",
+"co_sub": "Bu sayfada ücret alınmaz. Ödemeyi gönder, sonra siparişi ver.",
+"co_points": "Puan",
+"co_daily": "Günlük puan",
+"co_daily_v": "{d} gün boyunca günde {n}",
+"co_yr": "Yıllık bonus",
+"co_get": "Alacağın",
+"co_today": "Bugünkü puan",
+"co_pay": "Ödeyeceğin",
+"co_crypto_tip": "Kripto ile öde, +{n} puan daha al.",
+"co_send_to": "Gönder",
+"co_copy": "kopyalamak için dokun",
+"co_gc": "En az {p} değerinde bir hediye kartı al, kodunu aç ve aşağıya gir. Kartı kendin kullanma.",
+"co_user": "Oyun içi kullanıcı adın",
+"co_discord": "Discord kullanıcı adın",
+"co_place": "Siparişi ver",
+"co_sending": "Gönderiliyor…",
+"co_err": "Sipariş gönderilemedi. Discord'da camel5961'e yaz, hallederiz.",
+"co_done_h": "Sipariş alındı",
+"co_done_p": "Ödemeyi onayladığımız anda puanların cüzdanına geçer, genellikle birkaç saat içinde.",
+"co_wallet": "Cüzdana git",
+"co_close": "Tamam",
+"co_signin": "Puan almak için giriş yap",
+"co_signin_p": "Puanlar hesabında tutulur, önce ücretsiz bir hesap gerekir.",
+"co_once": "Recruit yalnızca ilk sipariş içindir.",
+"co_prog_pay": "Ödeme kontrolü",
+"co_prog_pts": "Puanlar cüzdanda",
+"earn_teaser_h": "Ücretsiz puan kazan",
+"earn_teaser_p": "Günlük giriş, kısa görevler, Market Tracker'da haftalık Price Call ve haftalık çekiliş. Satın alma gerekmez.",
+"earn_cta": "Ücretsiz puan kazan",
+"tab_wallet": "Cüzdan",
+"tab_earn": "Ücretsiz",
+"tab_contests": "Yarışmalar",
+"tab_exchange": "Çevir",
+"w_title": "Puanların",
+"w_lead": "Puan al, günlük puan için abone ol ya da ücretsiz kazan. İstediğin zaman altına çevir. 1 puan = 1 altın.",
+"w_balance": "Bakiye",
+"w_worth": "Çevirince {n} altın eder",
+"w_paid": "satın alındı",
+"w_free": "ücretsiz kazanıldı",
+"w_tickets": "çekiliş bileti",
+"w_exchange": "Altına çevir",
+"w_buy": "Puan al",
+"w_signin_h": "Puanlarını görmek için giriş yap",
+"w_signin_p": "Cüzdan, girişler, yarışmalar ve çevirmeler hesabında tutulur.",
+"sub_none": "Her gün cüzdanına 25 ile 217 arası puan gelsin.",
+"sub_see": "Planları gör",
+"sub_daily": "puan her gün",
+"sub_auto": "00:00 UTC'de otomatik yatırılır. Talep yok, ilan yok. Biriktir ve istediğin zaman çevir.",
+"sub_left": "{n} gün kaldı",
+"sub_renew": "Yenile",
+"sub_plan": "{tier} planı",
+"sub_legacy": "Planın hâlâ eski günlük talep sisteminde. Tüm planları günlük puana geçiriyoruz; o zamana kadar eskisi gibi talep et.",
+"sub_legacy_btn": "Bugün {n} altın talep et",
+"sub_legacy_done": "Bugünkü talebin alındı.",
+"ci_title": "Günlük giriş",
+"ci_btn": "Giriş yap · +{n} puan",
+"ci_done": "Bugün giriş yaptın. Yarın tekrar gel.",
+"ci_streak": "{n} günlük seri",
+"ci_note": "7. gün {n} puan seri bonusu verir. Bir gün kaçırırsan seri baştan başlar.",
+"ci_day": "Gün",
+"ord_pending": "Ödeme bekleniyor",
+"ord_pending_p": "Onaydan sonra puanlar gelir.",
+"ord_wait": "Ödeme kontrol ediliyor",
+"ord_rejected": "Ödeme bulunamadı",
+"hist_title": "Geçmiş",
+"hist_empty": "Henüz bir şey yok. İlk puanların için giriş yap.",
+"k_buy": "Satın alma",
+"k_bonus": "Bonus",
+"k_sub": "Plan",
+"k_earn": "Kazanç",
+"k_contest": "Yarışma",
+"k_ex": "Çevrildi",
+"k_adjust": "Düzeltme",
+"h_checkin": "Günlük giriş · {n}. gün",
+"h_video": "Haftanın videosu izlendi",
+"h_subdays": "{tier} günlük puan · {n} gün",
+"h_ex": "{n} altın çevirme",
+"xs_awaiting_listing": "ilanın bekleniyor",
+"xs_listed": "ilan gönderildi",
+"xs_filled": "altın teslim edildi",
+"earn_tasks": "Görevler",
+"earn_ticket": "Her görev 1 bilet verir",
+"earn_none": "Yeni görevler yolda. Bu arada her gün giriş yap.",
+"earn_rules": "Oyuncu başına bir hesap. Yan hesaplar puanlarını kaybeder. Sosyal görevler rastgele kontrol edilir.",
+"task_discord": "Discord'a katıl",
+"task_youtube": "YouTube'da abone ol",
+"task_tiktok": "TikTok'ta takip et",
+"task_video": "Haftanın videosunu izle",
+"task_once": "Tek seferlik",
+"task_weekly": "Her pazartesi sıfırlanır",
+"task_go": "Yap",
+"task_done": "Tamam",
+"c_lead": "Yarışmalara katılım ücretsiz. Puan satın almak ekstra katılım sağlamaz.",
+"pc_title": "Price Call",
+"pc_h": "Pazar fiyatını tahmin et, {n} puan kazan",
+"pc_p": "Haftanın skin'inin Market Tracker'da pazar 20:00 UTC kapanış fiyatını tahmin et. En yakın tahmin kazanır. Oyuncu başına bir tahmin.",
+"pc_skin": "Haftanın skin'i",
+"pc_now": "Şu an",
+"pc_guess": "Tahminin, altın olarak",
+"pc_lock": "Kilitle",
+"pc_yours": "Tahminin: {n} G. Sonuçlar kapanıştan sonra açıklanır.",
+"pc_none": "Bu haftanın Price Call'u yakında açılıyor.",
+"pc_closed": "Bu haftanın tahminleri kapandı.",
+"pc_won": "{h} {g} G dedi, {a} G'den kapandı",
+"dr_title": "Haftalık çekiliş",
+"dr_h": "{w} kazanan × {n} puan",
+"dr_tickets": "bu haftaki bilet",
+"dr_p": "Her giriş için 1, her tamamlanan görev için 1 bilet. Pazartesi sıfırlanır.",
+"dr_last": "Geçen hafta",
+"left": "{d}g {h}s kaldı",
+"ex_prog_amt": "Miktar",
+"ex_amount": "Çevrilecek puan",
+"ex_all": "Tümü",
+"ex_get": "{n} altın alırsın",
+"ex_min": "En az {n} puan.",
+"ex_have": "{n} puanın var.",
+"ex_locked": "Ücretsiz puanlar ilk alışverişinden sonra çevrilebilir.",
+"ex_continue": "Devam",
+"ex_list_h": "{n} puan çevir",
+"ex_done_h": "{n} altın yolda",
+"ex_done_p": "Cüzdanından {n} puan düştük. Ekibimiz ilanını genellikle 3 saat içinde satın alır.",
+"ex_more": "Daha fazla çevir",
+"ex_open": "İlanın bekleniyor",
+"ex_finish": "İlanı tamamla",
+"ex_cancel": "İptal",
+"ex_rule": "En az {n} puan çevrilebilir. Puanlar çevirene kadar cüzdanında kalır, büyük bir ilan için biriktirebilirsin.",
+"err_generic": "Olmadı. Bağlantını kontrol edip tekrar dene."
+},
+"ar": {
+"cu_eyebrow": "أي كمية",
+"cu_h2a": "تحتاج",
+"cu_h2b": "كمية محددة؟",
+"cu_p": "اكتب عدد النقاط التي تريدها. الطلبات الكبيرة تحصل على مكافأة الكمية.",
+"pts_unit": "نقطة",
+"pts_short": "نقطة",
+"pay_with": "طريقة الدفع",
+"your_bonuses": "مكافآتك الآن:",
+"nav_dash": "المحفظة",
+"hero_cta1": "اشترِ النقاط",
+"hero_lead": "اشترِ النقاط بجزء صغير من سعر الذهب داخل اللعبة، أو احصل عليها يوميًا مع الاشتراك، أو اجمعها مجانًا. ثم استبدلها بالذهب 1:1. يديرها فريق standoff2markettracker.com.",
+"how_e": "كيف تعمل النقاط",
+"how_h": "اشترِ، اكسب، استبدل",
+"how1_h": "احصل على النقاط",
+"how1_p": "اشترِ حزمة، أو اشترك لتصلك نقاط يوميًا، أو اكسبها مجانًا بتسجيل الحضور والمهام والمسابقات.",
+"how2_h": "اجمعها",
+"how2_p": "تبقى النقاط في محفظتك حتى تحتاجها. النقطة الواحدة تساوي دائمًا ذهبة واحدة.",
+"how3_h": "استبدلها بالذهب",
+"how3_p": "اعرض G22 \"Flock\" بالمبلغ الذي نحدده، وسيشتريها فريقنا عادة خلال 3 ساعات.",
+"b_eyebrow": "حزم النقاط",
+"b_h2a": "الأسعار نفسها،",
+"b_h2b": "الآن بالنقاط",
+"b_p": "كل حزمة تطابق باقات الذهب السابقة. ادفع بالعملات الرقمية واحصل على +{n}% نقاط.",
+"b_bonus_inc": "{a} + {b} مكافأة",
+"b_crypto_hint": "+{n} عند الدفع بالعملات الرقمية",
+"b_per": "نقطة لكل 1$",
+"b_buy": "اشترِ {name}",
+"pb_crypto": "الدفع بالعملات الرقمية",
+"pb_sub": "مشترك {tier}",
+"pb_first": "أول عملية شراء",
+"pb_loyal": "الولاء",
+"pb_bulk1": "كمية 10,000+",
+"pb_bulk2": "كمية 25,000+",
+"pb_flash": "مكافأة سريعة",
+"cu_label": "كم نقطة تريد؟",
+"cu_pay": "تدفع {p} مقابل {n} نقطة",
+"cu_rate": "سعرك: ${r} للنقطة. 10,000+ نقطة تمنح +5%، و25,000+ تمنح +10%.",
+"cu_buy": "اشترِ النقاط",
+"ps_h2a": "نقاط كل يوم،",
+"ps_h2b": "تلقائيًا",
+"ps_p": "يضيف اشتراكك النقاط إلى محفظتك يوميًا الساعة 00:00 UTC. بلا مطالبة يومية وبلا عرض يومي. استبدلها متى شئت.",
+"ps_monthly": "شهري",
+"ps_yearly": "سنوي",
+"ps_save": "وفّر حتى {n}%",
+"s_daily": "نقطة يوميًا",
+"s_month": "{n} نقطة شهريًا، تُضاف يوميًا",
+"s_yrbonus": "+{n} نقطة مكافأة يوم الاشتراك",
+"s_crypto": "+{n} نقطة فورًا للدفع بالعملات الرقمية",
+"s_pack": "+{n}% نقاط إضافية على كل حزمة",
+"s_rate": "نقاط بالكمية التي تريدها بسعر ${r} للنقطة",
+"s_get": "اشترك في {name}",
+"s_extend": "مدّد {name}",
+"s_yours": "خطتك",
+"co_title": "أكمل طلبك",
+"co_sub": "لن يتم خصم أي مبلغ في هذه الصفحة. أرسل الدفعة ثم قدّم الطلب.",
+"co_points": "النقاط",
+"co_daily": "النقاط اليومية",
+"co_daily_v": "{n} يوميًا لمدة {d} يومًا",
+"co_yr": "المكافأة السنوية",
+"co_get": "ستحصل على",
+"co_today": "نقاط اليوم",
+"co_pay": "ستدفع",
+"co_crypto_tip": "ادفع بالعملات الرقمية واحصل على +{n} نقطة إضافية.",
+"co_send_to": "أرسل",
+"co_copy": "اضغط للنسخ",
+"co_gc": "اشترِ بطاقة هدايا بقيمة {p} على الأقل، واكشف الرمز وأدخله أدناه. لا تستخدمها بنفسك.",
+"co_user": "اسمك داخل اللعبة",
+"co_discord": "اسم المستخدم في Discord",
+"co_place": "قدّم الطلب",
+"co_sending": "جارٍ الإرسال…",
+"co_err": "تعذّر إرسال الطلب. راسل camel5961 على Discord وسنحل الأمر.",
+"co_done_h": "تم استلام الطلب",
+"co_done_p": "تصل نقاطك إلى المحفظة فور تأكيد الدفع، عادة خلال ساعات قليلة.",
+"co_wallet": "إلى المحفظة",
+"co_close": "تم",
+"co_signin": "سجّل الدخول لشراء النقاط",
+"co_signin_p": "النقاط محفوظة في حسابك، لذا تحتاج إلى حساب مجاني أولًا.",
+"co_once": "حزمة Recruit لأول طلب فقط.",
+"co_prog_pay": "التحقق من الدفع",
+"co_prog_pts": "النقاط في المحفظة",
+"earn_teaser_h": "اكسب النقاط مجانًا",
+"earn_teaser_p": "تسجيل حضور يومي، ومهام سريعة، وPrice Call أسبوعي على Market Tracker، وسحب أسبوعي. بلا شراء.",
+"earn_cta": "اكسب نقاطًا مجانية",
+"tab_wallet": "المحفظة",
+"tab_earn": "مجانًا",
+"tab_contests": "المسابقات",
+"tab_exchange": "الاستبدال",
+"w_title": "نقاطك",
+"w_lead": "اشترِ النقاط، أو اشترك لتصلك يوميًا، أو اكسبها مجانًا. استبدلها بالذهب متى شئت. نقطة = ذهبة.",
+"w_balance": "الرصيد",
+"w_worth": "تساوي {n} ذهبة عند الاستبدال",
+"w_paid": "مدفوعة",
+"w_free": "مجانية",
+"w_tickets": "تذاكر السحب",
+"w_exchange": "استبدل بالذهب",
+"w_buy": "اشترِ النقاط",
+"w_signin_h": "سجّل الدخول لرؤية نقاطك",
+"w_signin_p": "المحفظة وتسجيل الحضور والمسابقات والاستبدال كلها في حسابك.",
+"sub_none": "احصل على نقاط في محفظتك كل يوم، من 25 إلى 217 يوميًا.",
+"sub_see": "عرض الخطط",
+"sub_daily": "نقطة كل يوم",
+"sub_auto": "تُضاف تلقائيًا الساعة 00:00 UTC. بلا مطالبة وبلا عرض. اجمعها واستبدلها متى شئت.",
+"sub_left": "متبقٍ {n} يوم",
+"sub_renew": "جدّد",
+"sub_plan": "خطة {tier}",
+"sub_legacy": "خطتك ما زالت على نظام المطالبة اليومية القديم. ننقل كل الخطط إلى النقاط اليومية؛ حتى ذلك الحين، طالب كالمعتاد.",
+"sub_legacy_btn": "اطلب {n} ذهبة اليوم",
+"sub_legacy_done": "تم إرسال مطالبة اليوم.",
+"ci_title": "تسجيل الحضور اليومي",
+"ci_btn": "سجّل حضورك · +{n} نقطة",
+"ci_done": "سجّلت حضورك اليوم. عد غدًا.",
+"ci_streak": "سلسلة {n} يوم",
+"ci_note": "اليوم السابع يمنح {n} نقطة مكافأة. إذا فاتك يوم تبدأ السلسلة من جديد.",
+"ci_day": "يوم",
+"ord_pending": "بانتظار الدفع",
+"ord_pending_p": "تصل النقاط بعد التأكيد.",
+"ord_wait": "نتحقق من الدفع",
+"ord_rejected": "لم يُعثر على الدفع",
+"hist_title": "السجل",
+"hist_empty": "لا شيء بعد. سجّل حضورك لتكسب أول نقاطك.",
+"k_buy": "شراء",
+"k_bonus": "مكافأة",
+"k_sub": "خطة",
+"k_earn": "مكتسبة",
+"k_contest": "مسابقة",
+"k_ex": "استبدال",
+"k_adjust": "تعديل",
+"h_checkin": "تسجيل حضور · اليوم {n}",
+"h_video": "شاهدت فيديو الأسبوع",
+"h_subdays": "نقاط {tier} اليومية · {n} يوم",
+"h_ex": "استبدال {n} ذهبة",
+"xs_awaiting_listing": "بانتظار عرضك",
+"xs_listed": "تم إرسال العرض",
+"xs_filled": "تم تسليم الذهب",
+"earn_tasks": "المهام",
+"earn_ticket": "كل مهمة تمنح تذكرة واحدة",
+"earn_none": "مهام جديدة قريبًا. في الأثناء، سجّل حضورك يوميًا.",
+"earn_rules": "حساب واحد لكل لاعب. الحسابات الإضافية تخسر نقاطها. تُراجع المهام الاجتماعية عشوائيًا.",
+"task_discord": "انضم إلى Discord",
+"task_youtube": "اشترك في YouTube",
+"task_tiktok": "تابع على TikTok",
+"task_video": "شاهد فيديو الأسبوع",
+"task_once": "مرة واحدة",
+"task_weekly": "يتجدد كل اثنين",
+"task_go": "نفّذ",
+"task_done": "تم",
+"c_lead": "المشاركة في المسابقات مجانية. شراء النقاط لا يزيد فرصك.",
+"pc_title": "Price Call",
+"pc_h": "توقّع سعر الأحد واربح {n} نقطة",
+"pc_p": "توقّع سعر إغلاق سكن الأسبوع على Market Tracker يوم الأحد الساعة 20:00 UTC. أقرب توقع يفوز. توقع واحد لكل لاعب.",
+"pc_skin": "سكن الأسبوع",
+"pc_now": "الآن",
+"pc_guess": "توقعك بالذهب",
+"pc_lock": "ثبّت التوقع",
+"pc_yours": "توقعك: {n} G. النتائج بعد الإغلاق.",
+"pc_none": "يُفتح Price Call هذا الأسبوع قريبًا.",
+"pc_closed": "أُغلقت التوقعات لهذا الأسبوع.",
+"pc_won": "{h} توقع {g} G، والإغلاق {a} G",
+"dr_title": "السحب الأسبوعي",
+"dr_h": "{w} فائزين × {n} نقطة",
+"dr_tickets": "تذاكر هذا الأسبوع",
+"dr_p": "تذكرة لكل تسجيل حضور وتذكرة لكل مهمة مكتملة. تُصفّر كل اثنين.",
+"dr_last": "الأسبوع الماضي",
+"left": "متبقٍ {d}ي {h}س",
+"ex_prog_amt": "الكمية",
+"ex_amount": "النقاط المراد استبدالها",
+"ex_all": "الكل",
+"ex_get": "ستحصل على {n} ذهبة",
+"ex_min": "الحد الأدنى {n} نقطة.",
+"ex_have": "لديك {n} نقطة.",
+"ex_locked": "يمكن استبدال النقاط المجانية بعد أول عملية شراء.",
+"ex_continue": "متابعة",
+"ex_list_h": "استبدال {n} نقطة",
+"ex_done_h": "{n} ذهبة في الطريق",
+"ex_done_p": "خصمنا {n} نقطة من محفظتك. سيشتري فريقنا عرضك، عادة خلال 3 ساعات.",
+"ex_more": "استبدل المزيد",
+"ex_open": "بانتظار عرضك",
+"ex_finish": "أكمل العرض",
+"ex_cancel": "إلغاء",
+"ex_rule": "الحد الأدنى للاستبدال {n} نقطة. تبقى النقاط في محفظتك حتى تستبدلها، فيمكنك جمعها لعرض واحد أكبر.",
+"err_generic": "لم ينجح ذلك. تحقق من اتصالك وحاول مجددًا."
+}
+};
+Object.keys(I18N_PTS).forEach(l => { I18N[l] = Object.assign({}, I18N[l] || {}, I18N_PTS[l]); });
 
 const PACKS = [
   { id:'recruit', name:'Recruit Pack', gold:250, bonus:0, price:1.99, tag:'FIRST ORDER', blurb:'New here? Prove us out for two bucks. One per customer.' },
@@ -1017,12 +2171,14 @@ function Sell({ sell, lang }) {
 
 function FAQ({ lang }) {
   const QA = [
-    ['How fast do I get my gold?', 'Orders and daily claims are filled within 3 hours of submitting your G22 "Flock" details — larger orders can take longer. Subscription gold is claimable from your dashboard every day.'],
-    ['What if my order is late?', 'Most orders are filled within 3 hours; larger orders can take longer. If yours seems stuck, DM camel5961 on Discord and we will chase it down.'],
-    ['How is the gold delivered?', 'Through the Standoff 2 marketplace. Once your order is placed we show you an exact amount (your gold plus a small unique marker) — you list a G22 "Flock" for that amount and send us its pattern number and a screenshot. Our team buys out your listing to fill the order, within 3 hours for most orders, longer for larger ones.'],
-    ['How do I pay?', 'Pick your payment method right at checkout — Cash App, Venmo, Ko-fi/PayPal, crypto, or an Apple/Google gift card. We never charge a card on this website; you send payment directly to the method you choose, then our team confirms it and delivers your gold.'],
-    ['Can I cancel my subscription?', 'Anytime. You keep every bit of gold you already claimed, no questions asked.'],
-    ['Is this legit?', 'We are the team behind standoff2markettracker.com — the Standoff 2 price tracker with live skin prices, giveaways, and an active Discord community. Come say hi before you spend a cent.'],
+    ['What are points?', 'Points are how you buy gold here now. 1 point is always worth 1 gold. You can buy them, get them every day with a plan, or earn them free, and they stay in your wallet until you exchange them.'],
+    ['How do I turn points into gold?', 'Open your wallet, pick Exchange and choose how many points to swap (250 minimum). We show you an exact amount to list a G22 "Flock" for. Send us its pattern number and a screenshot and our team buys the listing out, usually within 3 hours. Larger amounts can take longer.'],
+    ['How do plans work now?', 'Your plan pays points into your wallet every day at 00:00 UTC: Bronze 25, Silver 67, Gold 217. There is no daily claim and no daily listing. Save the points up and exchange them whenever you like. Yearly plans add bonus points on day one.'],
+    ['How do I pay?', 'Pick a method at checkout: Cash App, Venmo, Ko-fi/PayPal, crypto, or an Apple/Google gift card. Paying in crypto adds ' + PTS.crypto + '% extra points. We never charge a card on this website. Points land once our team confirms the payment.'],
+    ['Can I earn points for free?', 'Yes. Check in every day for points and a streak bonus on day 7, do the quick tasks, enter the weekly Price Call on the Market Tracker, and collect tickets for the weekly draw. Free points can be exchanged after your first purchase.'],
+    ['What happened to my old plan?', 'Plans from the old daily-claim system move to daily points with the days you had left. Until yours moves over, you can keep claiming from your wallet as before.'],
+    ['Can I cancel my plan?', 'Plans do not renew on their own. Points you already have stay yours.'],
+    ['Is this legit?', 'We are the team behind standoff2markettracker.com, the Standoff 2 price tracker with live skin prices, giveaways, and an active Discord community. Come say hi before you spend a cent.'],
   ];
   return (
     <section id="faq">
@@ -1604,7 +2760,7 @@ function BuyGoldPanel({ user, tier, signIn, flashSale, lifetimeGold, hasPurchase
 function AdminPanel({ user, signIn, flashSale }) {
   const [authed, setAuthed] = useState(false);
   const [checking, setChecking] = useState(true);
-  const [tab, setTab] = useState('orders');
+  const [tab, setTab] = useState('points');
   const [users, setUsers] = useState([]);
   const [orders, setOrders] = useState([]);
   const [claims, setClaims] = useState([]);
@@ -1685,7 +2841,7 @@ function AdminPanel({ user, signIn, flashSale }) {
   const startFlash = () => {
     const pct = parseInt(fsPct), hrs = parseFloat(fsHours);
     if (isNaN(pct) || pct <= 0 || pct > 90) return flash('err','Enter a percent between 1 and 90');
-    db.ref('flashSale').set({ active: true, label: fsLabel.trim() || 'Flash Sale', percent: pct, endsAt: hrs > 0 ? Date.now() + hrs*3600000 : null });
+    db.ref('flashSale').set({ active: true, label: fsLabel.trim() || 'Flash Bonus', percent: pct, startedAt: Date.now(), endsAt: hrs > 0 ? Date.now() + hrs*3600000 : null });
     flash('ok','Flash sale started!');
   };
   const stopFlash = () => { db.ref('flashSale').set({ active: false }); flash('ok','Flash sale stopped'); };
@@ -1738,7 +2894,8 @@ function AdminPanel({ user, signIn, flashSale }) {
         <button className={tab==='orders'?'on':''} onClick={()=>setTab('orders')}>Orders {pending>0?`(${pending})`:''}</button>
         <button className={tab==='claims'?'on':''} onClick={()=>setTab('claims')}>Claims {pendingClaims>0?`(${pendingClaims})`:''}</button>
         <button className={tab==='users'?'on':''} onClick={()=>setTab('users')}>Users ({users.length}){subsNeedingAttention>0?` · ${subsNeedingAttention} subs`:''}</button>
-        <button className={tab==='flash'?'on':''} onClick={()=>setTab('flash')}>Flash Sale</button>
+        <button className={tab==='flash'?'on':''} onClick={()=>setTab('flash')}>Flash Bonus</button>
+        <button className={tab==='points'?'on':''} onClick={()=>setTab('points')}>Points</button>
       </div>
       <div className="field" style={{maxWidth:400,margin:'0 auto 20px'}}>
         <input value={search} onChange={e=>setSearch(e.target.value)} placeholder={tab==='orders'?'Search orders by username/method…':'Search users by name/email/UID…'} />
@@ -1807,27 +2964,1187 @@ function AdminPanel({ user, signIn, flashSale }) {
         </div>
       )}
 
+      {tab === 'points' && <PointsAdmin users={users} flashSale={flashSale} />}
+
       {tab === 'flash' && (
         <div style={{maxWidth:480,margin:'0 auto'}}>
           {flashActive(flashSale) ? (
             <div className="card" style={{transform:'none',marginBottom:16}}>
               <div style={{fontWeight:700,color:'var(--green)',marginBottom:6}}>● Flash sale is LIVE</div>
-              <div className="sub" style={{marginBottom:4}}>{flashSale.label} — {flashSale.percent}% off</div>
+              <div className="sub" style={{marginBottom:4}}>{flashSale.label} — +{flashSale.percent}% bonus points</div>
               {flashSale.endsAt && <div className="sub" style={{marginBottom:12}}>Ends {new Date(flashSale.endsAt).toLocaleString()}</div>}
               <button className="btn btn-ghost btn-sm" onClick={stopFlash}>Stop sale now</button>
             </div>
           ) : (
-            <p className="msub" style={{marginBottom:16}}>No active flash sale. Start one below — it shows a sitewide countdown banner and applies the discount to all custom gold orders.</p>
+            <p className="msub" style={{marginBottom:16}}>No flash bonus running. Start one below. It shows a sitewide countdown banner and adds the bonus percent to every points purchase (bundles and custom amounts) placed while it runs.</p>
           )}
           <div className="card" style={{transform:'none'}}>
             <div className="field"><label>Sale label</label><input value={fsLabel} onChange={e=>setFsLabel(e.target.value)} placeholder="Weekend Flash Sale" /></div>
-            <div className="field"><label>Discount percent</label><input type="number" min="1" max="90" value={fsPct} onChange={e=>setFsPct(e.target.value)} /></div>
+            <div className="field"><label>Bonus points percent</label><input type="number" min="1" max="90" value={fsPct} onChange={e=>setFsPct(e.target.value)} /></div>
             <div className="field"><label>Duration (hours, 0 = no end time)</label><input type="number" min="0" value={fsHours} onChange={e=>setFsHours(e.target.value)} /></div>
             <button className="btn btn-gold" style={{width:'100%'}} onClick={startFlash}>{flashActive(flashSale) ? 'Replace active sale' : 'Start flash sale'}</button>
           </div>
         </div>
       )}
     </div></section>
+  );
+}
+
+
+// =====================================================================
+// ---- Points system (Oct 2026): buy, earn and exchange points 1:1 for gold ----
+// Balances are never stored as one writable number. A wallet is computed from
+// records the database rules lock down: admin-written ledger entries and plan
+// periods, write-once check-ins / tasks stamped with server time, and exchanges.
+// =====================================================================
+const PTS = {
+  rates: { none:0.0086, bronze:0.008, silver:0.0058, gold:0.004 },
+  crypto:7, first:5, loyalty:5, loyaltyAt:25000, bulk1:5, bulk1At:10000, bulk2:10, bulk2At:25000,
+  checkin:5, streak7:25, video:10, minExchange:250,
+  tasks:{ discord:50, youtube:50, tiktok:30 },
+  priceCallPrize:2500, drawPrize:1000, drawWinners:3,
+};
+const BUNDLES = [
+  { id:'recruit', name:'Recruit', pts:250,   price:1.99,  tag:'FIRST ORDER', once:true },
+  { id:'scout',   name:'Scout',   pts:1000,  price:7.99 },
+  { id:'raider',  name:'Raider',  pts:5000,  price:37.99, tag:'MOST POPULAR' },
+  { id:'vault',   name:'Vault',   pts:12000, price:79.99 },
+];
+const WEEK_MS = 7 * DAY_MS;
+const dayIdx = ts => Math.floor(ts / DAY_MS);
+const weekIdx = ts => Math.floor((ts + 3 * DAY_MS) / WEEK_MS);   // weeks start Monday 00:00 UTC
+const weekStartMs = w => w * WEEK_MS - 3 * DAY_MS;
+let serverOffset = 0;
+try { db.ref('.info/serverTimeOffset').on('value', s => { serverOffset = s.val() || 0; }); } catch (e) {}
+const nowMs = () => Date.now() + serverOffset;
+const svTs = () => { try { return window.firebase.database.ServerValue.TIMESTAMP; } catch (e) { return Date.now(); } };
+const round2 = n => Math.round(n * 100) / 100;
+const capWord = s => (s || '').charAt(0).toUpperCase() + (s || '').slice(1);
+function tf(lang, key, vars) {
+  let s = t(lang, key);
+  if (vars) Object.keys(vars).forEach(k => { s = s.split('{' + k + '}').join(vars[k]); });
+  return s;
+}
+const tierName = id => (TIERS.find(x => x.id === id) || { name: capWord(id) }).name;
+
+// Builds the wallet from the raw points/{uid} node. Same function runs for the
+// player and in the admin panel, so both always see the same balance.
+function computeWallet(p, now) {
+  p = p || {};
+  const w = { balance:0, bought:0, earned:0, subPts:0, lifetimeBought:0, hasPurchased:false, tickets:0,
+              streak:0, checkedToday:false, tier:null, daysLeft:null, period:null, openEx:[], history:[] };
+  const today = dayIdx(now), wk = weekIdx(now);
+  Object.keys(p.ledger || {}).forEach(id => {
+    const l = p.ledger[id] || {}; const amt = Number(l.amt) || 0;
+    w.balance += amt;
+    if (l.kind === 'buy') { w.bought += amt; w.lifetimeBought += amt; w.hasPurchased = true; }
+    else if (l.kind === 'bonus' || l.kind === 'sub') w.bought += amt;
+    else w.earned += amt;
+    w.history.push({ id, ts: l.ts || 0, kind: l.kind || 'adjust', label: l.label || '', amt });
+  });
+  const days = Object.keys(p.checkins || {})
+    .filter(k => { const v = p.checkins[k]; return v && typeof v.ts === 'number' && String(dayIdx(v.ts)) === k; })
+    .map(Number).sort((a, b) => a - b);
+  let run = 0, prev = null;
+  days.forEach(d => {
+    run = (prev !== null && d === prev + 1) ? run + 1 : 1; prev = d;
+    const amt = PTS.checkin + (run % 7 === 0 ? PTS.streak7 : 0);
+    w.balance += amt; w.earned += amt;
+    if (weekIdx(d * DAY_MS) === wk) w.tickets++;
+    w.history.push({ id:'ci' + d, ts: p.checkins[String(d)].ts, kind:'earn', lk:'h_checkin', arg:{ n: ((run - 1) % 7) + 1 }, amt });
+  });
+  const last = days.length ? days[days.length - 1] : null;
+  w.checkedToday = last === today;
+  w.streak = (last === today || last === today - 1) ? run : 0;
+  Object.keys(p.tasks || {}).forEach(k => {
+    const v = p.tasks[k]; if (!v || typeof v.ts !== 'number' || !PTS.tasks[k]) return;
+    w.balance += PTS.tasks[k]; w.earned += PTS.tasks[k];
+    if (weekIdx(v.ts) === wk) w.tickets++;
+    w.history.push({ id:'tk' + k, ts: v.ts, kind:'earn', lk:'task_' + k, amt: PTS.tasks[k] });
+  });
+  Object.keys(p.video || {}).forEach(k => {
+    const v = p.video[k]; if (!v || typeof v.ts !== 'number' || String(weekIdx(v.ts)) !== k) return;
+    w.balance += PTS.video; w.earned += PTS.video;
+    if (Number(k) === wk) w.tickets++;
+    w.history.push({ id:'vd' + k, ts: v.ts, kind:'earn', lk:'h_video', amt: PTS.video });
+  });
+  Object.keys(p.periods || {}).forEach(id => {
+    const per = p.periods[id] || {}; const daily = DAILY_GOLD[per.tier] || 0;
+    if (!daily || !per.start || !per.end) return;
+    const first = dayIdx(per.start), lastDay = dayIdx(per.end) - 1;
+    const n = Math.max(0, Math.min(today, lastDay) - first + 1);
+    w.hasPurchased = true;
+    if (n > 0) {
+      w.balance += daily * n; w.bought += daily * n; w.subPts += daily * n;
+      w.history.push({ id:'pd' + id, ts: Math.max(per.start, Math.min(today, lastDay) * DAY_MS + 1000), kind:'sub', lk:'h_subdays', arg:{ tier: tierName(per.tier), n }, amt: daily * n });
+    }
+    if (today >= first && today <= lastDay && (!w.period || per.start > w.period.start)) {
+      w.period = Object.assign({ id }, per); w.tier = per.tier; w.daysLeft = lastDay - today + 1;
+    }
+  });
+  Object.keys(p.exchanges || {}).forEach(id => {
+    const x = p.exchanges[id] || {}; const amt = Number(x.amt) || 0;
+    if (x.status === 'rejected' || x.status === 'cancelled') return;
+    w.balance -= amt;
+    if (x.status === 'awaiting_listing') w.openEx.push(Object.assign({ id }, x));
+    w.history.push({ id:'ex' + id, ts: x.createdAt || 0, kind:'ex', lk:'h_ex', arg:{ n: fmt(amt) }, amt: -amt, status: x.status });
+  });
+  w.history.sort((a, b) => b.ts - a.ts);
+  return w;
+}
+
+// Every old discount now pays out as extra points. Percentages add up on the base points.
+function pointBonuses({ base, method, tier, hasPurchased, lifetimeBought, flash, kind }) {
+  const L = [];
+  if (method === 'crypto') L.push({ key:'pb_crypto', pct: PTS.crypto });
+  if (kind !== 'sub') {
+    if (tier && PACK_DISC[tier]) L.push({ key:'pb_sub', arg:{ tier: tierName(tier) }, pct: PACK_DISC[tier] });
+    if (!hasPurchased) L.push({ key:'pb_first', pct: PTS.first });
+    if ((lifetimeBought || 0) >= PTS.loyaltyAt) L.push({ key:'pb_loyal', pct: PTS.loyalty });
+    if (base >= PTS.bulk2At) L.push({ key:'pb_bulk2', pct: PTS.bulk2 });
+    else if (base >= PTS.bulk1At) L.push({ key:'pb_bulk1', pct: PTS.bulk1 });
+    if (flashActive(flash)) L.push({ key:'pb_flash', label: flash.label, pct: Number(flash.percent) || 0 });
+  }
+  const lines = L.filter(l => l.pct > 0).map(l => Object.assign({}, l, { pts: Math.round(base * l.pct / 100) }));
+  return { lines, pts: lines.reduce((a, l) => a + l.pts, 0), pct: lines.reduce((a, l) => a + l.pct, 0) };
+}
+// What an order is worth. Used at checkout and again by the admin before crediting,
+// so a tampered order can never credit more than its real price buys.
+function quoteOrder(o, ctx) {
+  let base = 0, price = 0, yrBonus = 0, kind = o.kind;
+  if (kind === 'bundle') { const b = BUNDLES.find(x => x.id === o.item); if (!b) return null; base = b.pts; price = b.price; }
+  else if (kind === 'custom') { base = Math.max(0, Math.floor(Number(o.basePts) || 0)); price = round2(base * PTS.rates[ctx.tier || 'none']); }
+  else if (kind === 'sub') {
+    const T = TIERS.find(x => x.id === o.tier); if (!T || !TERM_DAYS[o.term]) return null;
+    base = DAILY_GOLD[T.id] * TERM_DAYS[o.term]; price = o.term === 'yearly' ? T.yr : T.mo;
+    yrBonus = o.term === 'yearly' ? YEARLY_BONUS[T.id] : 0;
+  } else return null;
+  const bonus = pointBonuses({ base, method: o.method, tier: ctx.tier, hasPurchased: ctx.hasPurchased, lifetimeBought: ctx.lifetimeBought, flash: ctx.flash, kind });
+  return { base, price, yrBonus, bonus, credit: kind === 'sub' ? yrBonus + bonus.pts : base + bonus.pts };
+}
+const bonusText = (lang, l) => (l.key === 'pb_flash' && l.label ? l.label : tf(lang, l.key, l.arg)) + ' +' + l.pct + '%';
+
+async function postWebhook(title, rows, color) {
+  try {
+    const res = await fetch(WEBHOOK, { method:'POST', headers:{ 'Content-Type':'application/json' },
+      body: JSON.stringify({ embeds:[{ title, description: rows.filter(r => r[1] != null && r[1] !== '').map(r => '**' + r[0] + ':** ' + r[1]).join('\n'), color: color || 16763964, timestamp: new Date().toISOString() }] }) });
+    return res.ok;
+  } catch (e) { return false; }
+}
+
+function usePoints(user) {
+  const [data, setData] = useState(null);
+  const [orders, setOrders] = useState([]);
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    if (!user) { setData(null); setOrders([]); return; }
+    const r = db.ref('points/' + user.uid);
+    const o = db.ref('pointsOrders/' + user.uid);
+    const cr = r.on('value', s => setData(s.val() || {}), () => setData({}));
+    const co = o.on('value', s => { const v = s.val() || {}; setOrders(Object.keys(v).map(k => Object.assign({ id:k }, v[k])).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0))); }, () => setOrders([]));
+    const i = setInterval(() => setTick(x => x + 1), 60000);
+    return () => { try { r.off('value', cr); o.off('value', co); } catch (e) {} clearInterval(i); };
+  }, [user]);
+  const wallet = React.useMemo(() => computeWallet(data, nowMs()), [data, tick]);
+  return { data, wallet, orders, ready: data !== null };
+}
+function usePointsConfig() {
+  const [cfg, setCfg] = useState({});
+  useEffect(() => { const r = db.ref('pointsConfig'); const cb = r.on('value', s => setCfg(s.val() || {}), () => {}); return () => { try { r.off('value', cb); } catch (e) {} }; }, []);
+  return cfg;
+}
+
+function PayMethodSeg({ method, setMethod, lang }) {
+  const opts = [['cashapp','Cash App'],['venmo','Venmo'],['kofi','Ko-fi / PayPal'],['crypto','Crypto'],['gift','Gift card']];
+  return (
+    <div>
+      <label style={{fontSize:13,color:'var(--muted)',fontWeight:700,display:'block',marginBottom:7}}>{t(lang,'pay_with')}</label>
+      <div className="seg" role="radiogroup">
+        {opts.map(([id, label]) => (
+          <button key={id} type="button" role="radio" aria-checked={method === id} className={method === id ? 'on' : ''} onClick={() => setMethod(id)}>
+            {label}{id === 'crypto' && <span className="b">+{PTS.crypto}%</span>}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ---------------- Checkout for points (bundles, custom amounts, plans) ----------------
+function PointsCheckout({ order, user, wallet, tier, flash, startMethod, onClose, onWallet, signIn, lang }) {
+  const L = k => t(lang, k);
+  const [method, setMethod] = useState(startMethod === 'gift' ? 'apple' : (startMethod || 'cashapp'));
+  const [username, setUsername] = useState(user ? (user.displayName || '') : '');
+  const [discord, setDiscord] = useState('');
+  const [gcCode, setGcCode] = useState('');
+  const [copied, setCopied] = useState('');
+  const [state, setState] = useState('form');
+  const ctx = { tier, hasPurchased: wallet.hasPurchased, lifetimeBought: wallet.lifetimeBought, flash };
+  const q = quoteOrder(Object.assign({}, order, { method }), ctx);
+  const cryptoQ = quoteOrder(Object.assign({}, order, { method:'crypto' }), ctx);
+  const isCard = method === 'apple' || method === 'google';
+  const copyText = (s, key) => { try { navigator.clipboard.writeText(s).catch(() => {}); } catch (e) {} setCopied(key); setTimeout(() => setCopied(''), 1500); };
+  const T = order.kind === 'sub' ? TIERS.find(x => x.id === order.tier) : null;
+  const title = order.kind === 'bundle' ? (BUNDLES.find(b => b.id === order.item) || {}).name + ' bundle'
+    : order.kind === 'custom' ? fmt(order.basePts) + ' ' + L('pts_unit')
+    : T.name + ' ' + (order.term === 'yearly' ? 'yearly' : 'monthly');
+  const blockedOnce = order.kind === 'bundle' && order.item === 'recruit' && wallet.hasPurchased;
+  const can = user && q && username.trim() && discord.trim() && (!isCard || gcCode.trim().length >= 8) && !blockedOnce && state !== 'sending';
+
+  const submit = async () => {
+    if (!can) return;
+    setState('sending');
+    const ts = Date.now();
+    const rec = {
+      kind: order.kind, item: order.item || null, basePts: q.base, tier: order.tier || null, term: order.term || null,
+      title, price: q.price, method, bonusPts: q.bonus.pts, yrBonus: q.yrBonus || 0, credit: q.credit,
+      bonusLines: q.bonus.lines.map(l => bonusText('en', l)).join(', ') || null,
+      username: username.trim(), discord: discord.trim(), gcCode: isCard ? gcCode.trim() : null,
+      referral: (() => { try { const r = localStorage.getItem('cs2g_ref'); return r && r !== user.uid ? r : null; } catch (e) { return null; } })(),
+      status: 'pending', createdAt: ts,
+    };
+    let saved = false;
+    try { await db.ref('pointsOrders/' + user.uid + '/' + ts).set(rec); saved = true; } catch (e) { console.warn('points order write failed', e); }
+    const hook = await postWebhook('💳 New points order — CheapStandoff2Gold', [
+      ['Item', title], ['Price', '$' + q.price.toFixed(2)], ['Method', PAYMENT_METHOD_LABELS[method] || method],
+      ['Points', order.kind === 'sub' ? (DAILY_GOLD[order.tier] + '/day for ' + TERM_DAYS[order.term] + ' days') : fmt(q.base)],
+      ['Bonus points', q.credit - (order.kind === 'sub' ? 0 : q.base) ? fmt(q.credit - (order.kind === 'sub' ? 0 : q.base)) + (rec.bonusLines ? ' (' + rec.bonusLines + ')' : '') : null],
+      ['Username', rec.username], ['Discord', rec.discord], ['Account', user.email || user.uid],
+      ['Gift Card Code', isCard ? '||' + gcCode.trim() + '||' : null], ['Referral', rec.referral],
+      ['Next step', 'Confirm the payment in Admin → Points to credit the wallet.'],
+    ]);
+    setState(saved ? 'done' : (hook ? 'done' : 'error'));
+  };
+
+  return (
+    <div className="overlay" onClick={e => e.target === e.currentTarget && onClose()}>
+      <div className="modal">
+        <button className="xbtn" onClick={onClose} aria-label="Close">×</button>
+        {!user ? (
+          <div style={{textAlign:'center',padding:'10px 0'}}>
+            <h3>{L('co_signin')}</h3>
+            <p className="msub" style={{marginTop:8}}>{L('co_signin_p')}</p>
+            <button className="btn btn-gold" onClick={() => { onClose(); signIn(); }}>{L('signin')}</button>
+          </div>
+        ) : state === 'done' ? (
+          <div className="oksplash">
+            <OrderProgress step={2} steps={['prog_details','co_prog_pay','co_prog_pts']} lang={lang} />
+            <div className="big">✓</div>
+            <h3>{L('co_done_h')}</h3>
+            <p className="msub" style={{marginTop:8}}>{L('co_done_p')}</p>
+            <div style={{display:'flex',gap:8,justifyContent:'center',flexWrap:'wrap',marginTop:8}}>
+              <button className="btn btn-gold btn-sm" onClick={() => { onClose(); onWallet && onWallet(); }}>{L('co_wallet')}</button>
+              <button className="btn btn-ghost btn-sm" onClick={onClose}>{L('co_close')}</button>
+            </div>
+          </div>
+        ) : (
+          <div>
+            <OrderProgress step={1} steps={['prog_details','co_prog_pay','co_prog_pts']} busy={state === 'sending'} lang={lang} />
+            <h3>{L('co_title')}</h3>
+            <p className="msub">{L('co_sub')}</p>
+            <div className="ordersum" style={{flexDirection:'column',gap:6}}>
+              {T ? <div style={{display:'flex',justifyContent:'space-between',gap:10}}><span>{L('co_daily')}</span><b>{tf(lang,'co_daily_v',{ n: DAILY_GOLD[T.id], d: TERM_DAYS[order.term] })}</b></div>
+                 : <div style={{display:'flex',justifyContent:'space-between',gap:10}}><span>{L('co_points')}</span><b>{fmt(q.base)}</b></div>}
+              {q.yrBonus > 0 && <div style={{display:'flex',justifyContent:'space-between',gap:10,color:'var(--green)'}}><span>{L('co_yr')}</span><b style={{color:'var(--green)'}}>+{fmt(q.yrBonus)}</b></div>}
+              {q.bonus.lines.map((l, i) => <div key={i} style={{display:'flex',justifyContent:'space-between',gap:10,color:'var(--green)'}}><span>{bonusText(lang, l)}</span><b style={{color:'var(--green)'}}>+{fmt(l.pts)}</b></div>)}
+              <div style={{display:'flex',justifyContent:'space-between',gap:10,borderTop:'1px solid var(--line2)',paddingTop:8}}><span>{T ? L('co_today') : L('co_get')}</span><b>{fmt(T ? q.credit + DAILY_GOLD[T.id] : q.credit)} {L('pts_unit')}</b></div>
+              <div style={{display:'flex',justifyContent:'space-between',gap:10}}><span>{L('co_pay')}</span><b>${q.price.toFixed(2)}</b></div>
+            </div>
+            {blockedOnce && <div className="alert err" style={{marginBottom:12}}>{L('co_once')}</div>}
+            {method !== 'crypto' && cryptoQ && cryptoQ.credit > q.credit && <div className="prule" style={{marginBottom:14}}>{tf(lang,'co_crypto_tip',{ n: fmt(cryptoQ.credit - q.credit) })}</div>}
+
+            <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>{L('pay_with')}</label>
+            <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:6,marginBottom:16}}>
+              {PAYMENT_METHODS.map(m => (
+                <div key={m.id} role="button" tabIndex={0} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setMethod(m.id); } }} onClick={() => setMethod(m.id)} style={{padding:'10px 4px',border:'1px solid ' + (method === m.id ? 'var(--gold)' : 'var(--line)'),borderRadius:10,background:method === m.id ? 'var(--gold-dim)' : 'transparent',color:method === m.id ? 'var(--ink)' : 'var(--muted)',fontSize:12,fontWeight:700,cursor:'pointer',textAlign:'center'}}>
+                  {m.label}{m.id === 'crypto' && <div style={{color:'var(--green)',fontSize:11}}>+{PTS.crypto}%</div>}
+                </div>
+              ))}
+            </div>
+            {(method === 'cashapp' || method === 'venmo') && (
+              <div>
+                <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>{L('co_send_to')} ${q.price.toFixed(2)}</label>
+                <div onClick={() => copyText(PAYMENT_HANDLES[method], 'handle')} style={{background:'var(--bg)',border:'1px solid var(--line)',borderRadius:12,padding:'12px 14px',display:'flex',justifyContent:'space-between',alignItems:'center',cursor:'pointer',marginBottom:14}}>
+                  <span style={{fontSize:16,fontWeight:700}}>{PAYMENT_HANDLES[method]}</span>
+                  <span style={{fontSize:12,color:copied === 'handle' ? 'var(--green)' : 'var(--muted)'}}>{copied === 'handle' ? '✓' : L('co_copy')}</span>
+                </div>
+              </div>
+            )}
+            {method === 'kofi' && <div className="quote" style={{marginBottom:14}}>Ko-fi: ${q.price.toFixed(2)} · <a href="https://ko-fi.com/standoff263277" target="_blank" rel="noopener">ko-fi.com/standoff263277 →</a></div>}
+            {method === 'crypto' && (
+              <div style={{marginBottom:14}}>
+                <label style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>{L('co_send_to')} ${q.price.toFixed(2)}</label>
+                <div style={{display:'flex',flexDirection:'column',gap:8}}>
+                  {CRYPTO_WALLETS.map(w => (
+                    <div key={w.name} onClick={() => copyText(w.addr, w.symbol)} style={{display:'flex',alignItems:'center',gap:10,padding:'10px 12px',background:'var(--bg)',border:'1px solid var(--line)',borderRadius:12,cursor:'pointer'}}>
+                      <div style={{width:32,height:32,borderRadius:'50%',background:w.color + '22',display:'flex',alignItems:'center',justifyContent:'center',fontSize:10,fontWeight:800,color:w.color,flexShrink:0}}>{w.symbol}</div>
+                      <div style={{flex:1,minWidth:0}}>
+                        <div style={{fontSize:13,fontWeight:700}}>{w.name} {w.note && <span style={{fontSize:11,color:'var(--muted)'}}>({w.note})</span>}</div>
+                        <div style={{fontSize:11,color:'var(--muted)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{w.addr}</div>
+                      </div>
+                      <span style={{fontSize:12,color:copied === w.symbol ? 'var(--green)' : 'var(--muted)',flexShrink:0}}>{copied === w.symbol ? '✓' : L('co_copy')}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            {isCard && (
+              <div>
+                <div className="quote" style={{marginBottom:12}}>{tf(lang,'co_gc',{ p: '$' + q.price.toFixed(2) })}</div>
+                <input type="text" value={gcCode} onChange={e => setGcCode(e.target.value.toUpperCase())} placeholder="XXXX-XXXX-XXXX" aria-label="Gift card code" style={{letterSpacing:'0.05em',marginBottom:12}} />
+              </div>
+            )}
+            <label htmlFor="pco-user" style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>{L('co_user')}</label>
+            <input id="pco-user" value={username} onChange={e => setUsername(e.target.value)} placeholder="e.g. CamelS2" style={{marginBottom:12}} />
+            <label htmlFor="pco-dc" style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',marginBottom:6}}>{L('co_discord')}</label>
+            <input id="pco-dc" value={discord} onChange={e => setDiscord(e.target.value)} placeholder="e.g. camel5961" style={{marginBottom:14}} />
+            <button className="btn btn-gold" style={{width:'100%'}} disabled={!can} onClick={submit}>{state === 'sending' ? L('co_sending') : L('co_place')}</button>
+            {state === 'error' && <div className="alert err">{L('co_err')}</div>}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ---------------- Homepage sections ----------------
+function PointsHow({ lang }) {
+  return (
+    <section id="how">
+      <div className="wrap">
+        <div className="sect-head"><div className="eyebrow">{t(lang,'how_e')}</div><h2>{t(lang,'how_h')}</h2></div>
+        <div className="steps">
+          <div className="step"><h3>{t(lang,'how1_h')}</h3><p>{t(lang,'how1_p')}</p></div>
+          <div className="step"><h3>{t(lang,'how2_h')}</h3><p>{t(lang,'how2_p')}</p></div>
+          <div className="step"><h3>{t(lang,'how3_h')}</h3><p>{t(lang,'how3_p')}</p></div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function PointsBundles({ lang, wallet, tier, flash, method, setMethod, open }) {
+  const ctx = { tier, hasPurchased: wallet.hasPurchased, lifetimeBought: wallet.lifetimeBought, flash };
+  const sample = pointBonuses(Object.assign({ base:1000, method, kind:'bundle' }, ctx));
+  return (
+    <section id="packs">
+      <div className="wrap">
+        <div className="sect-head">
+          <div className="eyebrow">{t(lang,'b_eyebrow')}</div>
+          <h2>{t(lang,'b_h2a')} <span className="goldtext">{t(lang,'b_h2b')}</span></h2>
+          <p>{tf(lang,'b_p',{ n: PTS.crypto })}</p>
+        </div>
+        <PayMethodSeg method={method} setMethod={setMethod} lang={lang} />
+        {sample.lines.length > 0 && (
+          <div style={{display:'flex',gap:6,flexWrap:'wrap',alignItems:'center',margin:'-6px 0 18px',fontSize:13.5,color:'var(--muted)'}}>
+            <span>{t(lang,'your_bonuses')}</span>{sample.lines.map((l, i) => <span key={i} className="ptag bonus">{bonusText(lang, l)}</span>)}
+          </div>
+        )}
+        <div className="grid4">
+          {BUNDLES.map(b => {
+            const bn = pointBonuses(Object.assign({ base:b.pts, method, kind:'bundle' }, ctx));
+            const total = b.pts + bn.pts;
+            const hidden = b.once && wallet.hasPurchased;
+            return (
+              <div key={b.id} className={'card' + (bn.pts ? ' hot' : '')} style={hidden ? {opacity:.55} : null}>
+                {b.tag && <div className="badge">{b.tag}</div>}
+                <h3>{b.name}</h3>
+                <div className="price" style={{marginTop:10}}>{fmt(total)} <small>{t(lang,'pts_short')}</small></div>
+                <div className={'bonusline' + (bn.pts ? '' : ' off')}>{bn.pts ? tf(lang,'b_bonus_inc',{ a: fmt(b.pts), b: fmt(bn.pts) }) : tf(lang,'b_crypto_hint',{ n: fmt(Math.round(b.pts * PTS.crypto / 100)) })}</div>
+                <div className="sub" style={{margin:'10px 0 14px'}}><b style={{color:'var(--ink)',fontSize:20,letterSpacing:'-.03em'}}>${b.price.toFixed(2)}</b> · {fmt(Math.round(total / b.price))} {t(lang,'b_per')}</div>
+                <button className="btn btn-gold" style={{marginTop:'auto'}} disabled={hidden} onClick={() => open({ kind:'bundle', item:b.id })}>{tf(lang,'b_buy',{ name: b.name })}</button>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function CustomPoints({ lang, wallet, tier, flash, method, setMethod, open, showHead }) {
+  const [amt, setAmt] = useState(2000);
+  const ctx = { tier, hasPurchased: wallet.hasPurchased, lifetimeBought: wallet.lifetimeBought, flash };
+  const q = quoteOrder({ kind:'custom', basePts: amt, method }, ctx);
+  return (
+    <div style={{maxWidth:560,margin:'0 auto'}}>
+      {showHead && <PayMethodSeg method={method} setMethod={setMethod} lang={lang} />}
+      <div className="card" style={{transform:'none'}}>
+        <label htmlFor="cu-amt" style={{fontSize:13,color:'var(--muted)',fontWeight:700,display:'block',marginBottom:7}}>{t(lang,'cu_label')}</label>
+        <input id="cu-amt" type="number" min={100} step={100} value={amt} onChange={e => setAmt(Math.max(0, parseInt(e.target.value) || 0))} />
+        <div className="chips">{[1000, 5000, 10000, 25000].map(v => <button key={v} type="button" className="chip" onClick={() => setAmt(v)}>{fmt(v)}</button>)}</div>
+        <div className="quote" style={{marginTop:10}}>{tf(lang,'cu_pay',{ p: '$' + q.price.toFixed(2), n: fmt(q.credit) })}</div>
+        {q.bonus.lines.length > 0 && <div style={{display:'flex',gap:6,flexWrap:'wrap',marginTop:10}}>{q.bonus.lines.map((l, i) => <span key={i} className="ptag bonus">{bonusText(lang, l)}</span>)}</div>}
+        <div className="sub" style={{marginTop:10,marginBottom:12}}>{tf(lang,'cu_rate',{ r: PTS.rates[tier || 'none'] })}</div>
+        <button className="btn btn-gold" style={{width:'100%'}} disabled={amt < 100} onClick={() => open({ kind:'custom', basePts: amt })}>{t(lang,'cu_buy')}</button>
+      </div>
+    </div>
+  );
+}
+
+function PointsSubs({ lang, wallet, method, setMethod, open }) {
+  const [yearly, setYearly] = useState(false);
+  const term = yearly ? 'yearly' : 'monthly';
+  return (
+    <section id="subs" style={{background:'var(--bg2)'}}>
+      <div className="wrap">
+        <div className="sect-head">
+          <div className="eyebrow">{t(lang,'subs_eyebrow')}</div>
+          <h2>{t(lang,'ps_h2a')} <span className="goldtext">{t(lang,'ps_h2b')}</span></h2>
+          <p>{t(lang,'ps_p')}</p>
+        </div>
+        <PayMethodSeg method={method} setMethod={setMethod} lang={lang} />
+        <div className="toggle" role="tablist">
+          <button className={!yearly ? 'on' : ''} onClick={() => setYearly(false)}>{t(lang,'ps_monthly')}</button>
+          <button className={yearly ? 'on' : ''} onClick={() => setYearly(true)}>{t(lang,'ps_yearly')} <span className="save">{tf(lang,'ps_save',{ n: maxYearlySave })}</span></button>
+        </div>
+        <div className="grid3">
+          {TIERS.map(T => {
+            const crypto = method === 'crypto' ? Math.round(DAILY_GOLD[T.id] * TERM_DAYS[term] * PTS.crypto / 100) : 0;
+            const mine = wallet.tier === T.id;
+            return (
+              <div key={T.id} className={'card' + (T.best ? ' best' : '') + (mine ? ' mine' : '')} style={T.best || mine ? {paddingTop:34} : null}>
+                {mine ? <div className="badge" style={{background:'#2F5FB3'}}>{t(lang,'s_yours')}</div> : T.tag && <div className="badge">{T.tag}</div>}
+                <h3>{T.name}</h3>
+                <div className="price">${yearly ? T.yr : T.mo}<small>/{yearly ? 'yr' : 'mo'}</small></div>
+                <div className="goldamt goldtext">+{DAILY_GOLD[T.id]} {t(lang,'s_daily')}</div>
+                <ul className="feat">
+                  <li>{tf(lang,'s_month',{ n: fmt(T.monthly) })}</li>
+                  {yearly && <li>{tf(lang,'s_yrbonus',{ n: fmt(YEARLY_BONUS[T.id]) })}</li>}
+                  {crypto > 0 && <li style={{color:'var(--green)',fontWeight:700}}>{tf(lang,'s_crypto',{ n: fmt(crypto) })}</li>}
+                  <li>{tf(lang,'s_pack',{ n: PACK_DISC[T.id] })}</li>
+                  <li>{tf(lang,'s_rate',{ r: PTS.rates[T.id] })}</li>
+                </ul>
+                <button className={'btn ' + (T.best ? 'btn-gold' : 'btn-ghost')} onClick={() => open({ kind:'sub', tier:T.id, term })}>{tf(lang, mine ? 's_extend' : 's_get', { name: T.name })}</button>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function EarnTeaser({ lang, goWallet }) {
+  return (
+    <section style={{paddingTop:0}}>
+      <div className="wrap">
+        <div className="card" style={{transform:'none',flexDirection:'row',alignItems:'center',justifyContent:'space-between',gap:16,flexWrap:'wrap'}}>
+          <div style={{flex:1,minWidth:240}}>
+            <div className="eyebrow">{t(lang,'tab_earn')}</div>
+            <h3 style={{fontSize:22,margin:'6px 0 4px'}}>{t(lang,'earn_teaser_h')}</h3>
+            <p className="sub" style={{marginBottom:0}}>{t(lang,'earn_teaser_p')}</p>
+          </div>
+          <button className="btn btn-gold" onClick={() => goWallet('earn')}>{t(lang,'earn_cta')}</button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ---------------- Wallet page (replaces the old dashboard) ----------------
+function nextSundayClose(now) {
+  const d = new Date(now); const c = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), 20));
+  c.setUTCDate(c.getUTCDate() + ((7 - c.getUTCDay()) % 7)); if (c.getTime() <= now) c.setUTCDate(c.getUTCDate() + 7);
+  return c.getTime();
+}
+function timeLeft(lang, ms) { const h = Math.max(0, Math.floor(ms / 3600000)); return tf(lang,'left',{ d: Math.floor(h / 24), h: h % 24 }); }
+const KIND_TAG = { buy:['buy','k_buy'], bonus:['bonus','k_bonus'], sub:['sub','k_sub'], earn:['earn','k_earn'], contest:['contest','k_contest'], ex:['', 'k_ex'], adjust:['', 'k_adjust'] };
+
+function StreakRow({ wallet, lang }) {
+  const day = wallet.streak % 7;
+  const filled = wallet.checkedToday ? (day === 0 && wallet.streak > 0 ? 7 : day) : day;
+  return (
+    <div className="streak">
+      {[0,1,2,3,4,5,6].map(i => {
+        const today = !wallet.checkedToday && i === day;
+        return <div key={i} className={'sday' + (i < filled ? ' done' : '') + (today ? ' today' : '') + (i === 6 ? ' seven' : '')}><b>+{i === 6 ? PTS.checkin + PTS.streak7 : PTS.checkin}</b>{t(lang,'ci_day')} {i + 1}</div>;
+      })}
+    </div>
+  );
+}
+
+function CheckinCard({ user, wallet, lang }) {
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState('');
+  const day = wallet.streak % 7;
+  const nextPts = PTS.checkin + ((wallet.checkedToday ? 0 : day) === 6 ? PTS.streak7 : 0);
+  const go = async () => {
+    setBusy(true); setErr('');
+    try { await db.ref('points/' + user.uid + '/checkins/' + dayIdx(nowMs())).set({ ts: svTs() }); }
+    catch (e) { setErr(t(lang,'err_generic')); }
+    setBusy(false);
+  };
+  return (
+    <div className="card" style={{transform:'none'}}>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:10}}>
+        <div className="eyebrow">{t(lang,'ci_title')}</div>
+        <span className="ptag earn">{tf(lang,'ci_streak',{ n: wallet.streak })}</span>
+      </div>
+      <StreakRow wallet={wallet} lang={lang} />
+      {wallet.checkedToday
+        ? <div style={{color:'var(--green)',fontWeight:700,fontSize:14}}>{t(lang,'ci_done')}</div>
+        : <button className="btn btn-gold" style={{width:'100%',background:'var(--green)'}} disabled={busy} onClick={go}>{tf(lang,'ci_btn',{ n: nextPts })}</button>}
+      {err && <div className="alert err">{err}</div>}
+      <div className="sub" style={{marginTop:10,marginBottom:0,fontSize:13}}>{tf(lang,'ci_note',{ n: PTS.streak7 })}</div>
+    </div>
+  );
+}
+
+function SubCard({ wallet, legacyTier, legacyClaimed, onLegacyClaim, goSubs, lang }) {
+  if (wallet.tier) {
+    const T = TIERS.find(x => x.id === wallet.tier);
+    return (
+      <div className="card mine" style={{transform:'none'}}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:10}}>
+          <div className="eyebrow" style={{color:'#2F5FB3'}}>{tf(lang,'sub_plan',{ tier: T.name })}</div>
+          <span className="ptag sub">{tf(lang,'sub_left',{ n: wallet.daysLeft })}</span>
+        </div>
+        <div style={{marginTop:8}}><span className="bigpts" style={{fontSize:36}}>+{DAILY_GOLD[T.id]}</span><span className="ptunit">{t(lang,'sub_daily')}</span></div>
+        <p className="sub" style={{marginTop:6,marginBottom:12}}>{t(lang,'sub_auto')}</p>
+        <button className="btn btn-ghost btn-sm" onClick={goSubs}>{wallet.daysLeft <= 7 ? t(lang,'sub_renew') : t(lang,'sub_see')}</button>
+      </div>
+    );
+  }
+  if (legacyTier) {
+    return (
+      <div className="card" style={{transform:'none'}}>
+        <div className="eyebrow">{tf(lang,'sub_plan',{ tier: tierName(legacyTier) })}</div>
+        <p className="sub" style={{marginTop:8}}>{t(lang,'sub_legacy')}</p>
+        {legacyClaimed ? <div style={{color:'var(--green)',fontWeight:700,fontSize:14}}>{t(lang,'sub_legacy_done')}</div>
+          : <button className="btn btn-gold btn-sm" onClick={onLegacyClaim}>{tf(lang,'sub_legacy_btn',{ n: DAILY_GOLD[legacyTier] })}</button>}
+      </div>
+    );
+  }
+  return (
+    <div className="card" style={{transform:'none'}}>
+      <div className="eyebrow">{t(lang,'nav_subs')}</div>
+      <p className="sub" style={{marginTop:8,marginBottom:12}}>{t(lang,'sub_none')}</p>
+      <button className="btn btn-gold btn-sm" onClick={goSubs}>{t(lang,'sub_see')}</button>
+    </div>
+  );
+}
+
+function HistoryList({ wallet, orders, lang }) {
+  const pend = orders.filter(o => o.status === 'pending' || o.status === 'rejected').slice(0, 10);
+  const rows = wallet.history.slice(0, 60);
+  return (
+    <div className="pstack" style={{marginTop:14}}>
+      {pend.length > 0 && (
+        <div className="lrows">
+          <div className="lhead"><h3 style={{fontSize:16}}>{t(lang,'ord_pending')}</h3><span className="sub" style={{marginBottom:0,fontSize:13}}>{t(lang,'ord_pending_p')}</span></div>
+          {pend.map(o => (
+            <div key={o.id} className="lrow">
+              <span className={'ptag ' + (o.status === 'rejected' ? 'bad' : 'pend')}>{o.status === 'rejected' ? t(lang,'ord_rejected') : t(lang,'ord_wait')}</span>
+              <div className="lmain"><div className="ltitle">{o.title}</div><div className="lmeta">${Number(o.price || 0).toFixed(2)} · {new Date(o.createdAt || 0).toLocaleDateString()}</div></div>
+              <div className="lamt pend">+{fmt(o.kind === 'sub' ? (o.credit || 0) + (DAILY_GOLD[o.tier] || 0) : (o.credit || 0))}</div>
+            </div>
+          ))}
+        </div>
+      )}
+      <div className="lrows">
+        <div className="lhead"><h3 style={{fontSize:16}}>{t(lang,'hist_title')}</h3></div>
+        {rows.length === 0 ? <div style={{padding:'22px 18px',color:'var(--low)'}}>{t(lang,'hist_empty')}</div> : rows.map(h => {
+          const k = KIND_TAG[h.kind] || KIND_TAG.adjust;
+          return (
+            <div key={h.id} className="lrow">
+              <span className={'ptag ' + k[0]}>{t(lang, k[1])}</span>
+              <div className="lmain"><div className="ltitle">{h.lk ? tf(lang, h.lk, h.arg) : h.label}</div><div className="lmeta">{h.ts ? new Date(h.ts).toLocaleDateString() : ''}{h.status ? ' · ' + t(lang, 'xs_' + h.status) : ''}</div></div>
+              <div className={'lamt' + (h.amt > 0 ? ' plus' : '')}>{h.amt > 0 ? '+' : '−'}{fmt(Math.abs(h.amt))}</div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function EarnTab({ user, wallet, data, cfg, lang }) {
+  const [busy, setBusy] = useState('');
+  const wk = weekIdx(nowMs());
+  const tasks = [['discord', cfg.discordUrl], ['youtube', cfg.youtubeUrl], ['tiktok', cfg.tiktokUrl]].filter(x => x[1]);
+  const doneTask = id => !!(data && data.tasks && data.tasks[id]);
+  const videoDone = !!(data && data.video && data.video[wk]);
+  const claim = async (path, url) => {
+    if (url) { try { window.open(url, '_blank', 'noopener'); } catch (e) {} }
+    setBusy(path);
+    try { await db.ref('points/' + user.uid + '/' + path).set({ ts: svTs() }); } catch (e) {}
+    setBusy('');
+  };
+  return (
+    <div className="pgrid2">
+      <div className="lrows">
+        <div className="lhead"><h3 style={{fontSize:16}}>{t(lang,'earn_tasks')}</h3><span className="sub" style={{marginBottom:0,fontSize:13}}>{t(lang,'earn_ticket')}</span></div>
+        {tasks.map(([id, url]) => (
+          <div key={id} className="ptask">
+            <div className="lmain"><div style={{fontWeight:700}}>{t(lang,'task_' + id)}</div><div className="lmeta" style={{fontSize:13,color:'var(--low)'}}>{t(lang,'task_once')}</div></div>
+            <div className="pp">+{PTS.tasks[id]}</div>
+            {doneTask(id) ? <span style={{color:'var(--green)',fontWeight:700,fontSize:14}}>{t(lang,'task_done')}</span>
+              : <button className="btn btn-gold btn-sm" disabled={busy === 'tasks/' + id} onClick={() => claim('tasks/' + id, url)}>{t(lang,'task_go')}</button>}
+          </div>
+        ))}
+        {cfg.videoUrl && Number(cfg.videoWeek) === wk && (
+          <div className="ptask">
+            <div className="lmain"><div style={{fontWeight:700}}>{t(lang,'task_video')}</div><div style={{fontSize:13,color:'var(--low)'}}>{t(lang,'task_weekly')}</div></div>
+            <div className="pp">+{PTS.video}</div>
+            {videoDone ? <span style={{color:'var(--green)',fontWeight:700,fontSize:14}}>{t(lang,'task_done')}</span>
+              : <button className="btn btn-gold btn-sm" disabled={busy === 'video/' + wk} onClick={() => claim('video/' + wk, cfg.videoUrl)}>{t(lang,'task_go')}</button>}
+          </div>
+        )}
+        {tasks.length === 0 && !(cfg.videoUrl && Number(cfg.videoWeek) === wk) && <div style={{padding:'22px 18px',color:'var(--low)'}}>{t(lang,'earn_none')}</div>}
+      </div>
+      <div className="pstack">
+        <CheckinCard user={user} wallet={wallet} lang={lang} />
+        <div className="prule">{t(lang,'earn_rules')}</div>
+      </div>
+    </div>
+  );
+}
+
+function Sparkline({ series }) {
+  if (!series || series.length < 2) return null;
+  const w = 300, h = 64, p = 6, min = Math.min(...series), max = Math.max(...series), span = (max - min) || 1;
+  const pts = series.map((v, i) => [p + i * (w - 2 * p) / (series.length - 1), h - p - (v - min) / span * (h - 2 * p)]);
+  const line = pts.map((q, i) => (i ? 'L' : 'M') + q[0].toFixed(1) + ' ' + q[1].toFixed(1)).join(' ');
+  const last = pts[pts.length - 1];
+  return (
+    <svg className="spark" viewBox={'0 0 ' + w + ' ' + h} preserveAspectRatio="none" aria-hidden="true">
+      <path d={line + ' L ' + last[0] + ' ' + h + ' L ' + pts[0][0] + ' ' + h + ' Z'} fill="var(--gold-dim)" />
+      <path d={line} fill="none" stroke="var(--gold)" strokeWidth="2" vectorEffect="non-scaling-stroke" />
+      <circle cx={last[0]} cy={last[1]} r="3.5" fill="var(--gold)" />
+    </svg>
+  );
+}
+
+function ContestsTab({ user, wallet, lang }) {
+  const now = nowMs(); const wk = weekIdx(now);
+  const [pc, setPc] = useState(null);
+  const [prevPc, setPrevPc] = useState(null);
+  const [draws, setDraws] = useState(null);
+  const [guess, setGuess] = useState('');
+  const [busy, setBusy] = useState(false);
+  useEffect(() => {
+    const r = db.ref('contests/priceCall/' + wk);
+    const cb = r.on('value', s => setPc(s.val() || {}), () => setPc({}));
+    db.ref('contests/priceCall/' + (wk - 1) + '/result').once('value').then(s => setPrevPc(s.val())).catch(() => {});
+    db.ref('contests/draw/' + (wk - 1) + '/winners').once('value').then(s => setDraws(s.val())).catch(() => {});
+    return () => { try { r.off('value', cb); } catch (e) {} };
+  }, [wk]);
+  const meta = pc && pc.meta;
+  const mine = pc && pc.entries && user && pc.entries[user.uid];
+  const closed = meta && meta.closesAt && now >= meta.closesAt;
+  const enter = async () => {
+    const g = parseInt(guess); if (!g || g < 1) return;
+    setBusy(true);
+    try { await db.ref('contests/priceCall/' + wk + '/entries/' + user.uid).set({ guess: g, handle: maskHandle(user.displayName || user.email || ''), ts: svTs() }); } catch (e) {}
+    setBusy(false);
+  };
+  const series = meta && meta.series ? String(meta.series).split(',').map(Number).filter(n => !isNaN(n)) : null;
+  return (
+    <div className="pgrid2">
+      <div className="card" style={{transform:'none'}}>
+        <div style={{display:'flex',justifyContent:'space-between',gap:10,alignItems:'center'}}><div className="eyebrow">{t(lang,'pc_title')}</div>{meta && !closed && <span className="ptag contest">{timeLeft(lang, meta.closesAt - now)}</span>}</div>
+        <h3 style={{fontSize:22,margin:'8px 0 4px'}}>{tf(lang,'pc_h',{ n: fmt(PTS.priceCallPrize) })}</h3>
+        <p className="sub">{t(lang,'pc_p')}</p>
+        {!meta ? <div className="prule">{t(lang,'pc_none')}</div> : (
+          <div>
+            <div className="card" style={{transform:'none',background:'var(--bg3)',padding:'14px 16px',margin:'12px 0'}}>
+              <div style={{display:'flex',justifyContent:'space-between',gap:10}}>
+                <div><div className="sub" style={{marginBottom:0,fontSize:13}}>{t(lang,'pc_skin')}</div><b style={{fontSize:16}}>{meta.skin}</b></div>
+                <div style={{textAlign:'right'}}><div className="sub" style={{marginBottom:0,fontSize:13}}>{t(lang,'pc_now')}</div><b style={{fontSize:20}} className="goldtext">{fmt(Number(meta.price) || 0)} G</b></div>
+              </div>
+              <Sparkline series={series} />
+            </div>
+            {mine ? <div className="quote">{tf(lang,'pc_yours',{ n: fmt(mine.guess) })}</div>
+              : closed ? <div className="prule">{t(lang,'pc_closed')}</div>
+              : <div>
+                  <label htmlFor="pc-guess" style={{fontSize:13,color:'var(--muted)',fontWeight:700,display:'block',marginBottom:7}}>{t(lang,'pc_guess')}</label>
+                  <div style={{display:'flex',gap:8}}>
+                    <input id="pc-guess" type="number" min="1" value={guess} onChange={e => setGuess(e.target.value)} placeholder="1265" />
+                    <button className="btn btn-gold" disabled={busy || !(parseInt(guess) > 0)} onClick={enter}>{t(lang,'pc_lock')}</button>
+                  </div>
+                </div>}
+          </div>
+        )}
+        {prevPc && prevPc.winnerHandle && <div className="sub" style={{marginTop:14,marginBottom:0,fontSize:13}}>{t(lang,'dr_last')}: {tf(lang,'pc_won',{ h: prevPc.winnerHandle, g: fmt(prevPc.guess), a: fmt(prevPc.actual) })}</div>}
+      </div>
+      <div className="pstack">
+        <div className="card" style={{transform:'none'}}>
+          <div style={{display:'flex',justifyContent:'space-between',gap:10,alignItems:'center'}}><div className="eyebrow">{t(lang,'dr_title')}</div><span className="ptag contest">{timeLeft(lang, weekStartMs(wk + 1) - now)}</span></div>
+          <h3 style={{fontSize:22,margin:'8px 0 4px'}}>{tf(lang,'dr_h',{ w: PTS.drawWinners, n: fmt(PTS.drawPrize) })}</h3>
+          <div style={{display:'flex',alignItems:'baseline',gap:10,margin:'12px 0'}}><span className="bigpts" style={{fontSize:40}}>{wallet.tickets}</span><span className="sub" style={{marginBottom:0}}>{t(lang,'dr_tickets')}</span></div>
+          <p className="sub" style={{marginBottom:0}}>{t(lang,'dr_p')}</p>
+        </div>
+        {draws && Array.isArray(draws) && draws.length > 0 && (
+          <div className="lrows">
+            <div className="lhead"><h3 style={{fontSize:16}}>{t(lang,'dr_last')}</h3></div>
+            <div className="lrow"><span className="ptag contest">{t(lang,'dr_title')}</span><div className="lmain"><div className="ltitle">{draws.join(' · ')}</div></div><div className="lamt plus">+{fmt(PTS.drawPrize)}</div></div>
+          </div>
+        )}
+        <div className="prule">{t(lang,'c_lead')}</div>
+      </div>
+    </div>
+  );
+}
+
+function ExchangeTab({ user, wallet, lang }) {
+  const L = k => t(lang, k);
+  const [amt, setAmt] = useState(() => Math.max(PTS.minExchange, Math.min(1000, Math.floor(wallet.balance))));
+  const [username, setUsername] = useState(user.displayName || '');
+  const [discord, setDiscord] = useState('');
+  const [step, setStep] = useState('amount');
+  const [active, setActive] = useState(null); // { id, amt, listPrice, username, discord }
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState('');
+  const locked = !wallet.hasPurchased;
+  const tooLow = amt < PTS.minExchange, tooHigh = amt > wallet.balance;
+  const can = !locked && !tooLow && !tooHigh && username.trim() && discord.trim() && !busy;
+
+  const start = async () => {
+    if (!can) return;
+    setBusy(true); setErr('');
+    const listPrice = +(amt + randListOffset()).toFixed(2);
+    const rec = { amt, listPrice, status:'awaiting_listing', createdAt: svTs(), username: username.trim(), discord: discord.trim() };
+    try {
+      const ref = db.ref('points/' + user.uid + '/exchanges').push();
+      await ref.set(rec);
+      setActive({ id: ref.key, amt, listPrice, username: rec.username, discord: rec.discord });
+      setStep('listing');
+    } catch (e) { setErr(L('err_generic')); }
+    setBusy(false);
+  };
+  const resume = x => { setActive({ id: x.id, amt: x.amt, listPrice: x.listPrice, username: x.username, discord: x.discord }); setStep('listing'); };
+  const cancel = async x => { try { await db.ref('points/' + user.uid + '/exchanges/' + x.id + '/status').set('cancelled'); } catch (e) {} };
+  const sendListing = async (pattern, screenshot) => {
+    const payload = { embeds:[{ title:'🔫 G22 "Flock" listing — Points exchange', description: 'Buy out this listing to fill a points exchange. Then mark it filled in Admin → Points.', color: 16766720,
+      fields:[ { name:'Username', value: active.username || '—', inline:true }, { name:'Discord', value: active.discord || '—', inline:true }, { name:'Pattern', value: pattern, inline:true },
+               { name:'Gold', value: fmt(active.amt) + ' G', inline:true }, { name:'Listed For', value: fmtG(active.listPrice) + ' G', inline:true }, { name:'Account', value: user.email || user.uid, inline:false } ],
+      timestamp: new Date().toISOString() }] };
+    let ok = false, screenshotUrl = null;
+    try {
+      const ext = (screenshot.name.match(/\.[a-zA-Z0-9]+$/) || ['.png'])[0];
+      const fd = new FormData(); fd.append('payload_json', JSON.stringify(payload)); fd.append('files[0]', screenshot, 'listing-screenshot' + ext);
+      const res = await fetch(WEBHOOK + '?wait=true', { method:'POST', body: fd }); ok = res.ok;
+      try { const msg = await res.json(); screenshotUrl = (msg && msg.attachments && msg.attachments[0] && msg.attachments[0].url) || null; } catch (e) {}
+    } catch (e) {}
+    if (!ok) return false;
+    try { await db.ref('points/' + user.uid + '/exchanges/' + active.id).update({ status:'listed', flockPattern: pattern, screenshotUrl }); } catch (e) { return false; }
+    setStep('done');
+    return true;
+  };
+  const steps = ['ex_prog_amt','prog_listing','prog_gold'];
+
+  let body;
+  if (step === 'listing' && active) {
+    body = (<div><OrderProgress step={2} steps={steps} lang={lang} /><FlockStep listPrice={active.listPrice} heading={tf(lang,'ex_list_h',{ n: fmt(active.amt) })} submitLabel={L('flock_send')} onSubmit={sendListing} lang={lang} /></div>);
+  } else if (step === 'done' && active) {
+    body = (
+      <div style={{textAlign:'center'}}>
+        <OrderProgress step={3} steps={steps} lang={lang} />
+        <div style={{fontSize:40,fontWeight:800,color:'var(--green)'}}>✓</div>
+        <h3>{tf(lang,'ex_done_h',{ n: fmt(active.amt) })}</h3>
+        <p className="msub" style={{marginTop:8}}>{tf(lang,'ex_done_p',{ n: fmt(active.amt) })}</p>
+        <button className="btn btn-ghost btn-sm" onClick={() => { setActive(null); setStep('amount'); }}>{L('ex_more')}</button>
+      </div>
+    );
+  } else {
+    body = (
+      <div>
+        <OrderProgress step={1} steps={steps} busy={busy} lang={lang} />
+        <label htmlFor="ex-amt" style={{fontSize:13,color:'var(--muted)',fontWeight:700,display:'block',marginBottom:7}}>{L('ex_amount')}</label>
+        <input id="ex-amt" type="number" min={PTS.minExchange} step={50} value={amt} onChange={e => setAmt(Math.max(0, parseInt(e.target.value) || 0))} />
+        <div className="chips">{[250, 1000, 5000].map(v => <button key={v} type="button" className="chip" onClick={() => setAmt(v)}>{fmt(v)}</button>)}<button type="button" className="chip" onClick={() => setAmt(Math.max(0, Math.floor(wallet.balance)))}>{L('ex_all')} ({fmt(Math.max(0, Math.floor(wallet.balance)))})</button></div>
+        <div className="quote" style={{marginTop:10,background: tooLow || tooHigh ? '#FBEBE9' : undefined, color: tooLow || tooHigh ? 'var(--danger)' : undefined}}>
+          {tooLow ? tf(lang,'ex_min',{ n: fmt(PTS.minExchange) }) : tooHigh ? tf(lang,'ex_have',{ n: fmt(Math.floor(wallet.balance)) }) : tf(lang,'ex_get',{ n: fmt(amt) })}
+        </div>
+        {locked && <div className="prule" style={{marginTop:10,color:'var(--danger)'}}>{L('ex_locked')}</div>}
+        <label htmlFor="ex-user" style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',margin:'14px 0 6px'}}>{L('co_user')}</label>
+        <input id="ex-user" value={username} onChange={e => setUsername(e.target.value)} placeholder="e.g. CamelS2" />
+        <label htmlFor="ex-dc" style={{fontSize:13,color:'var(--muted)',fontWeight:600,display:'block',margin:'12px 0 6px'}}>{L('co_discord')}</label>
+        <input id="ex-dc" value={discord} onChange={e => setDiscord(e.target.value)} placeholder="e.g. camel5961" />
+        <button className="btn btn-gold" style={{width:'100%',marginTop:14}} disabled={!can} onClick={start}>{busy ? L('co_sending') : L('ex_continue')}</button>
+        {err && <div className="alert err">{err}</div>}
+      </div>
+    );
+  }
+  return (
+    <div className="pgrid2">
+      <div className="card" style={{transform:'none'}}>{body}</div>
+      <div className="pstack">
+        <div className="card" style={{transform:'none'}}>
+          <div className="eyebrow">{L('w_balance')}</div>
+          <div style={{marginTop:10}}><span className="bigpts" style={{fontSize:40}}>{fmt(Math.floor(wallet.balance))}</span><span className="ptunit">{L('pts_unit')}</span></div>
+          <div className="prule" style={{marginTop:14}}>{tf(lang,'ex_rule',{ n: fmt(PTS.minExchange) })}</div>
+        </div>
+        {wallet.openEx.length > 0 && step === 'amount' && (
+          <div className="lrows">
+            <div className="lhead"><h3 style={{fontSize:16}}>{L('ex_open')}</h3></div>
+            {wallet.openEx.map(x => (
+              <div key={x.id} className="lrow">
+                <div className="lmain"><div className="ltitle">{fmt(x.amt)} G</div><div className="lmeta">{fmtG(x.listPrice || 0)} G</div></div>
+                <button className="btn btn-gold btn-sm" onClick={() => resume(x)}>{L('ex_finish')}</button>
+                <button className="btn btn-ghost btn-sm" onClick={() => cancel(x)}>{L('ex_cancel')}</button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function WalletPage({ user, signIn, pts, cfg, legacyUser, tab, setTab, goSubs, goBuy, lang }) {
+  const [claimOpen, setClaimOpen] = useState(false);
+  const [legacyToday, setLegacyToday] = useState(null);
+  useEffect(() => {
+    if (!user) return;
+    const r = db.ref('dailyClaims/' + user.uid + '/' + new Date().toISOString().slice(0, 10));
+    const cb = r.on('value', s => setLegacyToday(s.val()), () => {});
+    return () => { try { r.off('value', cb); } catch (e) {} };
+  }, [user]);
+  if (!user) return (
+    <section><div className="wrap" style={{textAlign:'center',maxWidth:520}}>
+      <div className="eyebrow">{t(lang,'nav_dash')}</div>
+      <h2 style={{margin:'10px 0 14px'}}>{t(lang,'w_signin_h')}</h2>
+      <p style={{color:'var(--muted)',marginBottom:22}}>{t(lang,'w_signin_p')}</p>
+      <button className="btn btn-gold" onClick={signIn}>{t(lang,'signin')}</button>
+    </div></section>
+  );
+  const { wallet, data, orders } = pts;
+  const legacyTier = !wallet.tier ? activeTier(legacyUser) : null;
+  const tabs = [['wallet','tab_wallet'],['earn','tab_earn'],['contests','tab_contests'],['exchange','tab_exchange']];
+  return (
+    <section><div className="wrap">
+      <div className="sect-head"><div className="eyebrow">{t(lang,'nav_dash')}</div><h2>{t(lang,'w_title')}</h2><p>{t(lang,'w_lead')}</p></div>
+      <div className="subtabs" role="tablist">{tabs.map(([id, k]) => <button key={id} role="tab" aria-selected={tab === id} className={tab === id ? 'on' : ''} onClick={() => setTab(id)}>{t(lang,k)}</button>)}</div>
+      {!pts.ready ? <p className="msub">…</p> : tab === 'earn' ? <EarnTab user={user} wallet={wallet} data={data} cfg={cfg} lang={lang} />
+        : tab === 'contests' ? <ContestsTab user={user} wallet={wallet} lang={lang} />
+        : tab === 'exchange' ? <ExchangeTab user={user} wallet={wallet} lang={lang} />
+        : (
+        <div>
+          <div className="pgrid2">
+            <div className="card" style={{transform:'none'}}>
+              <div className="eyebrow">{t(lang,'w_balance')}</div>
+              <div style={{marginTop:10}}><span className="bigpts">{fmt(Math.floor(wallet.balance))}</span><span className="ptunit">{t(lang,'pts_unit')}</span></div>
+              <div className="sub" style={{marginTop:6}}>{tf(lang,'w_worth',{ n: fmt(Math.max(0, Math.floor(wallet.balance))) })}</div>
+              <div style={{display:'flex',gap:18,flexWrap:'wrap',margin:'6px 0 18px',fontSize:14,color:'var(--muted)'}}>
+                <span><b style={{color:'var(--ink)'}}>{fmt(wallet.bought)}</b> {t(lang,'w_paid')}</span>
+                <span><b style={{color:'var(--ink)'}}>{fmt(wallet.earned)}</b> {t(lang,'w_free')}</span>
+                <span><b style={{color:'var(--ink)'}}>{wallet.tickets}</b> {t(lang,'w_tickets')}</span>
+              </div>
+              <div style={{display:'flex',gap:10,flexWrap:'wrap'}}>
+                <button className="btn btn-gold" onClick={() => setTab('exchange')}>{t(lang,'w_exchange')}</button>
+                <button className="btn btn-ghost" onClick={goBuy}>{t(lang,'w_buy')}</button>
+              </div>
+            </div>
+            <div className="pstack">
+              <SubCard wallet={wallet} legacyTier={legacyTier} legacyClaimed={!!legacyToday} onLegacyClaim={() => setClaimOpen(true)} goSubs={goSubs} lang={lang} />
+              <CheckinCard user={user} wallet={wallet} lang={lang} />
+            </div>
+          </div>
+          <HistoryList wallet={wallet} orders={orders} lang={lang} />
+        </div>
+      )}
+      {claimOpen && legacyTier && <ClaimModal user={user} tier={legacyTier} amount={DAILY_GOLD[legacyTier] || 0} username={(legacyUser && legacyUser.standoffUsername) || user.displayName} onClose={() => setClaimOpen(false)} onClaimed={() => setClaimOpen(false)} lang={lang} />}
+    </div></section>
+  );
+}
+
+// ---------------- Admin: points ----------------
+function PointsAdmin({ users, flashSale }) {
+  const [view, setView] = useState('orders');
+  const [allPts, setAllPts] = useState({});
+  const [allOrders, setAllOrders] = useState({});
+  const [cfg, setCfg] = useState({});
+  const [busy, setBusy] = useState('');
+  const now = nowMs(); const wk = weekIdx(now);
+  useEffect(() => {
+    const a = db.ref('points'), b = db.ref('pointsOrders'), c = db.ref('pointsConfig');
+    const ca = a.on('value', s => setAllPts(s.val() || {}), () => {});
+    const cb = b.on('value', s => setAllOrders(s.val() || {}), () => {});
+    const cc = c.on('value', s => setCfg(s.val() || {}), () => {});
+    return () => { try { a.off('value', ca); b.off('value', cb); c.off('value', cc); } catch (e) {} };
+  }, []);
+  const userById = {}; (users || []).forEach(u => { userById[u.uid] = u; });
+  const who = uid => { const u = userById[uid] || {}; return (u.name || '(no name)') + (u.email ? ' · ' + u.email : ''); };
+  const walletOf = uid => computeWallet(allPts[uid], now);
+  const ledgerAdd = (uid, entry) => db.ref('points/' + uid + '/ledger').push(Object.assign({ ts: Date.now() }, entry));
+
+  // ---- orders ----
+  const orders = [];
+  Object.keys(allOrders).forEach(uid => Object.keys(allOrders[uid] || {}).forEach(id => orders.push(Object.assign({ uid, id }, allOrders[uid][id]))));
+  orders.sort((x, y) => (y.createdAt || 0) - (x.createdAt || 0));
+  const pendingOrders = orders.filter(o => o.status === 'pending');
+  const quoteFor = o => {
+    const w = walletOf(o.uid);
+    const legacy = activeTier(userById[o.uid]);
+    const tier = w.tier || legacy || null;
+    // A flash bonus counts if the order was placed while that sale was running.
+    const fs = flashSale; const at = o.createdAt || 0;
+    const fl = fs && Number(fs.percent) > 0 && (!fs.endsAt || at < fs.endsAt) && (!fs.startedAt || at >= fs.startedAt) && (fs.active || (fs.endsAt && at < fs.endsAt)) ? { active:true, percent: fs.percent, label: fs.label } : null;
+    return { q: quoteOrder(o, { tier, hasPurchased: w.hasPurchased, lifetimeBought: w.lifetimeBought, flash: fl }), legacy: !w.tier && !!legacy, tier };
+  };
+  const confirmOrder = async o => {
+    const { q } = quoteFor(o);
+    if (!q) { alert('This order has an unknown item. Reject it and sort it out by hand.'); return; }
+    setBusy(o.id);
+    try {
+      const tag = { order: o.id };
+      if (o.kind === 'sub') {
+        const w = walletOf(o.uid); const days = TERM_DAYS[o.term] || 31;
+        let start = Date.now();
+        if (w.period && w.period.tier === o.tier) start = w.period.end;                 // extend the same plan
+        else if (w.period) await db.ref('points/' + o.uid + '/periods/' + w.period.id + '/end').set(Date.now()); // switch plan from today
+        await db.ref('points/' + o.uid + '/periods').push({ tier: o.tier, term: o.term, start, end: start + days * DAY_MS, order: o.id });
+        if (q.yrBonus) await ledgerAdd(o.uid, Object.assign({ kind:'bonus', amt: q.yrBonus, label: tierName(o.tier) + ' yearly bonus' }, tag));
+        if (q.bonus.pts) await ledgerAdd(o.uid, Object.assign({ kind:'bonus', amt: q.bonus.pts, label: q.bonus.lines.map(l => bonusText('en', l)).join(', ') }, tag));
+      } else {
+        await ledgerAdd(o.uid, Object.assign({ kind:'buy', amt: q.base, label: o.title || 'Points' }, tag));
+        if (q.bonus.pts) await ledgerAdd(o.uid, Object.assign({ kind:'bonus', amt: q.bonus.pts, label: q.bonus.lines.map(l => bonusText('en', l)).join(', ') }, tag));
+      }
+      await db.ref('pointsOrders/' + o.uid + '/' + o.id).update({ status:'confirmed', confirmedAt: Date.now(), credited: q.credit });
+    } catch (e) { alert('Could not confirm: ' + (e.message || e)); }
+    setBusy('');
+  };
+  const rejectOrder = async o => { setBusy(o.id); try { await db.ref('pointsOrders/' + o.uid + '/' + o.id).update({ status:'rejected', rejectedAt: Date.now() }); } catch (e) {} setBusy(''); };
+
+  // ---- exchanges ----
+  const exchanges = [];
+  Object.keys(allPts).forEach(uid => Object.keys((allPts[uid] || {}).exchanges || {}).forEach(id => exchanges.push(Object.assign({ uid, id }, allPts[uid].exchanges[id]))));
+  exchanges.sort((x, y) => (y.createdAt || 0) - (x.createdAt || 0));
+  const openEx = exchanges.filter(x => x.status === 'listed' || x.status === 'awaiting_listing');
+  const fillEx = async x => {
+    setBusy(x.id);
+    try {
+      const done = Date.now();
+      await db.ref('points/' + x.uid + '/exchanges/' + x.id).update({ status:'filled', filledAt: done });
+      feedPush(x.createdAt || done, { handle: maskHandle(x.username), gold: x.amt || 0, listed: x.listPrice || null, status:'filled', fillMins: Math.max(1, Math.round((done - (x.createdAt || done)) / 60000)) });
+    } catch (e) { alert('Could not update: ' + (e.message || e)); }
+    setBusy('');
+  };
+  const rejectEx = async x => { setBusy(x.id); try { await db.ref('points/' + x.uid + '/exchanges/' + x.id).update({ status:'rejected', rejectedAt: Date.now() }); } catch (e) {} setBusy(''); };
+
+  // ---- players ----
+  const [q, setQ] = useState('');
+  const players = (users || []).map(u => Object.assign({}, u, { w: walletOf(u.uid), legacy: activeTier(u) }))
+    .filter(u => !q || (u.name || '').toLowerCase().includes(q.toLowerCase()) || (u.email || '').toLowerCase().includes(q.toLowerCase()) || u.uid.includes(q))
+    .sort((a, b) => b.w.balance - a.w.balance);
+  const adjust = async u => {
+    const v = prompt('Points to add (use a minus sign to remove):', '100'); if (v === null) return;
+    const n = parseInt(v); if (isNaN(n) || !n) return;
+    const why = prompt('Reason (the player sees this):', n > 0 ? 'Referral reward' : 'Correction'); if (why === null) return;
+    await ledgerAdd(u.uid, { kind: n > 0 ? 'earn' : 'adjust', amt: n, label: why || 'Adjustment' });
+  };
+  const givePlan = async (u, tier, term) => {
+    if (!tier) return;
+    const w = u.w; const days = TERM_DAYS[term];
+    let start = Date.now();
+    if (w.period && w.period.tier === tier) start = w.period.end;
+    else if (w.period) await db.ref('points/' + u.uid + '/periods/' + w.period.id + '/end').set(Date.now());
+    await db.ref('points/' + u.uid + '/periods').push({ tier, term, start, end: start + days * DAY_MS, comp: true });
+  };
+  const moveLegacy = async u => {
+    const ends = u.subscriptionEnds && u.subscriptionEnds > Date.now() ? u.subscriptionEnds : Date.now() + TERM_DAYS.monthly * DAY_MS;
+    await db.ref('points/' + u.uid + '/periods').push({ tier: u.legacy, term: u.subscriptionTerm || 'monthly', start: Date.now(), end: ends, migrated: true });
+    await db.ref('users/' + u.uid).update({ subscriptionTier: null, subscriptionEnds: null, subscriptionTerm: null, movedToPointsAt: Date.now() });
+  };
+  const moveAllLegacy = async () => {
+    const list = players.filter(u => u.legacy && !u.w.tier);
+    if (!list.length || !confirm('Move ' + list.length + ' legacy subscriber(s) to daily points? Their remaining days carry over.')) return;
+    setBusy('migrate'); for (const u of list) { try { await moveLegacy(u); } catch (e) {} } setBusy('');
+  };
+
+  // ---- rewards & contests ----
+  const [links, setLinks] = useState(null);
+  useEffect(() => { if (links === null && cfg) setLinks({ discordUrl: cfg.discordUrl || '', youtubeUrl: cfg.youtubeUrl || '', tiktokUrl: cfg.tiktokUrl || '', videoUrl: cfg.videoUrl || '' }); }, [cfg]);
+  const saveLinks = async () => {
+    const v = Object.assign({}, links); const prevVideo = cfg.videoUrl || '';
+    const upd = { discordUrl: v.discordUrl.trim() || null, youtubeUrl: v.youtubeUrl.trim() || null, tiktokUrl: v.tiktokUrl.trim() || null, videoUrl: v.videoUrl.trim() || null };
+    if (upd.videoUrl && (upd.videoUrl !== prevVideo || Number(cfg.videoWeek) !== wk)) upd.videoWeek = wk;
+    setBusy('links'); try { await db.ref('pointsConfig').update(upd); } catch (e) { alert('Save failed: ' + (e.message || e)); } setBusy('');
+  };
+  const [pc, setPc] = useState(null);
+  const [prevPc, setPrevPc] = useState(null);
+  const [skin, setSkin] = useState(''); const [price, setPrice] = useState(''); const [series, setSeries] = useState(''); const [actual, setActual] = useState('');
+  const [drawPrev, setDrawPrev] = useState(null);
+  useEffect(() => {
+    const r = db.ref('contests/priceCall/' + wk), r2 = db.ref('contests/priceCall/' + (wk - 1)), r3 = db.ref('contests/draw/' + (wk - 1));
+    const c1 = r.on('value', s => setPc(s.val() || {}), () => {}); const c2 = r2.on('value', s => setPrevPc(s.val() || {}), () => {}); const c3 = r3.on('value', s => setDrawPrev(s.val() || {}), () => {});
+    return () => { try { r.off('value', c1); r2.off('value', c2); r3.off('value', c3); } catch (e) {} };
+  }, [wk]);
+  const openPriceCall = async () => {
+    if (!skin.trim() || !(Number(price) > 0)) { alert('Add the skin name and its current price.'); return; }
+    await db.ref('contests/priceCall/' + wk + '/meta').set({ skin: skin.trim(), price: Number(price), series: series.trim() || null, closesAt: nextSundayClose(now), openedAt: Date.now() });
+  };
+  const settle = async (w, data) => {
+    const a = Number(actual); if (!(a > 0)) { alert('Enter the closing price first.'); return; }
+    const entries = Object.keys((data && data.entries) || {}).map(uid => Object.assign({ uid }, data.entries[uid]));
+    if (!entries.length) { alert('No entries to settle.'); return; }
+    entries.sort((x, y) => Math.abs(x.guess - a) - Math.abs(y.guess - a) || (x.ts || 0) - (y.ts || 0));
+    const win = entries[0];
+    if (!confirm('Winner: ' + who(win.uid) + ' guessed ' + fmt(win.guess) + ' G (closed at ' + fmt(a) + '). Pay ' + fmt(PTS.priceCallPrize) + ' points?')) return;
+    await ledgerAdd(win.uid, { kind:'contest', amt: PTS.priceCallPrize, label: 'Price Call winner' });
+    await db.ref('contests/priceCall/' + w + '/result').set({ actual: a, guess: win.guess, winnerHandle: win.handle || maskHandle(''), paidAt: Date.now() });
+  };
+  const ticketsFor = (p, w) => {
+    p = p || {}; let n = 0;
+    Object.keys(p.checkins || {}).forEach(k => { const v = p.checkins[k]; if (v && String(dayIdx(v.ts)) === k && weekIdx(v.ts) === w) n++; });
+    Object.keys(p.tasks || {}).forEach(k => { const v = p.tasks[k]; if (v && PTS.tasks[k] && weekIdx(v.ts) === w) n++; });
+    Object.keys(p.video || {}).forEach(k => { const v = p.video[k]; if (v && String(weekIdx(v.ts)) === k && Number(k) === w) n++; });
+    return n;
+  };
+  const runDraw = async () => {
+    const w = wk - 1;
+    if (drawPrev && drawPrev.winners) { alert('Last week was already drawn.'); return; }
+    let pool = Object.keys(allPts).map(uid => ({ uid, n: ticketsFor(allPts[uid], w) })).filter(x => x.n > 0);
+    if (!pool.length) { alert('Nobody earned tickets last week.'); return; }
+    const winners = [];
+    while (winners.length < PTS.drawWinners && pool.length) {
+      const total = pool.reduce((a, x) => a + x.n, 0); let r = Math.random() * total; let i = 0;
+      while (r >= pool[i].n) { r -= pool[i].n; i++; }
+      winners.push(pool[i].uid); pool.splice(i, 1);
+    }
+    if (!confirm('Winners: ' + winners.map(who).join(' | ') + '. Pay ' + fmt(PTS.drawPrize) + ' points each?')) return;
+    for (const uid of winners) await ledgerAdd(uid, { kind:'contest', amt: PTS.drawPrize, label: 'Weekly draw winner' });
+    await db.ref('contests/draw/' + w).set({ winners: winners.map(uid => maskHandle((userById[uid] || {}).name || '')), drawnAt: Date.now() });
+  };
+
+  const sub = (k, l, n) => <button className={view === k ? 'on' : ''} onClick={() => setView(k)}>{l}{n ? ' (' + n + ')' : ''}</button>;
+  const legacyCount = players.filter(u => u.legacy && !u.w.tier).length;
+  return (
+    <div>
+      <div className="toggle" style={{marginBottom:18}}>{sub('orders','Payments',pendingOrders.length)}{sub('ex','Exchanges',openEx.length)}{sub('players','Players')}{sub('rewards','Rewards')}</div>
+
+      {view === 'orders' && (
+        <div style={{display:'flex',flexDirection:'column',gap:10}}>
+          <p className="msub">Check the payment arrived, then confirm. Points are credited from the price list and the player's real bonuses, not from what the browser sent.</p>
+          {orders.length === 0 && <p className="msub">No points orders yet.</p>}
+          {orders.slice(0, 80).map(o => {
+            const { q: qq, legacy } = quoteFor(o);
+            const mismatch = qq && Math.abs(qq.price - Number(o.price || 0)) > 0.009;
+            return (
+              <div key={o.uid + o.id} className="card" style={{transform:'none',flexDirection:'row',alignItems:'center',justifyContent:'space-between',gap:12,flexWrap:'wrap'}}>
+                <div style={{flex:1,minWidth:220}}>
+                  <div style={{fontWeight:700}}>{o.title} · ${Number(o.price || 0).toFixed(2)} <span className={'ptag ' + (o.status === 'pending' ? 'pend' : o.status === 'confirmed' ? 'earn' : 'bad')} style={{marginLeft:6}}>{o.status}</span></div>
+                  <div className="sub" style={{marginBottom:0}}>{who(o.uid)} · {PAYMENT_METHOD_LABELS[o.method] || o.method} · {o.username} / {o.discord} · {new Date(o.createdAt || 0).toLocaleString()}</div>
+                  {o.gcCode && <div style={{fontSize:12,color:'var(--gold)',marginTop:4}}>Gift code: {o.gcCode}</div>}
+                  {o.referral && <div style={{fontSize:12,color:'var(--gold)',marginTop:4}}>Referred by: {o.referral}</div>}
+                  {o.status === 'pending' && qq && <div style={{fontSize:13,marginTop:6}}>Will credit <b>{fmt(qq.credit)}</b> points now{o.kind === 'sub' ? ' + ' + DAILY_GOLD[o.tier] + '/day for ' + TERM_DAYS[o.term] + ' days' : ''}{qq.bonus.lines.length ? ' (' + qq.bonus.lines.map(l => bonusText('en', l)).join(', ') + ')' : ''}</div>}
+                  {o.status === 'pending' && mismatch && <div style={{fontSize:13,color:'var(--danger)',fontWeight:700,marginTop:4}}>Price check: this order should cost ${qq.price.toFixed(2)}. Make sure that's what was paid.</div>}
+                  {o.status === 'pending' && legacy && <div style={{fontSize:12,color:'var(--gold)',marginTop:4}}>Uses the player's old-system tier for rates and bonuses.</div>}
+                </div>
+                {o.status === 'pending' && <div style={{display:'flex',gap:6}}>
+                  <button className="btn btn-gold btn-sm" disabled={busy === o.id} onClick={() => confirmOrder(o)}>Payment received</button>
+                  <button className="btn btn-ghost btn-sm" disabled={busy === o.id} onClick={() => rejectOrder(o)}>Reject</button>
+                </div>}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {view === 'ex' && (
+        <div style={{display:'flex',flexDirection:'column',gap:10}}>
+          <p className="msub">Buy out the player's G22 "Flock" listing, then mark it filled. Rejecting returns the points to their wallet.</p>
+          {exchanges.length === 0 && <p className="msub">No exchanges yet.</p>}
+          {exchanges.slice(0, 80).map(x => {
+            const bal = walletOf(x.uid).balance; const open = x.status === 'listed' || x.status === 'awaiting_listing';
+            return (
+              <div key={x.uid + x.id} className="card" style={{transform:'none',flexDirection:'row',alignItems:'center',justifyContent:'space-between',gap:12,flexWrap:'wrap'}}>
+                <div style={{flex:1,minWidth:220}}>
+                  <div style={{fontWeight:700}}>{fmt(x.amt || 0)} G · listed for {fmtG(x.listPrice || 0)} G <span className={'ptag ' + (x.status === 'filled' ? 'earn' : x.status === 'listed' ? 'pend' : x.status === 'awaiting_listing' ? '' : 'bad')} style={{marginLeft:6}}>{x.status}</span></div>
+                  <div className="sub" style={{marginBottom:0}}>{who(x.uid)} · {x.username} / {x.discord}{x.flockPattern ? ' · pattern ' + x.flockPattern : ''} · {new Date(x.createdAt || 0).toLocaleString()}</div>
+                  {x.screenshotUrl && <a href={x.screenshotUrl} target="_blank" rel="noopener" style={{fontSize:13}}>Listing screenshot</a>}
+                  {open && bal < 0 && <div style={{fontSize:13,color:'var(--danger)',fontWeight:700,marginTop:4}}>Overdrawn: this player is {fmt(Math.ceil(-bal))} points short. Don't fill until it's sorted.</div>}
+                </div>
+                {open && <div style={{display:'flex',gap:6}}>
+                  <button className="btn btn-gold btn-sm" disabled={busy === x.id || x.status !== 'listed' || bal < 0} onClick={() => fillEx(x)}>Mark filled</button>
+                  <button className="btn btn-ghost btn-sm" disabled={busy === x.id} onClick={() => rejectEx(x)}>Reject</button>
+                </div>}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {view === 'players' && (
+        <div style={{display:'flex',flexDirection:'column',gap:10}}>
+          <div style={{display:'flex',gap:10,flexWrap:'wrap',alignItems:'center'}}>
+            <input value={q} onChange={e => setQ(e.target.value)} placeholder="Search name, email or UID" style={{maxWidth:320}} />
+            {legacyCount > 0 && <button className="btn btn-gold btn-sm" disabled={busy === 'migrate'} onClick={moveAllLegacy}>Move {legacyCount} old subscriber{legacyCount > 1 ? 's' : ''} to daily points</button>}
+          </div>
+          {players.slice(0, 150).map(u => (
+            <div key={u.uid} className="card" style={{transform:'none',flexDirection:'row',alignItems:'center',justifyContent:'space-between',gap:12,flexWrap:'wrap'}}>
+              <div style={{flex:1,minWidth:220}}>
+                <div style={{fontWeight:700}}>{u.name || '(no name)'} <span className="sub" style={{fontSize:12}}>{u.email || ''}</span></div>
+                <div className="sub" style={{marginBottom:0}}><b style={{color:u.w.balance < 0 ? 'var(--danger)' : 'var(--ink)'}}>{fmt(Math.floor(u.w.balance))} pts</b> · {fmt(u.w.bought)} paid · {fmt(u.w.earned)} free · plan: {u.w.tier ? tierName(u.w.tier) + ' (' + u.w.daysLeft + 'd left)' : 'none'}{u.legacy && !u.w.tier ? ' · old-system ' + u.legacy : ''}</div>
+              </div>
+              <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
+                <button className="btn btn-ghost btn-sm" onClick={() => adjust(u)}>± points</button>
+                {u.legacy && !u.w.tier && <button className="btn btn-ghost btn-sm" onClick={() => moveLegacy(u)}>Move to points</button>}
+                <select defaultValue="" onChange={e => { const [tier, term] = e.target.value.split(':'); e.target.value = ''; if (tier && confirm('Give ' + (u.name || 'this player') + ' a free ' + tier + ' ' + term + ' plan?')) givePlan(u, tier, term); }} style={{width:'auto',padding:'6px 10px',fontSize:13}} aria-label="Give plan">
+                  <option value="">Give plan…</option>
+                  {TIERS.map(T => <option key={T.id + 'm'} value={T.id + ':monthly'}>{T.name} · 31 days</option>)}
+                  {TIERS.map(T => <option key={T.id + 'y'} value={T.id + ':yearly'}>{T.name} · 366 days</option>)}
+                </select>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {view === 'rewards' && links && (
+        <div className="pgrid2">
+          <div className="pstack">
+            <div className="card" style={{transform:'none'}}>
+              <div className="eyebrow" style={{marginBottom:10}}>Task links</div>
+              <p className="msub">A task only shows to players once its link is set. The weekly video task runs for the current week (Mon–Sun UTC) after you save a link.</p>
+              {[['discordUrl','Discord invite (+' + PTS.tasks.discord + ')'],['youtubeUrl','YouTube channel (+' + PTS.tasks.youtube + ')'],['tiktokUrl','TikTok profile (+' + PTS.tasks.tiktok + ')'],['videoUrl',"This week's video (+" + PTS.video + ')']].map(([k, l]) => (
+                <div key={k} className="field"><label htmlFor={'cfg-' + k}>{l}</label><input id={'cfg-' + k} value={links[k]} onChange={e => setLinks(Object.assign({}, links, { [k]: e.target.value }))} placeholder="https://" /></div>
+              ))}
+              <button className="btn btn-gold" disabled={busy === 'links'} onClick={saveLinks}>Save links</button>
+            </div>
+            <div className="card" style={{transform:'none'}}>
+              <div className="eyebrow" style={{marginBottom:10}}>Weekly draw</div>
+              <p className="msub">Draw last week's {PTS.drawWinners} winners. Each ticket is one check-in or task from that week. Winners get {fmt(PTS.drawPrize)} points.</p>
+              {drawPrev && drawPrev.winners ? <div className="quote">Drawn: {drawPrev.winners.join(' · ')}</div> : <button className="btn btn-gold" onClick={runDraw}>Draw last week's winners</button>}
+            </div>
+          </div>
+          <div className="pstack">
+            <div className="card" style={{transform:'none'}}>
+              <div className="eyebrow" style={{marginBottom:10}}>Price Call · this week</div>
+              {pc && pc.meta ? (
+                <div>
+                  <div className="quote" style={{marginBottom:10}}>{pc.meta.skin} · {fmt(pc.meta.price)} G now · closes {new Date(pc.meta.closesAt).toLocaleString()}</div>
+                  <div className="sub">{Object.keys(pc.entries || {}).length} entries</div>
+                  {now >= pc.meta.closesAt && !pc.result && (
+                    <div><div className="field"><label htmlFor="pc-actual">Closing price (G)</label><input id="pc-actual" type="number" value={actual} onChange={e => setActual(e.target.value)} /></div>
+                    <button className="btn btn-gold" onClick={() => settle(wk, pc)}>Pay the closest call</button></div>
+                  )}
+                  {pc.result && <div className="quote">Paid {pc.result.winnerHandle} · guessed {fmt(pc.result.guess)}, closed {fmt(pc.result.actual)}</div>}
+                </div>
+              ) : (
+                <div>
+                  <div className="field"><label htmlFor="pc-skin">Skin of the week</label><input id="pc-skin" value={skin} onChange={e => setSkin(e.target.value)} placeholder="Name as shown on the Market Tracker" /></div>
+                  <div className="field"><label htmlFor="pc-price">Current price (G)</label><input id="pc-price" type="number" value={price} onChange={e => setPrice(e.target.value)} /></div>
+                  <div className="field"><label htmlFor="pc-series">Last 7 daily prices, comma separated (optional, draws the chart)</label><input id="pc-series" value={series} onChange={e => setSeries(e.target.value)} placeholder="1180,1205,1198,1222,1250,1236,1240" /></div>
+                  <button className="btn btn-gold" onClick={openPriceCall}>Open this week's Price Call</button>
+                  <p className="msub" style={{marginTop:10,marginBottom:0}}>Entries close Sunday 20:00 UTC.</p>
+                </div>
+              )}
+            </div>
+            {prevPc && prevPc.meta && !prevPc.result && (
+              <div className="card" style={{transform:'none'}}>
+                <div className="eyebrow" style={{marginBottom:10}}>Price Call · last week (unpaid)</div>
+                <div className="sub">{prevPc.meta.skin} · {Object.keys(prevPc.entries || {}).length} entries</div>
+                <div className="field"><label htmlFor="pc-actual2">Closing price (G)</label><input id="pc-actual2" type="number" value={actual} onChange={e => setActual(e.target.value)} /></div>
+                <button className="btn btn-gold" onClick={() => settle(wk - 1, prevPc)}>Pay the closest call</button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -1844,7 +4161,7 @@ function FlashBanner({ flashSale, onShop }) {
   }
   return (
     <div onClick={onShop} style={{background:'var(--ink)',color:'#FFFFFF',padding:'9px 16px',textAlign:'center',fontFamily:'Figtree',fontWeight:700,fontSize:15,letterSpacing:'.03em',cursor:'pointer'}}>
-      {flashSale.label || 'FLASH SALE'} — {flashSale.percent}% OFF ALL GOLD{countdown ? ' · ENDS IN ' + countdown : ''} · TAP TO SHOP
+      {flashSale.label || 'FLASH BONUS'} — +{flashSale.percent}% BONUS POINTS{countdown ? ' · ENDS IN ' + countdown : ''} · TAP TO SHOP
     </div>
   );
 }
@@ -1861,6 +4178,10 @@ function App() {
   const [hasPurchased, setHasPurchased] = useState(false);
   const [flashSale, setFlashSale] = useState(null);
   const [avgDeliveryHrs, setAvgDeliveryHrs] = useState(null);
+  const [legacyUser, setLegacyUser] = useState(null);
+  const [walletTab, setWalletTab] = useState('wallet');
+  const [pointsOrder, setPointsOrder] = useState(null);
+  const [payMethod, setPayMethod] = useState('cashapp');
   const [lang, setLang] = useState(() => { try { return localStorage.getItem('cs2g_lang') || 'en'; } catch(e) { return 'en'; } });
   useEffect(() => {
     try { localStorage.setItem('cs2g_lang', lang); } catch(e) {}
@@ -1874,10 +4195,10 @@ function App() {
     if (vu) {
       setAuthOpen(false);
       db.ref('admins/' + vu.uid).once('value', s => setIsAdmin(s.val() === true)).catch(()=>setIsAdmin(false));
-      db.ref('users/' + vu.uid).on('value', s => setUserTier(activeTier(s.val())));
+      db.ref('users/' + vu.uid).on('value', s => { setLegacyUser(s.val()); setUserTier(activeTier(s.val())); });
       db.ref('users/' + vu.uid + '/lifetimeGold').on('value', s => setLifetimeGold(s.val() || 0));
       db.ref('users/' + vu.uid + '/hasPurchased').on('value', s => setHasPurchased(s.val() === true));
-    } else { setIsAdmin(false); setUserTier(null); setLifetimeGold(0); setHasPurchased(false); }
+    } else { setIsAdmin(false); setUserTier(null); setLegacyUser(null); setLifetimeGold(0); setHasPurchased(false); }
   }), []);
   useEffect(() => {
     const r = db.ref('flashSale');
@@ -1890,19 +4211,23 @@ function App() {
   useEffect(() => { try { const r = new URLSearchParams(location.search).get('ref'); if (r && /^[A-Za-z0-9_-]{6,64}$/.test(r)) localStorage.setItem('cs2g_ref', r); } catch(e) {} }, []);
   const signIn = () => setAuthOpen(true);
   const buy = item => setCheckout(item);
+  const pts = usePoints(user);
+  const pcfg = usePointsConfig();
+  const pTier = pts.wallet.tier || userTier;
+  const openPoints = o => setPointsOrder(o);
+  const goWallet = tab => { setWalletTab(tab || 'wallet'); setPage('dash'); setTimeout(() => window.scrollTo(0, 0), 10); };
   const go = (id) => { setPage('home'); setTimeout(() => document.getElementById(id)?.scrollIntoView({behavior:'smooth'}), 30); };
   return (
     <div>
       <div className="annc">Weekly skin giveaways on our main site — <a href="https://standoff2markettracker.com" target="_blank" rel="noopener"><b>standoff2markettracker.com</b></a></div>
-      {flashActive(flashSale) && <FlashBanner flashSale={flashSale} onShop={()=>setPage('buy')} />}
+      {flashActive(flashSale) && <FlashBanner flashSale={flashSale} onShop={()=>go('packs')} />}
       <header><div className="wrap nav">
         <div className="logo">Cheap<span>Standoff2</span>Gold</div>
         <ul className="navlinks">
-          <li><button className={page==='buy'?'active':''} onClick={()=>setPage('buy')}>{t(lang,'nav_buy')}</button></li>
-          <li><button onClick={()=>go('packs')}>{t(lang,'nav_packs')}</button></li>
+          <li><button onClick={()=>go('packs')}>{t(lang,'b_eyebrow')}</button></li>
           <li><button onClick={()=>go('subs')}>{t(lang,'nav_subs')}</button></li>
           <li><button onClick={()=>go('sell')}>{t(lang,'nav_sell')}</button></li>
-          <li><button className={page==='dash'?'active':''} onClick={()=>setPage('dash')}>{t(lang,'nav_dash')}</button></li>
+          <li><button className={page==='dash'?'active':''} onClick={()=>goWallet('wallet')}>{t(lang,'nav_dash')}</button></li>
           {isAdmin && <li><button className={page==='admin'?'active':''} onClick={()=>setPage('admin')}>{t(lang,'nav_admin')}</button></li>}
         </ul>
         <div className="authbox">
@@ -1913,7 +4238,7 @@ function App() {
                 : (<button className="btn btn-ghost btn-sm" onClick={signIn}>{t(lang,'signin')}</button>)}
           <button className="menubtn" aria-label="Menu" onClick={()=>setMenuOpen(o=>!o)}>☰</button>
         </div>
-      </div>{menuOpen && (<div className="mobilemenu"><button onClick={()=>{setPage('buy');setMenuOpen(false);}}>{t(lang,'nav_buy')}</button><button onClick={()=>{go('packs');setMenuOpen(false);}}>{t(lang,'nav_packs')}</button><button onClick={()=>{go('subs');setMenuOpen(false);}}>{t(lang,'nav_subs')}</button><button onClick={()=>{go('sell');setMenuOpen(false);}}>{t(lang,'nav_sell')}</button><button onClick={()=>{setPage('dash');setMenuOpen(false);}}>{t(lang,'nav_dash')}</button>{isAdmin && <button onClick={()=>{setPage('admin');setMenuOpen(false);}}>{t(lang,'nav_admin')}</button>}<button onClick={()=>{(user ? auth.signOut() : signIn());setMenuOpen(false);}}>{user ? t(lang,'signout') : t(lang,'signin')}</button></div>)}</header>
+      </div>{menuOpen && (<div className="mobilemenu"><button onClick={()=>{setPage('buy');setMenuOpen(false);}}>{t(lang,'cu_buy')}</button><button onClick={()=>{go('packs');setMenuOpen(false);}}>{t(lang,'b_eyebrow')}</button><button onClick={()=>{go('subs');setMenuOpen(false);}}>{t(lang,'nav_subs')}</button><button onClick={()=>{go('sell');setMenuOpen(false);}}>{t(lang,'nav_sell')}</button><button onClick={()=>{goWallet('wallet');setMenuOpen(false);}}>{t(lang,'nav_dash')}</button>{isAdmin && <button onClick={()=>{setPage('admin');setMenuOpen(false);}}>{t(lang,'nav_admin')}</button>}<button onClick={()=>{(user ? auth.signOut() : signIn());setMenuOpen(false);}}>{user ? t(lang,'signout') : t(lang,'signin')}</button></div>)}</header>
 
       {page === 'home' ? (
         <main>
@@ -1923,7 +4248,7 @@ function App() {
               <h1>{t(lang,'hero_title1')} <span className="goldtext">{t(lang,'hero_title2')}</span> {t(lang,'hero_title3')}</h1>
               <p className="lead">{t(lang,'hero_lead')}</p>
               <div className="heroctas">
-                <button className="btn btn-gold" onClick={()=>setPage('buy')}>{t(lang,'hero_cta1')}</button>
+                <button className="btn btn-gold" onClick={()=>go('packs')}>{t(lang,'hero_cta1')}</button>
                 <button className="btn btn-ghost" onClick={()=>go('subs')}>{t(lang,'hero_cta2')}</button>
               </div>
               <div className="trustline"><span>◆ <b>{t(lang,'trust1')}</b></span><span>◆ <b>{t(lang,'trust2')}</b></span><span>◆ <b>{t(lang,'trust3')}</b>: camel5961</span></div>
@@ -1932,36 +4257,37 @@ function App() {
               <div className="tag">TOP DEAL</div>
               <div className="eyebrow" style={{marginBottom:6}}>Gold Tier</div>
               <div className="dealnum goldtext num">6,500</div>
-              <div className="dealsub">gold every month for $35</div>
-              <div className="dealrow"><span>Daily claim</span><b>≈ 217 gold</b></div>
-              <div className="dealrow"><span>Gold per dollar</span><b>186</b></div>
-              <div className="dealrow"><span>vs. one-time packs</span><b>Up to 30% more gold</b></div>
-              <button className="btn btn-gold" style={{width:'100%',marginTop:18}} onClick={()=>buy({type:'Subscription',label:'Gold Monthly — 6,500 gold/month',price:35})}>Claim this deal</button>
+              <div className="dealsub">points every month for $37.99</div>
+              <div className="dealrow"><span>Paid into your wallet</span><b>217 every day</b></div>
+              <div className="dealrow"><span>Points per dollar</span><b>{fmt(Math.round(6500 / 37.99))}</b></div>
+              <div className="dealrow"><span>Pay in crypto</span><b>+{fmt(Math.round(217 * 31 * PTS.crypto / 100))} points up front</b></div>
+              <button className="btn btn-gold" style={{width:'100%',marginTop:18}} onClick={()=>openPoints({ kind:'sub', tier:'gold', term:'monthly' })}>Get the Gold plan</button>
             </div>
           </div></div>
           <StatsBar avgDeliveryHrs={avgDeliveryHrs} />
           <LiveOrders lang={lang} />
+          <PointsHow lang={lang} />
+          <PointsBundles lang={lang} wallet={pts.wallet} tier={pTier} flash={flashSale} method={payMethod} setMethod={setPayMethod} open={openPoints} />
           <section id="buy-custom" style={{paddingTop:0}}>
             <div className="wrap">
-              <div className="sect-head"><div className="eyebrow">Buy Any Amount</div><h2>Need a <span className="goldtext">specific amount?</span></h2><p>Type the exact gold you want and pay your way — cards, PayPal, crypto, or gift cards.</p></div>
-              <BuyGoldPanel user={user} tier={userTier} signIn={signIn} flashSale={flashSale} lifetimeGold={lifetimeGold} hasPurchased={hasPurchased} avgDeliveryHrs={avgDeliveryHrs} lang={lang} />
+              <div className="sect-head"><div className="eyebrow">{t(lang,'cu_eyebrow')}</div><h2>{t(lang,'cu_h2a')} <span className="goldtext">{t(lang,'cu_h2b')}</span></h2><p>{t(lang,'cu_p')}</p></div>
+              <CustomPoints lang={lang} wallet={pts.wallet} tier={pTier} flash={flashSale} method={payMethod} setMethod={setPayMethod} open={openPoints} />
             </div>
           </section>
-          <Packs buy={buy} lang={lang} tier={userTier} go={go} />
-          <Subs buy={buy} lang={lang} />
-          <HowItWorks lang={lang} />
+          <PointsSubs lang={lang} wallet={pts.wallet} method={payMethod} setMethod={setPayMethod} open={openPoints} />
+          <EarnTeaser lang={lang} goWallet={goWallet} />
           <Sell sell={buy} lang={lang} />
           <FAQ lang={lang} />
         </main>
       ) : page === 'buy' ? (
         <section><div className="wrap">
-          <div className="sect-head"><div className="eyebrow">Buy Gold</div><h2>Buy <span className="goldtext">any amount</span> of gold</h2><p>Type the exact amount you want and choose how to pay.</p></div>
-          <BuyGoldPanel user={user} tier={userTier} signIn={signIn} flashSale={flashSale} lifetimeGold={lifetimeGold} hasPurchased={hasPurchased} avgDeliveryHrs={avgDeliveryHrs} lang={lang} />
+          <div className="sect-head"><div className="eyebrow">{t(lang,'cu_eyebrow')}</div><h2>{t(lang,'cu_h2a')} <span className="goldtext">{t(lang,'cu_h2b')}</span></h2><p>{t(lang,'cu_p')}</p></div>
+          <CustomPoints showHead lang={lang} wallet={pts.wallet} tier={pTier} flash={flashSale} method={payMethod} setMethod={setPayMethod} open={openPoints} />
         </div></section>
       ) : page === 'admin' ? (
         <AdminPanel user={user} signIn={signIn} flashSale={flashSale} />
       ) : (
-        <Dashboard user={user} signIn={signIn} lifetimeGold={lifetimeGold} go={go} lang={lang} />
+        <WalletPage user={user} signIn={signIn} pts={pts} cfg={pcfg} legacyUser={legacyUser} tab={walletTab} setTab={setWalletTab} goSubs={() => go('subs')} goBuy={() => go('packs')} lang={lang} />
       )}
 
       <footer><div className="wrap fgrid">
@@ -1969,8 +4295,9 @@ function App() {
         <div>{t(lang,'footer_support')}: <b style={{color:'var(--gold)'}}>camel5961</b> on Discord</div>
       </div></footer>
 
-      <div className="mcta"><button className="btn btn-gold" onClick={()=>{page!=='home'&&setPage('home');go('subs')}}>Get cheap gold</button></div>
+      <div className="mcta"><button className="btn btn-gold" onClick={()=>go('packs')}>{t(lang,'hero_cta1')}</button></div>
       {checkout && <Checkout item={checkout} user={user} tier={userTier} go={go} onClose={()=>setCheckout(null)} lang={lang} />}
+      {pointsOrder && <PointsCheckout order={pointsOrder} user={user} wallet={pts.wallet} tier={pTier} flash={flashSale} startMethod={payMethod} onClose={()=>setPointsOrder(null)} onWallet={()=>goWallet('wallet')} signIn={signIn} lang={lang} />}
       {authOpen && <AuthPanel onClose={()=>setAuthOpen(false)} />}
     </div>
   );
