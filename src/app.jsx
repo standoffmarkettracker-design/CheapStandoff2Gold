@@ -1694,6 +1694,9 @@ function computeDiscounts(baseCost, amt, opts) {
   return { finalCost: cost, baseCost, lines, totalPct };
 }
 
+// Gift card codes go to Discord only. The database keeps the last 4 characters so orders can be matched.
+const gcTail = c => { c = String(c || '').replace(/[^A-Za-z0-9]/g, ''); return c ? c.slice(-4) : null; };
+
 async function submitOrder(order) {
   const lines = Object.entries(order).map(([k,v]) => `**${k}:** ${v}`).join('\n');
   let webhookOk = false;
@@ -1706,7 +1709,8 @@ async function submitOrder(order) {
   } catch(e) { console.warn('webhook failed', e); }
   let key = null;
   try {
-    const ref = await db.ref('goldOrders').push({ ...order, createdAt: Date.now(), status:'awaiting_listing' });
+    const rec = { ...order }; delete rec['Gift Card Code'];
+    const ref = await db.ref('goldOrders').push({ ...rec, createdAt: Date.now(), status:'awaiting_listing' });
     key = ref.key;
   } catch(e) { console.warn('db write skipped', e); }
   return { ok: webhookOk, key };
@@ -1896,7 +1900,7 @@ function Checkout({ item, user, tier, go, onClose, lang }) {
           uid: user.uid, username: username.trim(), discord: discord.trim(), method, type: item.type,
           status: isSell ? 'pending' : 'awaiting_listing', amount: null, label: item.label, price: effPrice,
           flockPattern: null, listPrice: listPrice || null,
-          gcCode: isCard ? gcCode.trim() : null, referral: refCode, createdAt: new Date().toISOString()
+          gcLast4: isCard ? gcTail(gcCode) : null, referral: refCode, createdAt: new Date().toISOString()
         });
         if (!isSell) feedPush(ts, { handle: maskHandle(username), gold: item.gold || 0, listed: null, status: 'awaiting_listing', fillMins: null });
       }
@@ -2578,7 +2582,7 @@ function BuyGoldPanel({ user, tier, signIn, flashSale, lifetimeGold, hasPurchase
           uid: user.uid, username: username.trim(), discord: discord.trim(), tier: tier || 'None', method,
           status: 'awaiting_listing', amount: goldAmt, price: parseFloat(cost), discountPct: disc.totalPct,
           flockPattern: null, listPrice: listPrice || null,
-          gcCode: isCard ? gcCode.trim() : null, createdAt: new Date().toISOString()
+          gcLast4: isCard ? gcTail(gcCode) : null, createdAt: new Date().toISOString()
         });
         feedPush(ts, { handle: maskHandle(username), gold: goldAmt || 0, listed: null, status: 'awaiting_listing', fillMins: null });
         db.ref('users/' + user.uid + '/hasPurchased').set(true);
@@ -2880,7 +2884,7 @@ function AdminPanel({ user, signIn, flashSale }) {
               <div style={{flex:1,minWidth:200}}>
                 <div style={{fontWeight:600}}>{o.username || '(no name)'} <span style={{fontSize:12,color:o.status==='complete'?'var(--green)':'var(--gold)',marginLeft:8}}>● {o.status}</span></div>
                 <div className="sub" style={{marginBottom:0}}>{o.amount ? fmt(o.amount)+' G' : (o.label || o.type || 'Order')} · {o.method}{o.tier?' · '+o.tier:''}{o.price?' · $'+o.price:''} · {o.createdAt ? new Date(o.createdAt).toLocaleString() : ''}</div>
-                {o.gcCode && <div style={{fontSize:12,fontFamily:'monospace',color:'var(--gold)',marginTop:4}}>Gift code: {o.gcCode}</div>}
+                {(o.gcCode || o.gcLast4) && <div style={{fontSize:12,fontFamily:'monospace',color:'var(--gold)',marginTop:4}}>{o.gcLast4 ? 'Gift card ending ' + o.gcLast4 + ' (full code in Discord)' : 'Gift code: ' + o.gcCode}</div>}
                 {o.referral && <div style={{fontSize:12,color:'var(--gold)',marginTop:4}}>Referred by: {o.referral}</div>}
               </div>
               {o.status !== 'complete' && <button className="btn btn-gold btn-sm" onClick={()=>markComplete(o)}>Mark complete</button>}
@@ -3210,7 +3214,7 @@ function PointsCheckout({ order, user, wallet, tier, flash, startMethod, onClose
       kind: order.kind, item: order.item || null, basePts: q.base, tier: order.tier || null, term: order.term || null,
       title, price: q.price, method, bonusPts: q.bonus.pts, yrBonus: q.yrBonus || 0, credit: q.credit,
       bonusLines: q.bonus.lines.map(l => bonusText('en', l)).join(', ') || null,
-      username: username.trim(), discord: discord.trim(), gcCode: isCard ? gcCode.trim() : null,
+      username: username.trim(), discord: discord.trim(), gcLast4: isCard ? gcTail(gcCode) : null,
       referral: (() => { try { const r = localStorage.getItem('cs2g_ref'); return r && r !== user.uid ? r : null; } catch (e) { return null; } })(),
       status: 'pending', createdAt: ts,
     };
@@ -4149,7 +4153,7 @@ function PointsAdmin({ users, flashSale }) {
                 <div style={{flex:1,minWidth:220}}>
                   <div style={{fontWeight:700}}>{o.title} · ${Number(o.price || 0).toFixed(2)} <span className={'ptag ' + (o.status === 'pending' ? 'pend' : o.status === 'confirmed' ? 'earn' : 'bad')} style={{marginLeft:6}}>{o.status}</span></div>
                   <div className="sub" style={{marginBottom:0}}>{who(o.uid)} · {PAYMENT_METHOD_LABELS[o.method] || o.method} · {o.username} / {o.discord} · {new Date(o.createdAt || 0).toLocaleString()}</div>
-                  {o.gcCode && <div style={{fontSize:12,color:'var(--gold)',marginTop:4}}>Gift code: {o.gcCode}</div>}
+                  {(o.gcCode || o.gcLast4) && <div style={{fontSize:12,color:'var(--gold)',marginTop:4}}>{o.gcLast4 ? 'Gift card ending ' + o.gcLast4 + ' (full code in Discord)' : 'Gift code: ' + o.gcCode}</div>}
                   {o.referral && <div style={{fontSize:12,color:'var(--gold)',marginTop:4}}>Referred by: {o.referral}</div>}
                   {o.status === 'pending' && qq && <div style={{fontSize:13,marginTop:6}}>Will credit <b>{fmt(qq.credit)}</b> points now{o.kind === 'sub' ? ' + ' + DAILY_GOLD[o.tier] + '/day for ' + TERM_DAYS[o.term] + ' days' : ''}{qq.bonus.lines.length ? ' (' + qq.bonus.lines.map(l => bonusText('en', l)).join(', ') + ')' : ''}</div>}
                   {o.status === 'pending' && mismatch && <div style={{fontSize:13,color:'var(--danger)',fontWeight:700,marginTop:4}}>Price check: this order should cost ${qq.price.toFixed(2)}. Make sure that's what was paid.</div>}
