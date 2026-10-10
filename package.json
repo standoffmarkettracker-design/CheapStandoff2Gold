@@ -1,0 +1,11 @@
+{
+  "name": "cheapstandoff2gold",
+  "private": true,
+  "description": "Builds index.html from src/ (run: node build.js)",
+  "scripts": { "build": "node build.js" },
+  "devDependencies": {
+    "@babel/core": "7.25.2",
+    "@babel/preset-react": "7.24.7",
+    "terser": "5.31.6"
+  }
+}
