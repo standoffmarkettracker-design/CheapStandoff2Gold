@@ -199,6 +199,39 @@ function t(lang, key) { return (I18N[lang] && I18N[lang][key]) || I18N.en[key] |
 // ---- Points system translations (merged over I18N; later keys override) ----
 const I18N_PTS = {
 "en": {
+"task_first_ex_h": "First exchange bonus",
+"h_ref_friend": "Joined through a friend",
+"h_ref_you": "Referral: a friend made their first purchase",
+"k_referral": "Referral",
+"ref_count": "Friends who bought so far: {n}",
+"ref_copy": "Copy",
+"ref_p": "Share your link. You both get points as soon as your friend's first payment is confirmed.",
+"ref_h": "You get {a}, they get {b}",
+"task_refer": "Refer a friend",
+"task_send": "Send",
+"task_rating_ph": "Anything to add? (optional)",
+"task_each": "each",
+"task_rating": "Rate your exchange",
+"task_first_ex_meta": "Paid when your first gold delivery is filled",
+"task_first_ex": "Complete your first exchange",
+"earn_once": "One-time",
+"task_alert_meta": "Any alert on the Market Tracker counts",
+"task_tracker_alert": "Set a price alert",
+"task_not_yet": "Not done yet. Finish it on the Market Tracker, then claim.",
+"task_watch_meta": "{n} of 3 added",
+"task_tracker_watch": "Add 3 skins to your Flip Finder watchlist",
+"earn_checked": "Checked automatically",
+"earn_tracker": "Market Tracker",
+"task_open_tracker": "Open tracker",
+"task_visits_meta": "{n} of {d} days this week, signed in",
+"task_tracker_visits": "Visit the Market Tracker on 3 days",
+"task_code_wrong": "That isn't this week's code. Check the video and try again.",
+"task_claim": "Claim",
+"task_code_ph": "Code word",
+"task_watch": "Watch",
+"task_code_meta": "Said in this week's video. Type it in to claim.",
+"task_code": "Find this week's code word",
+"earn_weekly": "This week",
 "task_signup": "Create your account",
 "cu_eyebrow": "Buy any amount",
 "cu_h2a": "Need a",
@@ -328,7 +361,7 @@ const I18N_PTS = {
 "k_ex": "Exchanged",
 "k_adjust": "Adjustment",
 "h_checkin": "Daily check-in · day {n}",
-"h_video": "Watched this week's video",
+"h_video": "Found this week's code word",
 "h_subdays": "{tier} daily points · {n} days",
 "h_ex": "{n} gold exchange",
 "xs_awaiting_listing": "waiting for your listing",
@@ -383,6 +416,39 @@ const I18N_PTS = {
 "err_generic": "That didn't go through. Check your connection and try again."
 },
 "ru": {
+"task_first_ex_h": "Бонус за первый обмен",
+"h_ref_friend": "Регистрация по приглашению друга",
+"h_ref_you": "Реферал: друг совершил первую покупку",
+"k_referral": "Реферал",
+"ref_count": "Друзей, совершивших покупку: {n}",
+"ref_copy": "Копировать",
+"ref_p": "Поделитесь ссылкой. Вы оба получите очки, как только подтвердится первая оплата друга.",
+"ref_h": "Вам {a}, другу {b}",
+"task_refer": "Пригласите друга",
+"task_send": "Отправить",
+"task_rating_ph": "Комментарий (необязательно)",
+"task_each": "за каждый",
+"task_rating": "Оцените обмен",
+"task_first_ex_meta": "Начисляется, когда ваш первый обмен выполнен",
+"task_first_ex": "Завершите первый обмен",
+"earn_once": "Один раз",
+"task_alert_meta": "Подойдёт любое оповещение на Market Tracker",
+"task_tracker_alert": "Создайте ценовое оповещение",
+"task_not_yet": "Ещё не выполнено. Сделайте это на Market Tracker и заберите очки.",
+"task_watch_meta": "Добавлено {n} из 3",
+"task_tracker_watch": "Добавьте 3 скина в список Flip Finder",
+"earn_checked": "Проверяется автоматически",
+"earn_tracker": "Market Tracker",
+"task_open_tracker": "Открыть трекер",
+"task_visits_meta": "{n} из {d} дней на этой неделе, с входом в аккаунт",
+"task_tracker_visits": "Заходите на Market Tracker 3 дня",
+"task_code_wrong": "Это не код этой недели. Посмотрите видео и попробуйте ещё раз.",
+"task_claim": "Забрать",
+"task_code_ph": "Кодовое слово",
+"task_watch": "Смотреть",
+"task_code_meta": "Оно звучит в видео этой недели. Введите его, чтобы получить очки.",
+"task_code": "Найдите кодовое слово недели",
+"earn_weekly": "На этой неделе",
 "task_signup": "Создать аккаунт",
 "cu_eyebrow": "Любая сумма",
 "cu_h2a": "Нужно",
@@ -512,7 +578,7 @@ const I18N_PTS = {
 "k_ex": "Обмен",
 "k_adjust": "Корректировка",
 "h_checkin": "Отметка · день {n}",
-"h_video": "Видео недели просмотрено",
+"h_video": "Найдено кодовое слово недели",
 "h_subdays": "{tier}: ежедневные очки · {n} дн.",
 "h_ex": "Обмен на {n} золота",
 "xs_awaiting_listing": "ждём ваш лот",
@@ -567,6 +633,39 @@ const I18N_PTS = {
 "err_generic": "Не получилось. Проверьте соединение и попробуйте снова."
 },
 "pt": {
+"task_first_ex_h": "Bônus da primeira troca",
+"h_ref_friend": "Entrou por indicação de um amigo",
+"h_ref_you": "Indicação: um amigo fez a primeira compra",
+"k_referral": "Indicação",
+"ref_count": "Amigos que já compraram: {n}",
+"ref_copy": "Copiar",
+"ref_p": "Compartilhe seu link. Vocês dois ganham pontos assim que o primeiro pagamento do amigo for confirmado.",
+"ref_h": "Você ganha {a}, ele ganha {b}",
+"task_refer": "Indique um amigo",
+"task_send": "Enviar",
+"task_rating_ph": "Algo a acrescentar? (opcional)",
+"task_each": "cada",
+"task_rating": "Avalie sua troca",
+"task_first_ex_meta": "Pago quando sua primeira entrega de ouro for concluída",
+"task_first_ex": "Conclua sua primeira troca",
+"earn_once": "Uma vez",
+"task_alert_meta": "Qualquer alerta no Market Tracker conta",
+"task_tracker_alert": "Crie um alerta de preço",
+"task_not_yet": "Ainda não concluído. Faça no Market Tracker e depois resgate.",
+"task_watch_meta": "{n} de 3 adicionadas",
+"task_tracker_watch": "Adicione 3 skins à lista do Flip Finder",
+"earn_checked": "Verificado automaticamente",
+"earn_tracker": "Market Tracker",
+"task_open_tracker": "Abrir tracker",
+"task_visits_meta": "{n} de {d} dias nesta semana, com login",
+"task_tracker_visits": "Visite o Market Tracker em 3 dias",
+"task_code_wrong": "Esse não é o código desta semana. Veja o vídeo e tente de novo.",
+"task_claim": "Resgatar",
+"task_code_ph": "Palavra-código",
+"task_watch": "Assistir",
+"task_code_meta": "Dita no vídeo desta semana. Digite para resgatar.",
+"task_code": "Encontre a palavra-código da semana",
+"earn_weekly": "Esta semana",
 "task_signup": "Criar sua conta",
 "cu_eyebrow": "Qualquer quantia",
 "cu_h2a": "Precisa de uma",
@@ -696,7 +795,7 @@ const I18N_PTS = {
 "k_ex": "Troca",
 "k_adjust": "Ajuste",
 "h_checkin": "Check-in diário · dia {n}",
-"h_video": "Vídeo da semana assistido",
+"h_video": "Encontrou a palavra-código da semana",
 "h_subdays": "{tier}: pontos diários · {n} dias",
 "h_ex": "Troca de {n} de ouro",
 "xs_awaiting_listing": "aguardando seu anúncio",
@@ -751,6 +850,39 @@ const I18N_PTS = {
 "err_generic": "Não deu certo. Verifique sua conexão e tente de novo."
 },
 "id": {
+"task_first_ex_h": "Bonus penukaran pertama",
+"h_ref_friend": "Bergabung lewat teman",
+"h_ref_you": "Referal: teman melakukan pembelian pertama",
+"k_referral": "Referal",
+"ref_count": "Teman yang sudah membeli: {n}",
+"ref_copy": "Salin",
+"ref_p": "Bagikan link-mu. Kalian berdua dapat poin begitu pembayaran pertama temanmu dikonfirmasi.",
+"ref_h": "Kamu dapat {a}, temanmu dapat {b}",
+"task_refer": "Ajak teman",
+"task_send": "Kirim",
+"task_rating_ph": "Ada tambahan? (opsional)",
+"task_each": "per penukaran",
+"task_rating": "Beri nilai penukaranmu",
+"task_first_ex_meta": "Dibayar saat pengiriman gold pertamamu selesai",
+"task_first_ex": "Selesaikan penukaran pertamamu",
+"earn_once": "Sekali",
+"task_alert_meta": "Peringatan apa pun di Market Tracker dihitung",
+"task_tracker_alert": "Pasang peringatan harga",
+"task_not_yet": "Belum selesai. Selesaikan di Market Tracker, lalu klaim.",
+"task_watch_meta": "{n} dari 3 ditambahkan",
+"task_tracker_watch": "Tambahkan 3 skin ke watchlist Flip Finder",
+"earn_checked": "Dicek otomatis",
+"earn_tracker": "Market Tracker",
+"task_open_tracker": "Buka tracker",
+"task_visits_meta": "{n} dari {d} hari minggu ini, dalam keadaan masuk",
+"task_tracker_visits": "Kunjungi Market Tracker selama 3 hari",
+"task_code_wrong": "Itu bukan kode minggu ini. Cek videonya lalu coba lagi.",
+"task_claim": "Klaim",
+"task_code_ph": "Kata kode",
+"task_watch": "Tonton",
+"task_code_meta": "Disebut di video minggu ini. Ketik untuk klaim.",
+"task_code": "Temukan kata kode minggu ini",
+"earn_weekly": "Minggu ini",
 "task_signup": "Buat akun",
 "cu_eyebrow": "Jumlah bebas",
 "cu_h2a": "Butuh jumlah",
@@ -880,7 +1012,7 @@ const I18N_PTS = {
 "k_ex": "Ditukar",
 "k_adjust": "Penyesuaian",
 "h_checkin": "Check-in harian · hari {n}",
-"h_video": "Menonton video minggu ini",
+"h_video": "Menemukan kata kode minggu ini",
 "h_subdays": "Poin harian {tier} · {n} hari",
 "h_ex": "Penukaran {n} gold",
 "xs_awaiting_listing": "menunggu listing kamu",
@@ -935,6 +1067,39 @@ const I18N_PTS = {
 "err_generic": "Gagal. Periksa koneksimu lalu coba lagi."
 },
 "tr": {
+"task_first_ex_h": "İlk çevirme bonusu",
+"h_ref_friend": "Bir arkadaş daveti ile katıldı",
+"h_ref_you": "Davet: bir arkadaşın ilk alışverişini yaptı",
+"k_referral": "Davet",
+"ref_count": "Şimdiye kadar satın alan arkadaşlar: {n}",
+"ref_copy": "Kopyala",
+"ref_p": "Linkini paylaş. Arkadaşının ilk ödemesi onaylanır onaylanmaz ikiniz de puan alırsınız.",
+"ref_h": "Sen {a}, arkadaşın {b} alır",
+"task_refer": "Arkadaşını davet et",
+"task_send": "Gönder",
+"task_rating_ph": "Eklemek istediğin bir şey var mı? (isteğe bağlı)",
+"task_each": "her biri",
+"task_rating": "Çevirmeni puanla",
+"task_first_ex_meta": "İlk altın teslimatın tamamlanınca ödenir",
+"task_first_ex": "İlk çevirmeni tamamla",
+"earn_once": "Tek seferlik",
+"task_alert_meta": "Market Tracker'daki herhangi bir alarm sayılır",
+"task_tracker_alert": "Fiyat alarmı kur",
+"task_not_yet": "Henüz tamamlanmadı. Market Tracker'da bitir, sonra al.",
+"task_watch_meta": "3'ten {n} eklendi",
+"task_tracker_watch": "Flip Finder izleme listene 3 skin ekle",
+"earn_checked": "Otomatik kontrol edilir",
+"earn_tracker": "Market Tracker",
+"task_open_tracker": "Tracker'ı aç",
+"task_visits_meta": "Bu hafta {d} günün {n}'i, giriş yapmış olarak",
+"task_tracker_visits": "Market Tracker'ı 3 gün ziyaret et",
+"task_code_wrong": "Bu, bu haftanın kodu değil. Videoyu kontrol edip tekrar dene.",
+"task_claim": "Al",
+"task_code_ph": "Kod kelime",
+"task_watch": "İzle",
+"task_code_meta": "Bu haftanın videosunda söyleniyor. Almak için yaz.",
+"task_code": "Haftanın kod kelimesini bul",
+"earn_weekly": "Bu hafta",
 "task_signup": "Hesabını oluştur",
 "cu_eyebrow": "İstediğin miktar",
 "cu_h2a": "Belirli bir",
@@ -1064,7 +1229,7 @@ const I18N_PTS = {
 "k_ex": "Çevrildi",
 "k_adjust": "Düzeltme",
 "h_checkin": "Günlük giriş · {n}. gün",
-"h_video": "Haftanın videosu izlendi",
+"h_video": "Haftanın kod kelimesi bulundu",
 "h_subdays": "{tier} günlük puan · {n} gün",
 "h_ex": "{n} altın çevirme",
 "xs_awaiting_listing": "ilanın bekleniyor",
@@ -1119,6 +1284,39 @@ const I18N_PTS = {
 "err_generic": "Olmadı. Bağlantını kontrol edip tekrar dene."
 },
 "ar": {
+"task_first_ex_h": "مكافأة أول استبدال",
+"h_ref_friend": "انضممت عبر صديق",
+"h_ref_you": "دعوة: صديق أتم أول عملية شراء",
+"k_referral": "دعوة",
+"ref_count": "أصدقاء اشتروا حتى الآن: {n}",
+"ref_copy": "نسخ",
+"ref_p": "شارك رابطك. تحصلان على النقاط فور تأكيد أول دفعة لصديقك.",
+"ref_h": "تحصل على {a} ويحصل صديقك على {b}",
+"task_refer": "ادعُ صديقًا",
+"task_send": "إرسال",
+"task_rating_ph": "أي إضافة؟ (اختياري)",
+"task_each": "لكل تقييم",
+"task_rating": "قيّم الاستبدال",
+"task_first_ex_meta": "تُضاف عند إتمام أول تسليم ذهب لك",
+"task_first_ex": "أكمل أول استبدال",
+"earn_once": "مرة واحدة",
+"task_alert_meta": "أي تنبيه على Market Tracker يُحتسب",
+"task_tracker_alert": "أنشئ تنبيه سعر",
+"task_not_yet": "لم تكتمل بعد. أكملها على Market Tracker ثم اطلب النقاط.",
+"task_watch_meta": "تمت إضافة {n} من 3",
+"task_tracker_watch": "أضف 3 سكنات إلى قائمة Flip Finder",
+"earn_checked": "يُتحقق منها تلقائيًا",
+"earn_tracker": "Market Tracker",
+"task_open_tracker": "افتح المتتبع",
+"task_visits_meta": "{n} من {d} أيام هذا الأسبوع مع تسجيل الدخول",
+"task_tracker_visits": "زر Market Tracker في 3 أيام",
+"task_code_wrong": "هذه ليست كلمة هذا الأسبوع. راجع الفيديو وحاول مجددًا.",
+"task_claim": "اطلب",
+"task_code_ph": "الكلمة السرية",
+"task_watch": "شاهد",
+"task_code_meta": "تُقال في فيديو هذا الأسبوع. اكتبها للمطالبة.",
+"task_code": "اعثر على الكلمة السرية لهذا الأسبوع",
+"earn_weekly": "هذا الأسبوع",
 "task_signup": "أنشئ حسابك",
 "cu_eyebrow": "أي كمية",
 "cu_h2a": "تحتاج",
@@ -1248,7 +1446,7 @@ const I18N_PTS = {
 "k_ex": "استبدال",
 "k_adjust": "تعديل",
 "h_checkin": "تسجيل حضور · اليوم {n}",
-"h_video": "شاهدت فيديو الأسبوع",
+"h_video": "وجدت كلمة هذا الأسبوع",
 "h_subdays": "نقاط {tier} اليومية · {n} يوم",
 "h_ex": "استبدال {n} ذهبة",
 "xs_awaiting_listing": "بانتظار عرضك",
@@ -2773,8 +2971,12 @@ function AdminPanel({ user, signIn, flashSale }) {
 const PTS = {
   rates: { none:0.0086, bronze:0.008, silver:0.0058, gold:0.004 },
   crypto:7, first:5, loyalty:5, loyaltyAt:25000, bulk1:5, bulk1At:10000, bulk2:10, bulk2At:25000,
-  checkin:3, streak7:25, video:10, minExchange:250,
-  tasks:{ discord:10, youtube:10, tiktok:10 }, welcome:10,
+  checkin:3, streak7:25, video:15, minExchange:250,
+  // tracker_watch / tracker_alert are checked by the database rules against the player's Market Tracker data
+  tasks:{ discord:10, youtube:10, tiktok:10, tracker_watch:15, tracker_alert:15 }, welcome:10,
+  trackerWeek:10, trackerDays:3,          // visit the Market Tracker on 3 days in a week
+  firstExchange:25, rating:5,             // paid once the team marks an exchange filled
+  referral:100, referralFriend:100,       // paid when the friend's first payment is confirmed
   priceCallPrize:2500, drawPrize:1000, drawWinners:3,
 };
 const BUNDLES = [
@@ -2820,9 +3022,10 @@ function computeWallet(p, now) {
     const l = p.ledger[id] || {}; const amt = Number(l.amt) || 0;
     w.balance += amt;
     if (l.kind === 'buy') { w.bought += amt; w.lifetimeBought += amt; w.hasPurchased = true; }
+    else if (l.kind === 'referral') { w.earned += amt; if (l.role === 'referrer') w.referrals = (w.referrals || 0) + 1; }
     else if (l.kind === 'bonus' || l.kind === 'sub') w.bought += amt;
     else w.earned += amt;
-    w.history.push({ id, ts: l.ts || 0, kind: l.kind || 'adjust', label: l.label || '', amt });
+    w.history.push({ id, ts: l.ts || 0, kind: l.kind || 'adjust', label: l.label || '', lk: l.kind === 'referral' ? (l.role === 'referrer' ? 'h_ref_you' : 'h_ref_friend') : undefined, amt });
   });
   const days = Object.keys(p.checkins || {})
     .filter(k => { const v = p.checkins[k]; return v && typeof v.ts === 'number' && String(dayIdx(v.ts)) === k; })
@@ -2863,6 +3066,32 @@ function computeWallet(p, now) {
     if (today >= first && today <= lastDay && (!w.period || per.start > w.period.start)) {
       w.period = Object.assign({ id }, per); w.tier = per.tier; w.daysLeft = lastDay - today + 1;
     }
+  });
+  // Market Tracker visits: one record per day, stamped with server time by the tracker site
+  const visitWeeks = {};
+  Object.keys(p.trackerVisits || {}).forEach(k => {
+    const v = p.trackerVisits[k]; if (!v || typeof v.ts !== 'number' || String(dayIdx(v.ts)) !== k) return;
+    const vw = weekIdx(v.ts); (visitWeeks[vw] = visitWeeks[vw] || []).push(v.ts);
+  });
+  w.trackerDaysThisWeek = (visitWeeks[wk] || []).length;
+  Object.keys(visitWeeks).forEach(vw => {
+    const list = visitWeeks[vw].sort((a, b) => a - b);
+    if (list.length < PTS.trackerDays) return;
+    w.balance += PTS.trackerWeek; w.earned += PTS.trackerWeek;
+    w.history.push({ id:'tv' + vw, ts: list[PTS.trackerDays - 1], kind:'earn', lk:'task_tracker_visits', amt: PTS.trackerWeek });
+  });
+  // First filled exchange and exchange ratings (both need the team to have filled the exchange)
+  const filled = Object.keys(p.exchanges || {}).map(id => Object.assign({ id }, p.exchanges[id])).filter(x => x.status === 'filled').sort((a, b) => (a.filledAt || a.createdAt || 0) - (b.filledAt || b.createdAt || 0));
+  w.filledEx = filled; w.ratings = p.ratings || {};
+  if (filled.length) {
+    w.balance += PTS.firstExchange; w.earned += PTS.firstExchange;
+    w.history.push({ id:'fx', ts: filled[0].filledAt || filled[0].createdAt || 0, kind:'earn', lk:'task_first_ex', amt: PTS.firstExchange });
+  }
+  Object.keys(p.ratings || {}).forEach(exId => {
+    const r = p.ratings[exId]; const x = (p.exchanges || {})[exId];
+    if (!r || !x || x.status !== 'filled' || typeof r.ts !== 'number') return;
+    w.balance += PTS.rating; w.earned += PTS.rating;
+    w.history.push({ id:'rt' + exId, ts: r.ts, kind:'earn', lk:'task_rating', amt: PTS.rating });
   });
   Object.keys(p.exchanges || {}).forEach(id => {
     const x = p.exchanges[id] || {}; const amt = Number(x.amt) || 0;
@@ -3231,7 +3460,7 @@ function nextSundayClose(now) {
   return c.getTime();
 }
 function timeLeft(lang, ms) { const h = Math.max(0, Math.floor(ms / 3600000)); return tf(lang,'left',{ d: Math.floor(h / 24), h: h % 24 }); }
-const KIND_TAG = { buy:['buy','k_buy'], bonus:['bonus','k_bonus'], sub:['sub','k_sub'], earn:['earn','k_earn'], contest:['contest','k_contest'], ex:['', 'k_ex'], adjust:['', 'k_adjust'] };
+const KIND_TAG = { buy:['buy','k_buy'], bonus:['bonus','k_bonus'], sub:['sub','k_sub'], earn:['earn','k_earn'], referral:['earn','k_referral'], contest:['contest','k_contest'], ex:['', 'k_ex'], adjust:['', 'k_adjust'] };
 
 function StreakRow({ wallet, lang }) {
   const day = wallet.streak % 7;
@@ -3341,47 +3570,135 @@ function HistoryList({ wallet, orders, lang }) {
   );
 }
 
-function EarnTab({ user, wallet, data, cfg, lang }) {
+const TRACKER_URL = 'https://standoff2markettracker.com';
+const normCode = c => String(c || '').trim().toLowerCase().replace(/\s+/g, ' ');
+
+function TaskRow({ title, meta, pts, done, children }) {
+  return (
+    <div className="ptask">
+      <div className="lmain"><div style={{fontWeight:700}}>{title}</div>{meta && <div className="lmeta" style={{fontSize:13,color:'var(--low)'}}>{meta}</div>}</div>
+      <div className="pp">{pts}</div>
+      {done ? <span style={{color:'var(--green)',fontWeight:700,fontSize:14}}>✓</span> : children}
+    </div>
+  );
+}
+
+function EarnTab({ user, wallet, data, cfg, legacyUser, lang }) {
+  const L = k => t(lang, k);
   const [busy, setBusy] = useState('');
+  const [msg, setMsg] = useState({});
+  const [code, setCode] = useState('');
+  const [alertCount, setAlertCount] = useState(null);
+  const [copied, setCopied] = useState(false);
+  const [stars, setStars] = useState({});
+  const [notes, setNotes] = useState({});
   const wk = weekIdx(nowMs());
-  const tasks = [['discord', taskLink(cfg, 'discordUrl')], ['youtube', taskLink(cfg, 'youtubeUrl')], ['tiktok', taskLink(cfg, 'tiktokUrl')]].filter(x => x[1]);
+  useEffect(() => {
+    const r = db.ref('alerts/' + user.uid);
+    const cb = r.on('value', s => setAlertCount(Object.keys(s.val() || {}).length), () => setAlertCount(0));
+    return () => { try { r.off('value', cb); } catch (e) {} };
+  }, [user]);
+  const social = [['discord', taskLink(cfg, 'discordUrl')], ['youtube', taskLink(cfg, 'youtubeUrl')], ['tiktok', taskLink(cfg, 'tiktokUrl')]].filter(x => x[1]);
   const doneTask = id => !!(data && data.tasks && data.tasks[id]);
   const videoDone = !!(data && data.video && data.video[wk]);
-  const claim = async (path, url) => {
-    if (url) { try { window.open(url, '_blank', 'noopener'); } catch (e) {} }
-    setBusy(path);
-    try { await db.ref('points/' + user.uid + '/' + path).set({ ts: svTs() }); } catch (e) {}
+  const watchCount = Object.keys((legacyUser && legacyUser.flipWatchlist) || {}).length;
+  const refLink = 'https://standoffmarkettracker-design.github.io/CheapStandoff2Gold/?ref=' + user.uid;
+  const say = (k, v) => setMsg(m => Object.assign({}, m, { [k]: v }));
+  const write = async (key, path, value, failKey) => {
+    setBusy(key); say(key, '');
+    try { await db.ref('points/' + user.uid + '/' + path).set(value); }
+    catch (e) { say(key, L(failKey || 'err_generic')); }
     setBusy('');
   };
+  const openLink = url => { if (url) { try { window.open(url, '_blank', 'noopener'); } catch (e) {} } };
+  const copyRef = () => { try { navigator.clipboard.writeText(refLink).then(() => { setCopied(true); setTimeout(() => setCopied(false), 1800); }, () => {}); } catch (e) {} };
+  const unrated = (wallet.filledEx || []).filter(x => !(wallet.ratings || {})[x.id]);
+  const msgLine = k => msg[k] ? <div style={{fontSize:13,color:'var(--danger)',fontWeight:600,padding:'0 18px 12px'}}>{msg[k]}</div> : null;
+
   return (
     <div className="pgrid2">
-      <div className="lrows">
-        <div className="lhead"><h3 style={{fontSize:16}}>{t(lang,'earn_tasks')}</h3><span className="sub" style={{marginBottom:0,fontSize:13}}>{t(lang,'earn_ticket')}</span></div>
-        <div className="ptask">
-          <div className="lmain"><div style={{fontWeight:700}}>{t(lang,'task_signup')}</div><div className="lmeta" style={{fontSize:13,color:'var(--low)'}}>{t(lang,'task_once')}</div></div>
-          <div className="pp">+{PTS.welcome}</div>
-          <span style={{color:'var(--green)',fontWeight:700,fontSize:14}}>{t(lang,'task_done')}</span>
+      <div className="pstack">
+        <div className="lrows">
+          <div className="lhead"><h3 style={{fontSize:16}}>{L('earn_weekly')}</h3><span className="sub" style={{marginBottom:0,fontSize:13}}>{L('task_weekly')}</span></div>
+          {Number(cfg.videoWeek) === wk && (
+            <div>
+              <TaskRow title={L('task_code')} meta={L('task_code_meta')} pts={'+' + PTS.video} done={videoDone}>
+                {cfg.videoUrl && <button className="btn btn-ghost btn-sm" onClick={() => openLink(cfg.videoUrl)}>{L('task_watch')}</button>}
+              </TaskRow>
+              {!videoDone && (
+                <div style={{display:'flex',gap:8,padding:'0 18px 14px'}}>
+                  <input value={code} onChange={e => setCode(e.target.value)} placeholder={L('task_code_ph')} aria-label={L('task_code')} />
+                  <button className="btn btn-gold btn-sm" disabled={!normCode(code) || busy === 'code'} onClick={() => write('code', 'video/' + wk, { ts: svTs(), code: normCode(code) }, 'task_code_wrong')}>{L('task_claim')}</button>
+                </div>
+              )}
+              {msgLine('code')}
+            </div>
+          )}
+          <TaskRow title={L('task_tracker_visits')} meta={tf(lang,'task_visits_meta',{ n: Math.min(wallet.trackerDaysThisWeek || 0, PTS.trackerDays), d: PTS.trackerDays })} pts={'+' + PTS.trackerWeek} done={(wallet.trackerDaysThisWeek || 0) >= PTS.trackerDays}>
+            <button className="btn btn-ghost btn-sm" onClick={() => openLink(TRACKER_URL)}>{L('task_open_tracker')}</button>
+          </TaskRow>
         </div>
-        {tasks.map(([id, url]) => (
-          <div key={id} className="ptask">
-            <div className="lmain"><div style={{fontWeight:700}}>{t(lang,'task_' + id)}</div><div className="lmeta" style={{fontSize:13,color:'var(--low)'}}>{t(lang,'task_once')}</div></div>
-            <div className="pp">+{PTS.tasks[id]}</div>
-            {doneTask(id) ? <span style={{color:'var(--green)',fontWeight:700,fontSize:14}}>{t(lang,'task_done')}</span>
-              : <button className="btn btn-gold btn-sm" disabled={busy === 'tasks/' + id} onClick={() => claim('tasks/' + id, url)}>{t(lang,'task_go')}</button>}
-          </div>
-        ))}
-        {cfg.videoUrl && Number(cfg.videoWeek) === wk && (
-          <div className="ptask">
-            <div className="lmain"><div style={{fontWeight:700}}>{t(lang,'task_video')}</div><div style={{fontSize:13,color:'var(--low)'}}>{t(lang,'task_weekly')}</div></div>
-            <div className="pp">+{PTS.video}</div>
-            {videoDone ? <span style={{color:'var(--green)',fontWeight:700,fontSize:14}}>{t(lang,'task_done')}</span>
-              : <button className="btn btn-gold btn-sm" disabled={busy === 'video/' + wk} onClick={() => claim('video/' + wk, cfg.videoUrl)}>{t(lang,'task_go')}</button>}
+
+        <div className="lrows">
+          <div className="lhead"><h3 style={{fontSize:16}}>{L('earn_tracker')}</h3><span className="sub" style={{marginBottom:0,fontSize:13}}>{L('earn_checked')}</span></div>
+          <TaskRow title={L('task_tracker_watch')} meta={tf(lang,'task_watch_meta',{ n: Math.min(watchCount, 3) })} pts={'+' + PTS.tasks.tracker_watch} done={doneTask('tracker_watch')}>
+            {watchCount >= 3
+              ? <button className="btn btn-gold btn-sm" disabled={busy === 'tw'} onClick={() => write('tw', 'tasks/tracker_watch', { ts: svTs() }, 'task_not_yet')}>{L('task_claim')}</button>
+              : <button className="btn btn-ghost btn-sm" onClick={() => openLink(TRACKER_URL)}>{L('task_open_tracker')}</button>}
+          </TaskRow>
+          {msgLine('tw')}
+          <TaskRow title={L('task_tracker_alert')} meta={L('task_alert_meta')} pts={'+' + PTS.tasks.tracker_alert} done={doneTask('tracker_alert')}>
+            {alertCount > 0
+              ? <button className="btn btn-gold btn-sm" disabled={busy === 'ta'} onClick={() => write('ta', 'tasks/tracker_alert', { ts: svTs() }, 'task_not_yet')}>{L('task_claim')}</button>
+              : <button className="btn btn-ghost btn-sm" onClick={() => openLink(TRACKER_URL)}>{L('task_open_tracker')}</button>}
+          </TaskRow>
+          {msgLine('ta')}
+        </div>
+
+        <div className="lrows">
+          <div className="lhead"><h3 style={{fontSize:16}}>{L('earn_once')}</h3><span className="sub" style={{marginBottom:0,fontSize:13}}>{L('earn_ticket')}</span></div>
+          <TaskRow title={L('task_signup')} meta={L('task_once')} pts={'+' + PTS.welcome} done={true} />
+          <TaskRow title={L('task_first_ex')} meta={L('task_first_ex_meta')} pts={'+' + PTS.firstExchange} done={(wallet.filledEx || []).length > 0} />
+          {social.map(([id, url]) => (
+            <TaskRow key={id} title={L('task_' + id)} meta={L('task_once')} pts={'+' + PTS.tasks[id]} done={doneTask(id)}>
+              <button className="btn btn-gold btn-sm" disabled={busy === id} onClick={() => { openLink(url); write(id, 'tasks/' + id, { ts: svTs() }); }}>{L('task_go')}</button>
+            </TaskRow>
+          ))}
+        </div>
+
+        {unrated.length > 0 && (
+          <div className="lrows">
+            <div className="lhead"><h3 style={{fontSize:16}}>{L('task_rating')}</h3><span className="pp">+{PTS.rating} {L('task_each')}</span></div>
+            {unrated.slice(0, 5).map(x => (
+              <div key={x.id} style={{padding:'12px 18px',borderBottom:'1px solid var(--line2)'}}>
+                <div style={{fontWeight:700,marginBottom:6}}>{tf(lang,'h_ex',{ n: fmt(x.amt || 0) })}</div>
+                <div style={{display:'flex',gap:4,marginBottom:8}} role="radiogroup" aria-label={L('task_rating')}>
+                  {[1,2,3,4,5].map(n => <button key={n} type="button" role="radio" aria-checked={stars[x.id] === n} onClick={() => setStars(Object.assign({}, stars, { [x.id]: n }))} style={{background:'none',border:'none',cursor:'pointer',fontSize:24,lineHeight:1,color:(stars[x.id] || 0) >= n ? 'var(--gold)' : 'var(--line)',padding:2}} aria-label={n + ' / 5'}>★</button>)}
+                </div>
+                <div style={{display:'flex',gap:8}}>
+                  <input value={notes[x.id] || ''} maxLength={280} onChange={e => setNotes(Object.assign({}, notes, { [x.id]: e.target.value }))} placeholder={L('task_rating_ph')} aria-label={L('task_rating_ph')} />
+                  <button className="btn btn-gold btn-sm" disabled={!stars[x.id] || busy === 'rt' + x.id} onClick={() => { const v = { stars: stars[x.id], ts: svTs() }; const n = (notes[x.id] || '').trim(); if (n) v.text = n.slice(0, 280); write('rt' + x.id, 'ratings/' + x.id, v); }}>{L('task_send')}</button>
+                </div>
+                {msgLine('rt' + x.id)}
+              </div>
+            ))}
           </div>
         )}
       </div>
+
       <div className="pstack">
+        <div className="card" style={{transform:'none'}}>
+          <div className="eyebrow">{L('task_refer')}</div>
+          <h3 style={{fontSize:20,margin:'8px 0 6px'}}>{tf(lang,'ref_h',{ a: fmt(PTS.referral), b: fmt(PTS.referralFriend) })}</h3>
+          <p className="sub" style={{marginBottom:12}}>{L('ref_p')}</p>
+          <div style={{display:'flex',gap:8}}>
+            <input readOnly value={refLink} onFocus={e => e.target.select()} aria-label={L('task_refer')} style={{fontSize:13}} />
+            <button className="btn btn-gold btn-sm" onClick={copyRef}>{copied ? '✓' : L('ref_copy')}</button>
+          </div>
+          <div className="sub" style={{marginTop:10,marginBottom:0,fontSize:13}}>{tf(lang,'ref_count',{ n: wallet.referrals || 0 })}</div>
+        </div>
         <CheckinCard user={user} wallet={wallet} lang={lang} />
-        <div className="prule">{t(lang,'earn_rules')}</div>
+        <div className="prule">{L('earn_rules')}</div>
       </div>
     </div>
   );
@@ -3603,7 +3920,7 @@ function WalletPage({ user, signIn, pts, cfg, legacyUser, tab, setTab, goSubs, g
     <section><div className="wrap">
       <div className="sect-head"><div className="eyebrow">{t(lang,'nav_dash')}</div><h2>{t(lang,'w_title')}</h2><p>{t(lang,'w_lead')}</p></div>
       <div className="subtabs" role="tablist">{tabs.map(([id, k]) => <button key={id} role="tab" aria-selected={tab === id} className={tab === id ? 'on' : ''} onClick={() => setTab(id)}>{t(lang,k)}</button>)}</div>
-      {!pts.ready ? <p className="msub">…</p> : tab === 'earn' ? <EarnTab user={user} wallet={wallet} data={data} cfg={cfg} lang={lang} />
+      {!pts.ready ? <p className="msub">…</p> : tab === 'earn' ? <EarnTab user={user} wallet={wallet} data={data} cfg={cfg} legacyUser={legacyUser} lang={lang} />
         : tab === 'contests' ? <ContestsTab user={user} wallet={wallet} lang={lang} />
         : tab === 'exchange' ? <ExchangeTab user={user} wallet={wallet} lang={lang} />
         : (
@@ -3676,6 +3993,13 @@ function PointsAdmin({ users, flashSale }) {
     setBusy(o.id);
     try {
       const tag = { order: o.id };
+      // Referral: pays both sides once, on the buyer's first confirmed payment, and never for self-referrals
+      const before = walletOf(o.uid);
+      const ref = o.referral && o.referral !== o.uid && userById[o.referral] ? o.referral : null;
+      if (ref && !before.hasPurchased && !Object.values((allPts[o.uid] || {}).ledger || {}).some(l => l.kind === 'referral')) {
+        await ledgerAdd(ref, { kind:'referral', role:'referrer', amt: PTS.referral, label: 'Referral: a friend made their first purchase', friend: o.uid, order: o.id });
+        await ledgerAdd(o.uid, { kind:'referral', role:'friend', amt: PTS.referralFriend, label: 'Joined through a friend', referrer: ref, order: o.id });
+      }
       if (o.kind === 'sub') {
         const w = walletOf(o.uid); const days = TERM_DAYS[o.term] || 31;
         let start = Date.now();
@@ -3744,10 +4068,22 @@ function PointsAdmin({ users, flashSale }) {
   const [links, setLinks] = useState(null);
   useEffect(() => { if (links === null && cfg) setLinks({ discordUrl: taskLink(cfg, 'discordUrl'), youtubeUrl: taskLink(cfg, 'youtubeUrl'), tiktokUrl: taskLink(cfg, 'tiktokUrl'), videoUrl: cfg.videoUrl || '' }); }, [cfg]);
   const saveLinks = async () => {
-    const v = Object.assign({}, links); const prevVideo = cfg.videoUrl || '';
+    const v = Object.assign({}, links);
     const upd = { discordUrl: v.discordUrl.trim() || null, youtubeUrl: v.youtubeUrl.trim() || null, tiktokUrl: v.tiktokUrl.trim() || null, videoUrl: v.videoUrl.trim() || null };
-    if (upd.videoUrl && (upd.videoUrl !== prevVideo || Number(cfg.videoWeek) !== wk)) upd.videoWeek = wk;
     setBusy('links'); try { await db.ref('pointsConfig').update(upd); } catch (e) { alert('Save failed: ' + (e.message || e)); } setBusy('');
+  };
+  const [weekCode, setWeekCode] = useState('');
+  const [savedCode, setSavedCode] = useState(null);
+  useEffect(() => { db.ref('videoSecrets/' + wk + '/code').once('value').then(s => setSavedCode(s.val())).catch(() => setSavedCode(null)); }, [wk]);
+  const saveCode = async () => {
+    const c = normCode(weekCode); if (!c) return;
+    setBusy('code');
+    try {
+      await db.ref('videoSecrets/' + wk).set({ code: c, setAt: Date.now() });
+      await db.ref('pointsConfig').update({ videoWeek: wk, videoUrl: (links.videoUrl || '').trim() || null });
+      setSavedCode(c); setWeekCode('');
+    } catch (e) { alert('Save failed: ' + (e.message || e)); }
+    setBusy('');
   };
   const [pc, setPc] = useState(null);
   const [prevPc, setPrevPc] = useState(null);
@@ -3841,6 +4177,7 @@ function PointsAdmin({ users, flashSale }) {
                   <div style={{fontWeight:700}}>{fmt(x.amt || 0)} G · listed for {fmtG(x.listPrice || 0)} G <span className={'ptag ' + (x.status === 'filled' ? 'earn' : x.status === 'listed' ? 'pend' : x.status === 'awaiting_listing' ? '' : 'bad')} style={{marginLeft:6}}>{x.status}</span></div>
                   <div className="sub" style={{marginBottom:0}}>{who(x.uid)} · {x.username} / {x.discord}{x.flockPattern ? ' · pattern ' + x.flockPattern : ''} · {new Date(x.createdAt || 0).toLocaleString()}</div>
                   {x.screenshotUrl && <a href={x.screenshotUrl} target="_blank" rel="noopener" style={{fontSize:13}}>Listing screenshot</a>}
+                  {((allPts[x.uid] || {}).ratings || {})[x.id] && (() => { const r = allPts[x.uid].ratings[x.id]; return <div style={{fontSize:13,marginTop:4}}><span className="goldtext">{'★'.repeat(r.stars || 0)}</span>{r.text ? ' · ' + r.text : ''}</div>; })()}
                   {open && bal < 0 && <div style={{fontSize:13,color:'var(--danger)',fontWeight:700,marginTop:4}}>Overdrawn: this player is {fmt(Math.ceil(-bal))} points short. Don't fill until it's sorted.</div>}
                 </div>
                 {open && <div style={{display:'flex',gap:6}}>
@@ -3885,10 +4222,18 @@ function PointsAdmin({ users, flashSale }) {
             <div className="card" style={{transform:'none'}}>
               <div className="eyebrow" style={{marginBottom:10}}>Task links</div>
               <p className="msub">A task only shows to players once its link is set. The weekly video task runs for the current week (Mon–Sun UTC) after you save a link.</p>
-              {[['discordUrl','Discord invite (+' + PTS.tasks.discord + ')'],['youtubeUrl','YouTube channel (+' + PTS.tasks.youtube + ')'],['tiktokUrl','TikTok profile (+' + PTS.tasks.tiktok + ')'],['videoUrl',"This week's video (+" + PTS.video + ')']].map(([k, l]) => (
+              {[['discordUrl','Discord invite (+' + PTS.tasks.discord + ')'],['youtubeUrl','YouTube channel (+' + PTS.tasks.youtube + ')'],['tiktokUrl','TikTok profile (+' + PTS.tasks.tiktok + ')'],['videoUrl',"This week's video link (optional, shown next to the code task)"]].map(([k, l]) => (
                 <div key={k} className="field"><label htmlFor={'cfg-' + k}>{l}</label><input id={'cfg-' + k} value={links[k]} onChange={e => setLinks(Object.assign({}, links, { [k]: e.target.value }))} placeholder="https://" /></div>
               ))}
               <button className="btn btn-gold" disabled={busy === 'links'} onClick={saveLinks}>Save links</button>
+            </div>
+            <div className="card" style={{transform:'none'}}>
+              <div className="eyebrow" style={{marginBottom:10}}>Code word · this week (+{PTS.video})</div>
+              <p className="msub">Say a code word in this week's YouTube video or TikTok. Players type it in to claim. The database checks it, and players can never see the saved code. Two words are harder to guess than one.</p>
+              {savedCode && <div className="quote" style={{marginBottom:10}}>This week's code: <b>{savedCode}</b></div>}
+              <div className="field"><label htmlFor="cfg-code">{savedCode ? 'Change the code' : 'Set the code'}</label><input id="cfg-code" value={weekCode} onChange={e => setWeekCode(e.target.value)} placeholder="e.g. golden flock" /></div>
+              <button className="btn btn-gold" disabled={busy === 'code' || !normCode(weekCode)} onClick={saveCode}>Save code for this week</button>
+              <p className="msub" style={{marginTop:10,marginBottom:0}}>The task resets every Monday (UTC). Set a new code each week.</p>
             </div>
             <div className="card" style={{transform:'none'}}>
               <div className="eyebrow" style={{marginBottom:10}}>Weekly draw</div>
