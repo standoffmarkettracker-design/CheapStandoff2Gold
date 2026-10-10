@@ -2767,7 +2767,7 @@ function AdminPanel({ user, signIn, flashSale }) {
 const PTS = {
   rates: { none:0.0086, bronze:0.008, silver:0.0058, gold:0.004 },
   crypto:7, first:5, loyalty:5, loyaltyAt:25000, bulk1:5, bulk1At:10000, bulk2:10, bulk2At:25000,
-  checkin:5, streak7:25, video:10, minExchange:250,
+  checkin:3, streak7:25, video:10, minExchange:250,
   tasks:{ discord:50, youtube:50, tiktok:30 },
   priceCallPrize:2500, drawPrize:1000, drawWinners:3,
 };
