@@ -199,6 +199,7 @@ function t(lang, key) { return (I18N[lang] && I18N[lang][key]) || I18N.en[key] |
 // ---- Points system translations (merged over I18N; later keys override) ----
 const I18N_PTS = {
 "en": {
+"task_signup": "Create your account",
 "cu_eyebrow": "Buy any amount",
 "cu_h2a": "Need a",
 "cu_h2b": "specific amount?",
@@ -382,6 +383,7 @@ const I18N_PTS = {
 "err_generic": "That didn't go through. Check your connection and try again."
 },
 "ru": {
+"task_signup": "Создать аккаунт",
 "cu_eyebrow": "Любая сумма",
 "cu_h2a": "Нужно",
 "cu_h2b": "точное количество?",
@@ -565,6 +567,7 @@ const I18N_PTS = {
 "err_generic": "Не получилось. Проверьте соединение и попробуйте снова."
 },
 "pt": {
+"task_signup": "Criar sua conta",
 "cu_eyebrow": "Qualquer quantia",
 "cu_h2a": "Precisa de uma",
 "cu_h2b": "quantia exata?",
@@ -748,6 +751,7 @@ const I18N_PTS = {
 "err_generic": "Não deu certo. Verifique sua conexão e tente de novo."
 },
 "id": {
+"task_signup": "Buat akun",
 "cu_eyebrow": "Jumlah bebas",
 "cu_h2a": "Butuh jumlah",
 "cu_h2b": "tertentu?",
@@ -931,6 +935,7 @@ const I18N_PTS = {
 "err_generic": "Gagal. Periksa koneksimu lalu coba lagi."
 },
 "tr": {
+"task_signup": "Hesabını oluştur",
 "cu_eyebrow": "İstediğin miktar",
 "cu_h2a": "Belirli bir",
 "cu_h2b": "miktar mı lazım?",
@@ -1114,6 +1119,7 @@ const I18N_PTS = {
 "err_generic": "Olmadı. Bağlantını kontrol edip tekrar dene."
 },
 "ar": {
+"task_signup": "أنشئ حسابك",
 "cu_eyebrow": "أي كمية",
 "cu_h2a": "تحتاج",
 "cu_h2b": "كمية محددة؟",
@@ -2768,7 +2774,7 @@ const PTS = {
   rates: { none:0.0086, bronze:0.008, silver:0.0058, gold:0.004 },
   crypto:7, first:5, loyalty:5, loyaltyAt:25000, bulk1:5, bulk1At:10000, bulk2:10, bulk2At:25000,
   checkin:3, streak7:25, video:10, minExchange:250,
-  tasks:{ discord:25, youtube:25, tiktok:25 },
+  tasks:{ discord:10, youtube:10, tiktok:10 }, welcome:10,
   priceCallPrize:2500, drawPrize:1000, drawWinners:3,
 };
 const BUNDLES = [
@@ -2808,6 +2814,8 @@ function computeWallet(p, now) {
   const w = { balance:0, bought:0, earned:0, subPts:0, lifetimeBought:0, hasPurchased:false, tickets:0,
               streak:0, checkedToday:false, tier:null, daysLeft:null, period:null, openEx:[], history:[] };
   const today = dayIdx(now), wk = weekIdx(now);
+  w.balance += PTS.welcome; w.earned += PTS.welcome;
+  w.history.push({ id:'welcome', ts: 0, kind:'earn', lk:'task_signup', amt: PTS.welcome });
   Object.keys(p.ledger || {}).forEach(id => {
     const l = p.ledger[id] || {}; const amt = Number(l.amt) || 0;
     w.balance += amt;
@@ -3349,6 +3357,11 @@ function EarnTab({ user, wallet, data, cfg, lang }) {
     <div className="pgrid2">
       <div className="lrows">
         <div className="lhead"><h3 style={{fontSize:16}}>{t(lang,'earn_tasks')}</h3><span className="sub" style={{marginBottom:0,fontSize:13}}>{t(lang,'earn_ticket')}</span></div>
+        <div className="ptask">
+          <div className="lmain"><div style={{fontWeight:700}}>{t(lang,'task_signup')}</div><div className="lmeta" style={{fontSize:13,color:'var(--low)'}}>{t(lang,'task_once')}</div></div>
+          <div className="pp">+{PTS.welcome}</div>
+          <span style={{color:'var(--green)',fontWeight:700,fontSize:14}}>{t(lang,'task_done')}</span>
+        </div>
         {tasks.map(([id, url]) => (
           <div key={id} className="ptask">
             <div className="lmain"><div style={{fontWeight:700}}>{t(lang,'task_' + id)}</div><div className="lmeta" style={{fontSize:13,color:'var(--low)'}}>{t(lang,'task_once')}</div></div>
@@ -3365,7 +3378,6 @@ function EarnTab({ user, wallet, data, cfg, lang }) {
               : <button className="btn btn-gold btn-sm" disabled={busy === 'video/' + wk} onClick={() => claim('video/' + wk, cfg.videoUrl)}>{t(lang,'task_go')}</button>}
           </div>
         )}
-        {tasks.length === 0 && !(cfg.videoUrl && Number(cfg.videoWeek) === wk) && <div style={{padding:'22px 18px',color:'var(--low)'}}>{t(lang,'earn_none')}</div>}
       </div>
       <div className="pstack">
         <CheckinCard user={user} wallet={wallet} lang={lang} />
