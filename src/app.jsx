@@ -2768,7 +2768,7 @@ const PTS = {
   rates: { none:0.0086, bronze:0.008, silver:0.0058, gold:0.004 },
   crypto:7, first:5, loyalty:5, loyaltyAt:25000, bulk1:5, bulk1At:10000, bulk2:10, bulk2At:25000,
   checkin:3, streak7:25, video:10, minExchange:250,
-  tasks:{ discord:50, youtube:50, tiktok:30 },
+  tasks:{ discord:25, youtube:25, tiktok:25 },
   priceCallPrize:2500, drawPrize:1000, drawWinners:3,
 };
 const BUNDLES = [
@@ -2777,6 +2777,13 @@ const BUNDLES = [
   { id:'raider',  name:'Raider',  pts:5000,  price:37.99, tag:'MOST POPULAR' },
   { id:'vault',   name:'Vault',   pts:12000, price:79.99 },
 ];
+// Built-in task links. A link saved in Admin -> Points -> Rewards takes priority.
+const TASK_LINKS = {
+  youtubeUrl: 'https://www.youtube.com/@camleeman712',
+  tiktokUrl: 'https://www.tiktok.com/@standoff2markettracker',
+  discordUrl: '',
+};
+const taskLink = (cfg, k) => ((cfg && cfg[k]) || TASK_LINKS[k] || '');
 const WEEK_MS = 7 * DAY_MS;
 const dayIdx = ts => Math.floor(ts / DAY_MS);
 const weekIdx = ts => Math.floor((ts + 3 * DAY_MS) / WEEK_MS);   // weeks start Monday 00:00 UTC
@@ -3329,7 +3336,7 @@ function HistoryList({ wallet, orders, lang }) {
 function EarnTab({ user, wallet, data, cfg, lang }) {
   const [busy, setBusy] = useState('');
   const wk = weekIdx(nowMs());
-  const tasks = [['discord', cfg.discordUrl], ['youtube', cfg.youtubeUrl], ['tiktok', cfg.tiktokUrl]].filter(x => x[1]);
+  const tasks = [['discord', taskLink(cfg, 'discordUrl')], ['youtube', taskLink(cfg, 'youtubeUrl')], ['tiktok', taskLink(cfg, 'tiktokUrl')]].filter(x => x[1]);
   const doneTask = id => !!(data && data.tasks && data.tasks[id]);
   const videoDone = !!(data && data.video && data.video[wk]);
   const claim = async (path, url) => {
@@ -3723,7 +3730,7 @@ function PointsAdmin({ users, flashSale }) {
 
   // ---- rewards & contests ----
   const [links, setLinks] = useState(null);
-  useEffect(() => { if (links === null && cfg) setLinks({ discordUrl: cfg.discordUrl || '', youtubeUrl: cfg.youtubeUrl || '', tiktokUrl: cfg.tiktokUrl || '', videoUrl: cfg.videoUrl || '' }); }, [cfg]);
+  useEffect(() => { if (links === null && cfg) setLinks({ discordUrl: taskLink(cfg, 'discordUrl'), youtubeUrl: taskLink(cfg, 'youtubeUrl'), tiktokUrl: taskLink(cfg, 'tiktokUrl'), videoUrl: cfg.videoUrl || '' }); }, [cfg]);
   const saveLinks = async () => {
     const v = Object.assign({}, links); const prevVideo = cfg.videoUrl || '';
     const upd = { discordUrl: v.discordUrl.trim() || null, youtubeUrl: v.youtubeUrl.trim() || null, tiktokUrl: v.tiktokUrl.trim() || null, videoUrl: v.videoUrl.trim() || null };
