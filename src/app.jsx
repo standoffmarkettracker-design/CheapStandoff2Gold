@@ -199,6 +199,8 @@ function t(lang, key) { return (I18N[lang] && I18N[lang][key]) || I18N.en[key] |
 // ---- Points system translations (merged over I18N; later keys override) ----
 const I18N_PTS = {
 "en": {
+"pc_7d": "This week",
+"pc_30d": "30 days",
 "task_first_ex_h": "First exchange bonus",
 "h_ref_friend": "Joined through a friend",
 "h_ref_you": "Referral: a friend made their first purchase",
@@ -416,6 +418,8 @@ const I18N_PTS = {
 "err_generic": "That didn't go through. Check your connection and try again."
 },
 "ru": {
+"pc_7d": "За неделю",
+"pc_30d": "За 30 дней",
 "task_first_ex_h": "Бонус за первый обмен",
 "h_ref_friend": "Регистрация по приглашению друга",
 "h_ref_you": "Реферал: друг совершил первую покупку",
@@ -633,6 +637,8 @@ const I18N_PTS = {
 "err_generic": "Не получилось. Проверьте соединение и попробуйте снова."
 },
 "pt": {
+"pc_7d": "Nesta semana",
+"pc_30d": "30 dias",
 "task_first_ex_h": "Bônus da primeira troca",
 "h_ref_friend": "Entrou por indicação de um amigo",
 "h_ref_you": "Indicação: um amigo fez a primeira compra",
@@ -850,6 +856,8 @@ const I18N_PTS = {
 "err_generic": "Não deu certo. Verifique sua conexão e tente de novo."
 },
 "id": {
+"pc_7d": "Minggu ini",
+"pc_30d": "30 hari",
 "task_first_ex_h": "Bonus penukaran pertama",
 "h_ref_friend": "Bergabung lewat teman",
 "h_ref_you": "Referal: teman melakukan pembelian pertama",
@@ -1067,6 +1075,8 @@ const I18N_PTS = {
 "err_generic": "Gagal. Periksa koneksimu lalu coba lagi."
 },
 "tr": {
+"pc_7d": "Bu hafta",
+"pc_30d": "30 gün",
 "task_first_ex_h": "İlk çevirme bonusu",
 "h_ref_friend": "Bir arkadaş daveti ile katıldı",
 "h_ref_you": "Davet: bir arkadaşın ilk alışverişini yaptı",
@@ -1284,6 +1294,8 @@ const I18N_PTS = {
 "err_generic": "Olmadı. Bağlantını kontrol edip tekrar dene."
 },
 "ar": {
+"pc_7d": "هذا الأسبوع",
+"pc_30d": "30 يومًا",
 "task_first_ex_h": "مكافأة أول استبدال",
 "h_ref_friend": "انضممت عبر صديق",
 "h_ref_you": "دعوة: صديق أتم أول عملية شراء",
@@ -2981,7 +2993,7 @@ const PTS = {
   trackerWeek:10, trackerDays:3,          // visit the Market Tracker on 3 days in a week
   firstExchange:25, rating:5,             // paid once the team marks an exchange filled
   referral:100, referralFriend:100,       // paid when the friend's first payment is confirmed
-  priceCallPrize:2500, drawPrize:1000, drawWinners:3,
+  priceCallPrize:150, drawPrize:1000, drawWinners:3,
 };
 const BUNDLES = [
   { id:'recruit', name:'Recruit', pts:250,   price:1.99,  tag:'FIRST ORDER', once:true },
@@ -3458,6 +3470,37 @@ function EarnTeaser({ lang, goWallet }) {
 }
 
 // ---------------- Wallet page (replaces the old dashboard) ----------------
+// ---- Price Call: runs itself every week ----
+// A contest week runs from Sunday 20:00 UTC to the next Sunday 20:00 UTC. The skin of the week is
+// picked automatically (same pick for every visitor) from the Market Tracker's Legendary/Arcane skins.
+const PC_SHIFT = 4 * 3600000;
+const pcWeek = ts => weekIdx(ts + PC_SHIFT);
+const pcClose = w => weekStartMs(w + 1) - PC_SHIFT;
+const PC_AUTO_FROM = pcWeek(Date.UTC(2026, 9, 11, 20, 0, 0));   // first automatic week starts Sun 11 Oct 2026, 20:00 UTC
+const TRACKER_ITEMS_URL = 'https://raw.githubusercontent.com/standoffmarkettracker-design/standoff2-market-tracker/main/items.json';
+let trackerItemsP = null;
+function loadTrackerItems() {
+  if (!trackerItemsP) trackerItemsP = fetch(TRACKER_ITEMS_URL, { cache: 'no-cache' }).then(r => r.ok ? r.json() : []).catch(() => { trackerItemsP = null; return []; });
+  return trackerItemsP;
+}
+function useTrackerItems() {
+  const [items, setItems] = useState(null);
+  useEffect(() => { let on = true; loadTrackerItems().then(v => { if (on) setItems(Array.isArray(v) ? v : []); }); return () => { on = false; }; }, []);
+  return items;
+}
+const fnv = str => { let h = 2166136261; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; } return h; };
+const mix32 = x => { x = Math.imul(x ^ (x >>> 16), 0x85ebca6b) >>> 0; x = Math.imul(x ^ (x >>> 13), 0xc2b2ae35) >>> 0; return (x ^ (x >>> 16)) >>> 0; };
+function autoPriceCall(w, items) {
+  if (w < PC_AUTO_FROM || !items || !items.length) return null;
+  let best = null, bh = Infinity;
+  items.forEach(i => {
+    if (!i || !(i.price >= 300 && i.price <= 100000) || !/^(Weapon Skin|Knife|Gloves)$/.test(i.type || '') || !/^(Legendary|Arcane)$/.test(i.rarity || '') || /StatTra/i.test(i.name) || /^(Chibi|Molotov|Thermite|HE|Smoke) /.test(i.name)) return;
+    const h = mix32(fnv(i.name) ^ mix32(w + 0x9e3779b9)); if (h < bh) { bh = h; best = i; }
+  });
+  return best ? { skin: best.name, price: best.price, closesAt: pcClose(w), auto: true } : null;
+}
+const liveItem = (items, name) => (items || []).find(i => i.name === name) || null;
+
 function nextSundayClose(now) {
   const d = new Date(now); const c = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), 20));
   c.setUTCDate(c.getUTCDate() + ((7 - c.getUTCDay()) % 7)); if (c.getTime() <= now) c.setUTCDate(c.getUTCDate() + 7);
@@ -3724,7 +3767,8 @@ function Sparkline({ series }) {
 }
 
 function ContestsTab({ user, wallet, lang }) {
-  const now = nowMs(); const wk = weekIdx(now);
+  const now = nowMs(); const wk = pcWeek(now);
+  const items = useTrackerItems();
   const [pc, setPc] = useState(null);
   const [prevPc, setPrevPc] = useState(null);
   const [draws, setDraws] = useState(null);
@@ -3734,10 +3778,12 @@ function ContestsTab({ user, wallet, lang }) {
     const r = db.ref('contests/priceCall/' + wk);
     const cb = r.on('value', s => setPc(s.val() || {}), () => setPc({}));
     db.ref('contests/priceCall/' + (wk - 1) + '/result').once('value').then(s => setPrevPc(s.val())).catch(() => {});
-    db.ref('contests/draw/' + (wk - 1) + '/winners').once('value').then(s => setDraws(s.val())).catch(() => {});
+    db.ref('contests/draw/' + (weekIdx(now) - 1) + '/winners').once('value').then(s => setDraws(s.val())).catch(() => {});
     return () => { try { r.off('value', cb); } catch (e) {} };
   }, [wk]);
-  const meta = pc && pc.meta;
+  const meta = (pc && pc.meta) || autoPriceCall(wk, items);
+  const live = meta && liveItem(items, meta.skin);
+  const nowPrice = live ? live.price : (meta ? Number(meta.price) || 0 : 0);
   const mine = pc && pc.entries && user && pc.entries[user.uid];
   const closed = meta && meta.closesAt && now >= meta.closesAt;
   const enter = async () => {
@@ -3758,9 +3804,17 @@ function ContestsTab({ user, wallet, lang }) {
             <div className="card" style={{transform:'none',background:'var(--bg3)',padding:'14px 16px',margin:'12px 0'}}>
               <div style={{display:'flex',justifyContent:'space-between',gap:10}}>
                 <div><div className="sub" style={{marginBottom:0,fontSize:13}}>{t(lang,'pc_skin')}</div><b style={{fontSize:16}}>{meta.skin}</b></div>
-                <div style={{textAlign:'right'}}><div className="sub" style={{marginBottom:0,fontSize:13}}>{t(lang,'pc_now')}</div><b style={{fontSize:20}} className="goldtext">{fmt(Number(meta.price) || 0)} G</b></div>
+                <div style={{textAlign:'right'}}><div className="sub" style={{marginBottom:0,fontSize:13}}>{t(lang,'pc_now')}</div><b style={{fontSize:20}} className="goldtext">{fmt(Math.round(nowPrice))} G</b></div>
               </div>
               <Sparkline series={series} />
+              {live && (
+                <div style={{display:'flex',gap:8,flexWrap:'wrap',marginTop:10}}>
+                  {[['pc_7d', live.week], ['pc_30d', live.month]].map(([k, v]) => typeof v === 'number' && (
+                    <span key={k} className={'ptag ' + (v >= 0 ? 'earn' : 'bad')}>{t(lang, k)} {v >= 0 ? '+' : ''}{v.toFixed(1)}%</span>
+                  ))}
+                  <a href={'https://standoff2markettracker.com'} target="_blank" rel="noopener" style={{fontSize:13,marginLeft:'auto'}}>{t(lang,'task_open_tracker')} →</a>
+                </div>
+              )}
             </div>
             {mine ? <div className="quote">{tf(lang,'pc_yours',{ n: fmt(mine.guess) })}</div>
               : closed ? <div className="prule">{t(lang,'pc_closed')}</div>
@@ -3768,7 +3822,7 @@ function ContestsTab({ user, wallet, lang }) {
                   <label htmlFor="pc-guess" style={{fontSize:13,color:'var(--muted)',fontWeight:700,display:'block',marginBottom:7}}>{t(lang,'pc_guess')}</label>
                   <div style={{display:'flex',gap:8}}>
                     <input id="pc-guess" type="number" min="1" value={guess} onChange={e => setGuess(e.target.value)} placeholder="1265" />
-                    <button className="btn btn-gold" disabled={busy || !(parseInt(guess) > 0)} onClick={enter}>{t(lang,'pc_lock')}</button>
+                    <button className="btn btn-gold" style={{whiteSpace:'nowrap',flex:'none'}} disabled={busy || !(parseInt(guess) > 0)} onClick={enter}>{t(lang,'pc_lock')}</button>
                   </div>
                 </div>}
           </div>
@@ -3777,7 +3831,7 @@ function ContestsTab({ user, wallet, lang }) {
       </div>
       <div className="pstack">
         <div className="card" style={{transform:'none'}}>
-          <div style={{display:'flex',justifyContent:'space-between',gap:10,alignItems:'center'}}><div className="eyebrow">{t(lang,'dr_title')}</div><span className="ptag contest">{timeLeft(lang, weekStartMs(wk + 1) - now)}</span></div>
+          <div style={{display:'flex',justifyContent:'space-between',gap:10,alignItems:'center'}}><div className="eyebrow">{t(lang,'dr_title')}</div><span className="ptag contest">{timeLeft(lang, weekStartMs(weekIdx(now) + 1) - now)}</span></div>
           <h3 style={{fontSize:22,margin:'8px 0 4px'}}>{tf(lang,'dr_h',{ w: PTS.drawWinners, n: fmt(PTS.drawPrize) })}</h3>
           <div style={{display:'flex',alignItems:'baseline',gap:10,margin:'12px 0'}}><span className="bigpts" style={{fontSize:40}}>{wallet.tickets}</span><span className="sub" style={{marginBottom:0}}>{t(lang,'dr_tickets')}</span></div>
           <p className="sub" style={{marginBottom:0}}>{t(lang,'dr_p')}</p>
@@ -4089,22 +4143,35 @@ function PointsAdmin({ users, flashSale }) {
     } catch (e) { alert('Save failed: ' + (e.message || e)); }
     setBusy('');
   };
+  const pcw = pcWeek(now);
+  const items = useTrackerItems();
   const [pc, setPc] = useState(null);
   const [prevPc, setPrevPc] = useState(null);
+  const [showPick, setShowPick] = useState(false);
   const [skin, setSkin] = useState(''); const [price, setPrice] = useState(''); const [series, setSeries] = useState(''); const [actual, setActual] = useState('');
   const [drawPrev, setDrawPrev] = useState(null);
   useEffect(() => {
-    const r = db.ref('contests/priceCall/' + wk), r2 = db.ref('contests/priceCall/' + (wk - 1)), r3 = db.ref('contests/draw/' + (wk - 1));
+    const r = db.ref('contests/priceCall/' + pcw), r2 = db.ref('contests/priceCall/' + (pcw - 1)), r3 = db.ref('contests/draw/' + (wk - 1));
     const c1 = r.on('value', s => setPc(s.val() || {}), () => {}); const c2 = r2.on('value', s => setPrevPc(s.val() || {}), () => {}); const c3 = r3.on('value', s => setDrawPrev(s.val() || {}), () => {});
     return () => { try { r.off('value', c1); r2.off('value', c2); r3.off('value', c3); } catch (e) {} };
-  }, [wk]);
+  }, [pcw, wk]);
+  const curMeta = (pc && pc.meta) || autoPriceCall(pcw, items);
+  const prevMeta = (prevPc && prevPc.meta) || autoPriceCall(pcw - 1, items);
+  // Save the automatic pick once you've seen it, so it can never shift mid-week.
+  useEffect(() => {
+    if (pc && !pc.meta && curMeta && curMeta.auto) db.ref('contests/priceCall/' + pcw + '/meta').set(Object.assign({}, curMeta, { openedAt: Date.now() })).catch(() => {});
+    if (prevPc && !prevPc.meta && prevMeta && prevMeta.auto) db.ref('contests/priceCall/' + (pcw - 1) + '/meta').set(Object.assign({}, prevMeta, { openedAt: Date.now() })).catch(() => {});
+  }, [pc, prevPc, curMeta && curMeta.skin, prevMeta && prevMeta.skin]);
   const openPriceCall = async () => {
     if (!skin.trim() || !(Number(price) > 0)) { alert('Add the skin name and its current price.'); return; }
-    await db.ref('contests/priceCall/' + wk + '/meta').set({ skin: skin.trim(), price: Number(price), series: series.trim() || null, closesAt: nextSundayClose(now), openedAt: Date.now() });
+    await db.ref('contests/priceCall/' + pcw + '/meta').set({ skin: skin.trim(), price: Number(price), series: series.trim() || null, closesAt: pcClose(pcw), openedAt: Date.now() });
+    setShowPick(false);
   };
-  const settle = async (w, data) => {
+  const fillLive = m => { const it = m && liveItem(items, m.skin); if (it) setActual(String(Math.round(it.price))); };
+  const settle = async (w, data, m) => {
     const a = Number(actual); if (!(a > 0)) { alert('Enter the closing price first.'); return; }
-    const entries = Object.keys((data && data.entries) || {}).map(uid => Object.assign({ uid }, data.entries[uid]));
+    const closeAt = (m && m.closesAt) || pcClose(w);
+    const entries = Object.keys((data && data.entries) || {}).map(uid => Object.assign({ uid }, data.entries[uid])).filter(e => !e.ts || e.ts <= closeAt);
     if (!entries.length) { alert('No entries to settle.'); return; }
     entries.sort((x, y) => Math.abs(x.guess - a) - Math.abs(y.guess - a) || (x.ts || 0) - (y.ts || 0));
     const win = entries[0];
@@ -4247,33 +4314,35 @@ function PointsAdmin({ users, flashSale }) {
           </div>
           <div className="pstack">
             <div className="card" style={{transform:'none'}}>
-              <div className="eyebrow" style={{marginBottom:10}}>Price Call · this week</div>
-              {pc && pc.meta ? (
-                <div>
-                  <div className="quote" style={{marginBottom:10}}>{pc.meta.skin} · {fmt(pc.meta.price)} G now · closes {new Date(pc.meta.closesAt).toLocaleString()}</div>
-                  <div className="sub">{Object.keys(pc.entries || {}).length} entries</div>
-                  {now >= pc.meta.closesAt && !pc.result && (
-                    <div><div className="field"><label htmlFor="pc-actual">Closing price (G)</label><input id="pc-actual" type="number" value={actual} onChange={e => setActual(e.target.value)} /></div>
-                    <button className="btn btn-gold" onClick={() => settle(wk, pc)}>Pay the closest call</button></div>
-                  )}
-                  {pc.result && <div className="quote">Paid {pc.result.winnerHandle} · guessed {fmt(pc.result.guess)}, closed {fmt(pc.result.actual)}</div>}
-                </div>
+              <div className="eyebrow" style={{marginBottom:10}}>Price Call · this week (+{fmt(PTS.priceCallPrize)} points)</div>
+              {!curMeta ? (
+                <p className="msub" style={{marginBottom:0}}>{pcw < PC_AUTO_FROM ? 'The first automatic Price Call opens Sunday 11 October at 20:00 UTC.' : 'Loading the Market Tracker…'}</p>
               ) : (
                 <div>
-                  <div className="field"><label htmlFor="pc-skin">Skin of the week</label><input id="pc-skin" value={skin} onChange={e => setSkin(e.target.value)} placeholder="Name as shown on the Market Tracker" /></div>
-                  <div className="field"><label htmlFor="pc-price">Current price (G)</label><input id="pc-price" type="number" value={price} onChange={e => setPrice(e.target.value)} /></div>
-                  <div className="field"><label htmlFor="pc-series">Last 7 daily prices, comma separated (optional, draws the chart)</label><input id="pc-series" value={series} onChange={e => setSeries(e.target.value)} placeholder="1180,1205,1198,1222,1250,1236,1240" /></div>
-                  <button className="btn btn-gold" onClick={openPriceCall}>Open this week's Price Call</button>
-                  <p className="msub" style={{marginTop:10,marginBottom:0}}>Entries close Sunday 20:00 UTC.</p>
+                  <div className="quote" style={{marginBottom:10}}>{curMeta.skin} · {fmt(Math.round((liveItem(items, curMeta.skin) || curMeta).price || 0))} G now · closes {new Date(curMeta.closesAt).toLocaleString()}</div>
+                  <div className="sub">{Object.keys((pc && pc.entries) || {}).length} entries · {curMeta.auto ? 'picked automatically' : 'picked by you'}</div>
+                  {pc && pc.result && <div className="quote">Paid {pc.result.winnerHandle} · guessed {fmt(pc.result.guess)}, closed {fmt(pc.result.actual)}</div>}
+                  {!Object.keys((pc && pc.entries) || {}).length && (
+                    showPick ? (
+                      <div style={{marginTop:12}}>
+                        <div className="field"><label htmlFor="pc-skin">Skin of the week</label><input id="pc-skin" value={skin} onChange={e => setSkin(e.target.value)} placeholder="Exact name, e.g. AKR &quot;Treasure Hunter&quot;" /></div>
+                        <div className="field"><label htmlFor="pc-price">Current price (G)</label><input id="pc-price" type="number" value={price} onChange={e => setPrice(e.target.value)} /></div>
+                        <button className="btn btn-gold btn-sm" onClick={openPriceCall}>Use this skin instead</button>
+                      </div>
+                    ) : <button className="btn btn-ghost btn-sm" style={{marginTop:10}} onClick={() => setShowPick(true)}>Pick a different skin</button>
+                  )}
                 </div>
               )}
             </div>
-            {prevPc && prevPc.meta && !prevPc.result && (
+            {prevMeta && prevPc && !prevPc.result && Object.keys(prevPc.entries || {}).length > 0 && (
               <div className="card" style={{transform:'none'}}>
                 <div className="eyebrow" style={{marginBottom:10}}>Price Call · last week (unpaid)</div>
-                <div className="sub">{prevPc.meta.skin} · {Object.keys(prevPc.entries || {}).length} entries</div>
+                <div className="sub">{prevMeta.skin} · {Object.keys(prevPc.entries || {}).length} entries · closed {new Date(prevMeta.closesAt).toLocaleString()}</div>
                 <div className="field"><label htmlFor="pc-actual2">Closing price (G)</label><input id="pc-actual2" type="number" value={actual} onChange={e => setActual(e.target.value)} /></div>
-                <button className="btn btn-gold" onClick={() => settle(wk - 1, prevPc)}>Pay the closest call</button>
+                <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
+                  <button className="btn btn-ghost btn-sm" onClick={() => fillLive(prevMeta)}>Use the tracker's current price</button>
+                  <button className="btn btn-gold btn-sm" onClick={() => settle(pcw - 1, prevPc, prevMeta)}>Pay the closest call</button>
+                </div>
               </div>
             )}
           </div>
